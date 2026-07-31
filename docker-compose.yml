@@ -17,6 +17,26 @@ services:
     networks: [porto]
     # Tidak ada ports: — DB hanya dijangkau lewat network internal.
 
+  # Sekali jalan lalu mati: menerapkan migrasi Prisma sebelum app boleh naik.
+  # Pakai stage `builder` karena di situ node_modules (termasuk CLI Prisma) masih utuh.
+  migrate:
+    build:
+      context: .
+      target: builder
+      args:
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    image: porto-migrate:latest
+    container_name: porto-migrate
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    command: npx prisma migrate deploy
+    networks: [porto]
+
   app:
     build:
       context: .
@@ -29,6 +49,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL}

@@ -41,14 +41,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
-# Prisma CLI + schema untuk menjalankan `migrate deploy` saat container start
+# Hanya query engine untuk runtime. CLI Prisma sengaja TIDAK ikut:
+# memetik-metik isi node_modules bikin dependensi transitif CLI putus.
+# Migrasi dijalankan service `migrate` terpisah (stage builder) di docker-compose.
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-# Sengaja TIDAK menyalin node_modules/.bin/prisma: itu symlink, dan menyalinnya
-# membuat CLI berjalan dari dalam .bin/ sehingga gagal menemukan file .wasm-nya.
-# Entrypoint memanggil build/index.js langsung.
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \

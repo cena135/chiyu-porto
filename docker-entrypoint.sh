@@ -18,8 +18,8 @@ s.on('error',()=>process.exit(1));
   sleep 2
 done
 
-echo "[entrypoint] menjalankan migrasi Prisma..."
-node ./node_modules/prisma/build/index.js migrate deploy
+# Migrasi TIDAK dijalankan di sini — itu tugas service `migrate` di docker-compose,
+# yang wajib selesai sukses sebelum container ini dinyalakan.
 
 echo "[entrypoint] start: $*"
 exec "$@"
