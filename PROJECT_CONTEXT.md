@@ -56,10 +56,11 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │                                                GET /api/projects sengaja tetap publik.
 │
 ├── uploads/                                  <- GAMBAR PROYEK. Bind mount ke container.
-│                                                Wajib `chown -R 1001:1001 uploads` di server.
+│                                                Tidak perlu chown: container jalan uid 1000,
+│                                                sama dengan user `alex` di T480.
 │
 ├── Dockerfile                                <- 3 stage (deps/builder/runner), output standalone,
-│                                                user non-root uid 1001
+│                                                user non-root `node` uid 1000 (samain dgn alex)
 ├── docker-entrypoint.sh                      <- tunggu Postgres siap -> `prisma migrate deploy` -> start
 ├── docker-compose.yml                        <- service: db, app, cloudflared
 ├── .env.example                              <- template. `.env` asli TIDAK di-commit.

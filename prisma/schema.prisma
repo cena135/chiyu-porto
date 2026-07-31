@@ -12,8 +12,7 @@ model Project {
   title       String
   slug        String   @unique
   description String
-  content     String?  // deskripsi panjang / case study (opsional)
-  imageUrl    String?  // path relatif, mis. /api/uploads/abc.webp
+  content     String? // deskripsi panjang / case study (opsional)
   liveUrl     String?
   repoUrl     String?
   techStack   String[] @default([])
@@ -23,5 +22,21 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Galeri. Gambar dengan order terkecil dipakai sebagai cover.
+  images ProjectImage[]
+
   @@index([published, order])
+}
+
+model ProjectImage {
+  id        String   @id @default(cuid())
+  projectId String
+  url       String // path relatif, mis. /api/uploads/abc.webp
+  alt       String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, order])
 }

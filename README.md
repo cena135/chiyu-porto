@@ -62,8 +62,8 @@ git clone <repo-kamu> porto && cd porto
 cp .env.example .env
 nano .env          # isi POSTGRES_PASSWORD, DATABASE_URL, kunci Clerk, ADMIN_EMAILS, token tunnel
 
-# folder upload milik user container (uid 1001)
-mkdir -p uploads && sudo chown -R 1001:1001 uploads
+# folder upload (container jalan sebagai uid 1000, sama dengan user `alex`)
+mkdir -p uploads
 
 # build + jalankan
 docker compose up -d --build
@@ -156,5 +156,6 @@ npm run dev
 - Upload: whitelist MIME, batas 8 MB, nama file diacak (nama asli user tidak pernah dipakai).
 - Serve file: path di-resolve dan diverifikasi masih di dalam `UPLOAD_DIR`; SVG dikirim dengan
   `Content-Security-Policy: default-src 'none'; sandbox` supaya tidak bisa eksekusi script.
-- Container berjalan sebagai user non-root (`nextjs`, uid 1001).
+- Container berjalan sebagai user non-root (`node`, uid 1000 — sengaja disamakan dengan user
+  `alex` di T480 supaya bind mount `uploads/` writable tanpa root).
 - Postgres tidak terekspos ke jaringan host maupun internet.

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
 
 // Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
@@ -9,7 +10,8 @@ async function getProjects() {
   try {
     return await prisma.project.findMany({
       where: { published: true },
-      orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
+      orderBy: PROJECT_ORDER,
+      include: WITH_IMAGES,
     });
   } catch {
     return []; // DB belum siap (mis. saat build) — halaman tetap render.

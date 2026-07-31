@@ -2,23 +2,31 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import type { Project } from "@prisma/client";
+import type { ProjectWithImages } from "@/lib/projects";
 
 type Status = { kind: "idle" } | { kind: "error"; msg: string } | { kind: "ok"; msg: string };
+
+/** Gambar lama (sudah di DB) vs gambar baru (masih File di browser). */
+type Slot =
+  | { kind: "existing"; id: string; url: string }
+  | { kind: "new"; key: string; url: string; file: File };
+
+const MAX_GALLERY = 12;
 
 const field =
   "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-mist-200 placeholder:text-mist-400/50 outline-none transition-all focus:border-aurora/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-aurora/15";
 const label = "block text-xs font-medium tracking-wide text-mist-400 mb-1.5";
 
-export function AdminDashboard({ initialProjects }: { initialProjects: Project[] }) {
+export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWithImages[] }) {
   const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
-  const [editing, setEditing] = useState<Project | null>(null);
+  const [editing, setEditing] = useState<ProjectWithImages | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const [preview, setPreview] = useState<string | null>(null);
-  const [removeImage, setRemoveImage] = useState(false);
+  const [slots, setSlots] = useState<Slot[]>([]);
+  const [removedIds, setRemovedIds] = useState<string[]>([]);
   const [pending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setProjects(initialProjects), [initialProjects]);
 
@@ -29,25 +37,90 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
     }
   }, [status]);
 
+  // Bebaskan object URL pratinjau saat komponen dilepas.
+  useEffect(() => {
+    return () => {
+      slots.forEach((s) => s.kind === "new" && URL.revokeObjectURL(s.url));
+    };
+  }, [slots]);
+
   function resetForm() {
     formRef.current?.reset();
+    slots.forEach((s) => s.kind === "new" && URL.revokeObjectURL(s.url));
     setEditing(null);
-    setPreview(null);
-    setRemoveImage(false);
+    setSlots([]);
+    setRemovedIds([]);
   }
 
-  function startEdit(p: Project) {
+  function startEdit(p: ProjectWithImages) {
+    slots.forEach((s) => s.kind === "new" && URL.revokeObjectURL(s.url));
     setEditing(p);
-    setPreview(p.imageUrl);
-    setRemoveImage(false);
+    setSlots(p.images.map((img) => ({ kind: "existing", id: img.id, url: img.url })));
+    setRemovedIds([]);
     setStatus({ kind: "idle" });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function addFiles(list: FileList | null) {
+    if (!list?.length) return;
+    const room = MAX_GALLERY - slots.length;
+    if (room <= 0) {
+      setStatus({ kind: "error", msg: `Maksimal ${MAX_GALLERY} gambar per proyek.` });
+      return;
+    }
+    const picked = Array.from(list).slice(0, room);
+    if (picked.length < list.length) {
+      setStatus({ kind: "error", msg: `Hanya ${room} gambar pertama diambil (batas ${MAX_GALLERY}).` });
+    }
+    setSlots((prev) => [
+      ...prev,
+      ...picked.map((file) => ({
+        kind: "new" as const,
+        key: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        url: URL.createObjectURL(file),
+        file,
+      })),
+    ]);
+    if (fileRef.current) fileRef.current.value = ""; // biar file sama bisa dipilih lagi
+  }
+
+  function removeSlot(idx: number) {
+    setSlots((prev) => {
+      const s = prev[idx];
+      if (s.kind === "existing") setRemovedIds((r) => [...r, s.id]);
+      else URL.revokeObjectURL(s.url);
+      return prev.filter((_, i) => i !== idx);
+    });
+  }
+
+  function move(idx: number, dir: -1 | 1) {
+    setSlots((prev) => {
+      const to = idx + dir;
+      if (to < 0 || to >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[to]] = [next[to], next[idx]];
+      return next;
+    });
+  }
+
+  function makeCover(idx: number) {
+    setSlots((prev) => (idx === 0 ? prev : [prev[idx], ...prev.filter((_, i) => i !== idx)]));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    if (removeImage) form.set("removeImage", "true");
+
+    // Input file asli tidak dipakai — urutan & isi galeri dikirim dari state `slots`.
+    form.delete("images");
+    for (const s of slots) if (s.kind === "new") form.append("images", s.file);
+    form.set(
+      "imageOrder",
+      slots.filter((s): s is Extract<Slot, { kind: "existing" }> => s.kind === "existing")
+        .map((s) => s.id)
+        .join(","),
+    );
+    form.set("deleteImageIds", removedIds.join(","));
 
     setStatus({ kind: "idle" });
     const url = editing ? `/api/projects/${editing.id}` : "/api/projects";
@@ -64,8 +137,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
     startTransition(() => router.refresh());
   }
 
-  async function handleDelete(p: Project) {
-    if (!confirm(`Hapus proyek "${p.title}"? Tindakan ini permanen.`)) return;
+  async function handleDelete(p: ProjectWithImages) {
+    if (!confirm(`Hapus proyek "${p.title}" beserta ${p.images.length} gambarnya? Permanen.`)) return;
     const res = await fetch(`/api/projects/${p.id}`, { method: "DELETE" });
     if (!res.ok) {
       const json = await res.json().catch(() => ({}));
@@ -78,7 +151,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
   }
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
+    <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,440px)_1fr]">
       {/* ---------- Form ---------- */}
       <form
         ref={formRef}
@@ -132,43 +205,94 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
             />
           </div>
 
+          {/* ---------- Manajer galeri ---------- */}
           <div>
-            <label className={label} htmlFor="image">
-              Gambar proyek
-            </label>
+            <div className="mb-1.5 flex items-baseline justify-between">
+              <label className={`${label} mb-0`} htmlFor="images">
+                Galeri screenshot
+              </label>
+              <span className="text-[11px] text-mist-400/70">
+                {slots.length}/{MAX_GALLERY}
+              </span>
+            </div>
+
             <input
-              id="image"
-              name="image"
+              ref={fileRef}
+              id="images"
+              name="images"
               type="file"
+              multiple
               accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/svg+xml"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) {
-                  setPreview(URL.createObjectURL(f));
-                  setRemoveImage(false);
-                }
-              }}
+              onChange={(e) => addFiles(e.target.files)}
               className="w-full cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-xs text-mist-400 transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-violet/20 file:px-3 file:py-1.5 file:text-xs file:text-mist-200 hover:border-aurora/40"
             />
             <p className="mt-1.5 text-[11px] text-mist-400/70">
-              JPG / PNG / WEBP / AVIF / SVG · maks 8 MB · disimpan di volume{" "}
-              <code className="text-aurora/80">uploads/</code>
+              Pilih beberapa file sekaligus · maks 8 MB/file · gambar{" "}
+              <span className="text-aurora/80">pertama = cover</span> di halaman depan
             </p>
 
-            {preview && !removeImage && (
-              <div className="relative mt-3 overflow-hidden rounded-xl border border-white/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={preview} alt="Pratinjau" className="h-36 w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPreview(null);
-                    setRemoveImage(true);
-                  }}
-                  className="absolute right-2 top-2 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] text-mist-200 backdrop-blur-md transition-colors hover:bg-ember/70 hover:text-ink-950"
-                >
-                  Hapus
-                </button>
+            {slots.length > 0 && (
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {slots.map((s, idx) => (
+                  <div
+                    key={s.kind === "existing" ? s.id : s.key}
+                    className={`group relative overflow-hidden rounded-xl border ${
+                      idx === 0 ? "border-aurora/60" : "border-white/10"
+                    }`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={s.url} alt="" className="h-20 w-full object-cover" />
+
+                    {idx === 0 && (
+                      <span className="absolute left-1 top-1 rounded bg-aurora/90 px-1.5 py-0.5 text-[9px] font-semibold text-ink-950">
+                        COVER
+                      </span>
+                    )}
+                    {s.kind === "new" && (
+                      <span className="absolute right-1 top-1 rounded bg-violet/80 px-1.5 py-0.5 text-[9px] text-mist-200">
+                        BARU
+                      </span>
+                    )}
+
+                    <div className="absolute inset-x-0 bottom-0 flex justify-center gap-0.5 bg-black/70 p-1 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+                      <button
+                        type="button"
+                        onClick={() => move(idx, -1)}
+                        disabled={idx === 0}
+                        title="Geser kiri"
+                        className="rounded px-1.5 text-[11px] text-mist-200 hover:text-aurora disabled:opacity-25"
+                      >
+                        ‹
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => makeCover(idx)}
+                        disabled={idx === 0}
+                        title="Jadikan cover"
+                        className="rounded px-1.5 text-[11px] text-mist-200 hover:text-aurora disabled:opacity-25"
+                      >
+                        ★
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => move(idx, 1)}
+                        disabled={idx === slots.length - 1}
+                        title="Geser kanan"
+                        className="rounded px-1.5 text-[11px] text-mist-200 hover:text-aurora disabled:opacity-25"
+                      >
+                        ›
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeSlot(idx)}
+                        title="Hapus gambar"
+                        className="rounded px-1.5 text-[11px] text-mist-200 hover:text-ember"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -300,14 +424,19 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
             }`}
             style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
           >
-            <div className="h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-ink-800">
-              {p.imageUrl ? (
+            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-ink-800">
+              {p.images[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.imageUrl} alt="" className="h-full w-full object-cover" />
+                <img src={p.images[0].url} alt="" className="h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-[10px] text-mist-400/50">
                   no image
                 </div>
+              )}
+              {p.images.length > 1 && (
+                <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 text-[9px] text-mist-200 backdrop-blur-sm">
+                  +{p.images.length - 1}
+                </span>
               )}
             </div>
 
@@ -327,7 +456,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: Project[]
               </div>
               <p className="mt-1 line-clamp-1 text-xs text-mist-400">{p.description}</p>
               <p className="mt-1 text-[11px] text-mist-400/60">
-                /{p.slug} · urutan {p.order}
+                /{p.slug} · urutan {p.order} · {p.images.length} gambar
               </p>
             </div>
 

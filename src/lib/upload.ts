@@ -33,6 +33,27 @@ export async function saveUpload(file: File): Promise<SaveResult> {
   return { ok: true, url: `/api/uploads/${name}` };
 }
 
+export const MAX_GALLERY = 12;
+
+/**
+ * Simpan banyak file sekaligus (galeri). Kalau ada satu yang gagal validasi,
+ * file yang terlanjur tersimpan dihapus lagi supaya tidak ada sampah nyangkut.
+ */
+export async function saveUploads(
+  files: File[],
+): Promise<{ ok: true; urls: string[] } | { ok: false; error: string }> {
+  const urls: string[] = [];
+  for (const f of files) {
+    const res = await saveUpload(f);
+    if (!res.ok) {
+      await Promise.all(urls.map(deleteUpload));
+      return { ok: false, error: `${f.name}: ${res.error}` };
+    }
+    urls.push(res.url);
+  }
+  return { ok: true, urls };
+}
+
 /** Hapus file lokal kalau URL-nya memang milik kita. Aman kalau file sudah tidak ada. */
 export async function deleteUpload(url?: string | null) {
   if (!url || !url.startsWith("/api/uploads/")) return;

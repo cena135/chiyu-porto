@@ -1,5 +1,21 @@
 import { z } from "zod";
+import type { Project, ProjectImage } from "@prisma/client";
 import { prisma } from "./prisma";
+
+/** Bentuk data yang dipakai di seluruh UI — proyek selalu dibawa bersama galerinya. */
+export type ProjectWithImages = Project & { images: ProjectImage[] };
+
+/** Urutan tampil standar: unggulan dulu, lalu kolom order, lalu terbaru. */
+export const PROJECT_ORDER = [
+  { featured: "desc" as const },
+  { order: "asc" as const },
+  { createdAt: "desc" as const },
+];
+
+/** Selalu ikutkan galeri, terurut. Gambar pertama = cover. */
+export const WITH_IMAGES = {
+  images: { orderBy: [{ order: "asc" as const }, { createdAt: "asc" as const }] },
+};
 
 export const projectSchema = z.object({
   title: z.string().trim().min(2, "Judul minimal 2 karakter").max(120),

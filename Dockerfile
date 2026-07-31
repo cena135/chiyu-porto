@@ -33,25 +33,28 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 ENV UPLOAD_DIR=/app/uploads
 
-RUN addgroup -g 1001 -S nodejs && adduser -u 1001 -S nextjs -G nodejs
+# Pakai user `node` bawaan image (uid 1000, gid 1000) — sengaja disamakan dengan
+# user `alex` di T480 supaya bind mount ./uploads bisa ditulis tanpa perlu root/chown.
 
 # Output standalone: server + node_modules minimal
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
 # Prisma CLI + schema untuk menjalankan `migrate deploy` saat container start
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=deps    /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+# Sengaja TIDAK menyalin node_modules/.bin/prisma: itu symlink, dan menyalinnya
+# membuat CLI berjalan dari dalam .bin/ sehingga gagal menemukan file .wasm-nya.
+# Entrypoint memanggil build/index.js langsung.
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads
+ && mkdir -p /app/uploads && chown -R node:node /app/uploads
 
-USER nextjs
+USER node
 EXPOSE 3000
 VOLUME ["/app/uploads"]
 

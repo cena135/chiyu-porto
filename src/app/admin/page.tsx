@@ -2,6 +2,7 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
 import { AdminDashboard } from "./AdminDashboard";
 
 export const metadata = { title: "Dashboard" };
@@ -25,7 +26,8 @@ export default async function AdminPage() {
   }
 
   const projects = await prisma.project.findMany({
-    orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
+    orderBy: PROJECT_ORDER,
+    include: WITH_IMAGES,
   });
 
   return (

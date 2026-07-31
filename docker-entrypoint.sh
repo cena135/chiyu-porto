@@ -19,7 +19,7 @@ s.on('error',()=>process.exit(1));
 done
 
 echo "[entrypoint] menjalankan migrasi Prisma..."
-./node_modules/.bin/prisma migrate deploy
+node ./node_modules/prisma/build/index.js migrate deploy
 
 echo "[entrypoint] start: $*"
 exec "$@"
