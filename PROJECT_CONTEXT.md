@@ -113,6 +113,10 @@ Migrasi Prisma jalan **otomatis** dari `docker-entrypoint.sh`. Tidak ada langkah
 
 ## 5. ROADMAP / STATUS
 
+**STATUS: SUDAH LIVE di https://porto.chiyu.my.id (31 Jul 2026)** — HTTP 200 via Cloudflare Tunnel.
+Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 0 = sukses),
+`porto-tunnel` (up). Migrasi `init` + `project_images` sudah diterapkan.
+
 **Sudah jadi:**
 - [x] Schema DB + migrasi awal
 - [x] Frontend publik, grid auto-grow, desain glassmorphism premium
@@ -121,9 +125,19 @@ Migrasi Prisma jalan **otomatis** dari `docker-entrypoint.sh`. Tidak ada langkah
 - [x] Dockerfile + docker-compose (app/db/cloudflared) + entrypoint auto-migrate
 - [x] Build produksi terverifikasi hijau di lokal
 - [x] Push ke GitHub
+- [x] Galeri multi-gambar per proyek (tabel `ProjectImage`, lightbox, manajer urutan/cover)
+- [x] Deploy perdana ke T480 — verified end-to-end (tabel DB, health, tulis uploads, domain publik)
+
+**PR/UTANG YANG MASIH MENGGANTUNG (WAJIB DIBACA AGEN BERIKUTNYA):**
+- [ ] **`ADMIN_EMAILS` di `.env` server masih `you@example.com`** → CEO belum bisa masuk `/admin`.
+      Variabel runtime: cukup edit `.env` lalu `docker compose up -d app`. TIDAK perlu rebuild.
+- [ ] **Kunci Clerk masih `pk_test`/`sk_test` (development instance)** di domain produksi.
+      Efeknya: `/admin` butuh handshake dev-browser (curl dapat 404, browser asli masih jalan),
+      ada banner dev, dan batas user rendah. Ganti ke `pk_live`/`sk_live` dari Clerk
+      **production instance**. `NEXT_PUBLIC_*` ter-inline saat build →
+      WAJIB `docker compose build --no-cache app` setelah ganti.
 
 **Belum / berikutnya:**
-- [ ] Deploy perdana ke T480 (nunggu CEO isi `.env`)
 - [ ] Pasang cron backup ke `/mnt/backup` (tiru pola `/home/alex/chiyupals/backup.sh`)
 - [ ] Halaman detail proyek `/p/[slug]` (slug sudah ada di DB, belum ada halamannya)
 - [ ] Kompres gambar otomatis (sharp → webp) biar hemat disk T480
