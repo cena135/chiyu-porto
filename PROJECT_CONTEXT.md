@@ -25,7 +25,8 @@
 d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │
 ├── prisma/
-│   ├── schema.prisma                        <- model `Project` (satu-satunya tabel)
+│   ├── seed.mjs                             <- seeder dummy: 6 proyek + SVG screenshot
+│   ├── schema.prisma                        <- model `Project` + `ProjectImage`
 │   └── migrations/20260731000000_init/       <- migrasi awal, sudah di-generate
 │
 ├── src/app/
@@ -37,10 +38,14 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │   ├── sign-in/[[...sign-in]]/page.tsx       <- halaman login Clerk
 │   ├── admin/
 │   │   ├── page.tsx                          <- server component, gate requireAdmin()
-│   │   └── AdminDashboard.tsx                <- CLIENT. Form CRUD + list + preview gambar
+│   │   ├── AdminDashboard.tsx                <- CLIENT. Shell: tab, statistik, cari/filter, daftar
+│   │   ├── ProjectForm.tsx                   <- CLIENT. Form tambah/ubah + galeri (batch)
+│   │   └── GalleryManager.tsx                <- CLIENT. Modal kelola screenshot, simpan langsung
 │   └── api/
 │       ├── projects/route.ts                 <- GET (publik) · POST (admin, multipart)
 │       ├── projects/[id]/route.ts            <- GET · PATCH · DELETE (admin)
+│       ├── projects/[id]/images/route.ts     <- POST tambah · DELETE hapus · PATCH urutkan galeri
+│       ├── projects/[id]/status/route.ts     <- PATCH toggle cepat published/featured
 │       ├── uploads/[...path]/route.ts        <- serve gambar dari UPLOAD_DIR, anti traversal
 │       └── health/route.ts                   <- dipakai healthcheck docker-compose
 │
@@ -142,6 +147,18 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 - [x] Smooth scroll tombol "Lihat Karya" → `#karya`. CSS-native (`scroll-behavior: smooth` +
       `scroll-padding-top: 5rem` di `html`), nol JS. Dimatikan otomatis saat
       `prefers-reduced-motion`. JANGAN tambah `scroll-mt-*` di section target — offset jadi dobel.
+
+- [x] Admin Dashboard lengkap (2 Agu 2026): tab Daftar/Tambah, statistik, pencarian, filter
+      status, urutan, toggle terbitkan/unggulan instan, modal Kelola Gambar, seeder dummy
+- [x] Seeder `prisma/seed.mjs` — dijalankan di server:
+      `docker compose exec app node prisma/seed.mjs` (`--reset` hapus, `--force` timpa)
+
+**KEPUTUSAN: `featured` & `published` TIDAK DIHAPUS.**
+CEO minta evaluasi "hapus jika tidak ada fungsinya". Hasil evaluasi: keduanya berfungsi nyata.
+`published` menggerakkan fitur draf (`page.tsx` filter `where: { published: true }`),
+`featured` menentukan urutan tampil + badge di kartu. Sudah dibuktikan di produksi: proyek draf
+"Kanvas Piksel Kolaboratif" tidak muncul di halaman publik. Menghapusnya butuh `DROP COLUMN`
+(dilarang SOP tanpa izin eksplisit). Yang diperbaiki: kejelasan UI-nya.
 
 **PR/UTANG YANG MASIH MENGGANTUNG (WAJIB DIBACA AGEN BERIKUTNYA):**
 - [ ] **`ADMIN_EMAILS` di `.env` server masih `you@example.com`** → CEO belum bisa masuk `/admin`.
