@@ -20,12 +20,23 @@ async function getProjects() {
 
 export default async function HomePage() {
   const projects = await getProjects();
-  const stacks = [...new Set(projects.flatMap((p) => p.techStack))].slice(0, 12);
+  const stacks = [...new Set(projects.flatMap((p) => p.techStack))].slice(
+    0,
+    12,
+  );
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 pb-28 pt-16 sm:pt-24">
+      {/* Tanpa JS, IntersectionObserver tidak jalan — pastikan kartu tetap terlihat. */}
+      <noscript>
+        <style>{`.slide-in{opacity:1 !important}`}</style>
+      </noscript>
+
       <header className="reveal flex items-center justify-between gap-4">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight">
+        <Link
+          href="/"
+          className="font-display text-lg font-semibold tracking-tight"
+        >
           chiyu<span className="text-aurora">.</span>
         </Link>
         <Link
@@ -36,20 +47,23 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      <section className="reveal py-20 sm:py-28" style={{ animationDelay: "80ms" }}>
+      <section
+        className="reveal py-20 sm:py-28"
+        style={{ animationDelay: "80ms" }}
+      >
         <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-mist-400">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-aurora" />
           Tersedia untuk proyek baru
         </span>
 
         <h1 className="font-display mt-7 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-6xl">
-          Saya membangun <span className="text-gradient">produk digital</span> yang rapi, cepat, dan
-          enak dipakai.
+          Saya membangun <span className="text-gradient">produk digital</span>{" "}
+          yang rapi, cepat, dan enak dipakai.
         </h1>
 
         <p className="mt-6 max-w-xl text-base leading-relaxed text-mist-400">
-          Kumpulan proyek fullstack, eksperimen infrastruktur, dan hal-hal yang saya kerjakan di
-          waktu luang. Semuanya self-hosted.
+          Kumpulan proyek fullstack, eksperimen infrastruktur, dan hal-hal yang
+          saya kerjakan di waktu luang. Semuanya self-hosted.
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -92,10 +106,15 @@ export default async function HomePage() {
 
         {projects.length === 0 ? (
           <div className="glass reveal rounded-3xl px-8 py-20 text-center">
-            <p className="font-display text-lg text-mist-200">Belum ada proyek di sini.</p>
+            <p className="font-display text-lg text-mist-200">
+              Belum ada proyek di sini.
+            </p>
             <p className="mt-2 text-sm text-mist-400">
               Masuk ke{" "}
-              <Link href="/admin" className="text-aurora underline-offset-4 hover:underline">
+              <Link
+                href="/admin"
+                className="text-aurora underline-offset-4 hover:underline"
+              >
                 panel admin
               </Link>{" "}
               untuk menambahkan proyek pertama.
@@ -112,7 +131,9 @@ export default async function HomePage() {
 
       <footer className="mt-28 border-t border-white/8 pt-8 text-xs text-mist-400">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span>© {new Date().getFullYear()} chiyu.my.id — self-hosted di rumah.</span>
+          <span>
+            © {new Date().getFullYear()} chiyu.my.id — self-hosted di rumah.
+          </span>
           <span>Next.js · PostgreSQL · Docker · Cloudflare Tunnel</span>
         </div>
       </footer>

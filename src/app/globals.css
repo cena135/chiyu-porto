@@ -2,7 +2,8 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-display:
+    var(--font-outfit), var(--font-inter), ui-sans-serif, sans-serif;
 
   /* Palet gelap bertingkat — bukan hitam/putih kaku */
   --color-ink-950: oklch(0.16 0.018 275);
@@ -104,7 +105,12 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, var(--color-aurora), var(--color-violet), var(--color-ember));
+  background: linear-gradient(
+    135deg,
+    var(--color-aurora),
+    var(--color-violet),
+    var(--color-ember)
+  );
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -116,7 +122,8 @@ body {
 }
 .card-hover:hover {
   transform: translateY(-8px);
-  box-shadow: 0 40px 80px -40px color-mix(in oklab, var(--color-violet) 55%, transparent);
+  box-shadow: 0 40px 80px -40px
+    color-mix(in oklab, var(--color-violet) 55%, transparent);
 }
 .card-hover:hover::after {
   opacity: 0.85;
@@ -149,7 +156,8 @@ body {
 }
 .btn-glow:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 40px -18px color-mix(in oklab, var(--color-aurora) 80%, transparent);
+  box-shadow: 0 18px 40px -18px
+    color-mix(in oklab, var(--color-aurora) 80%, transparent);
 }
 .btn-glow:hover::before {
   background-position: 100% 0;
@@ -166,8 +174,53 @@ body {
   }
 }
 
+/* ---------- Slide-in kartu proyek (kanan -> kiri, sambil membesar) ----------
+   Dipasang di WRAPPER, bukan di kartu: .card-hover memakai transform untuk efek
+   hover, dan animation-fill-mode akan mengunci transform kalau ditumpuk di
+   elemen yang sama. Wrapper animasi masuk, kartu urus hover. */
+.slide-in {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.slide-in.is-visible {
+  /* easing expo-out: cepat di awal, mendarat pelan — terasa mahal, bukan kaku */
+  animation: slide-in-right 0.78s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--stagger, 0ms);
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translate3d(56px, 12px, 0) scale(0.94);
+    filter: blur(6px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Lepas will-change setelah selesai supaya tidak menahan layer GPU
+   (T480 CPU-nya terbatas, jangan ditinggali compositing layer menganggur). */
+.slide-in.is-done {
+  will-change: auto;
+}
+
+/* Tanpa JS: IntersectionObserver tidak pernah jalan. Fallback-nya dipasang lewat
+   <noscript> di src/app/page.tsx supaya kartu tidak tersangkut tak terlihat. */
+
 .text-gradient {
-  background: linear-gradient(100deg, var(--color-mist-200), var(--color-aurora), var(--color-violet));
+  background: linear-gradient(
+    100deg,
+    var(--color-mist-200),
+    var(--color-aurora),
+    var(--color-violet)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -198,5 +251,12 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  /* Jangan sampai kartu ikut tersembunyi permanen saat animasi dimatikan. */
+  .slide-in {
+    opacity: 1;
+  }
+  .slide-in.is-visible {
+    animation-delay: 0ms !important;
   }
 }
