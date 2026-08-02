@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { PROJECT_ORDER, WITH_IMAGES, parseProjectForm, uniqueSlug } from "@/lib/projects";
+import { PROJECT_ORDER, WITH_IMAGES, parseProjectForm, revalidatePublic, uniqueSlug } from "@/lib/projects";
 import { MAX_GALLERY, saveUploads } from "@/lib/upload";
 
 export const runtime = "nodejs";
@@ -60,6 +59,6 @@ export async function POST(req: NextRequest) {
     include: WITH_IMAGES,
   });
 
-  revalidatePath("/");
+  revalidatePublic();
   return NextResponse.json({ project }, { status: 201 });
 }

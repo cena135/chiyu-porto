@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { WITH_IMAGES, parseProjectForm, uniqueSlug } from "@/lib/projects";
+import { WITH_IMAGES, parseProjectForm, revalidatePublic, uniqueSlug } from "@/lib/projects";
 import { MAX_GALLERY, deleteUpload, saveUploads } from "@/lib/upload";
 
 export const runtime = "nodejs";
@@ -116,7 +115,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   );
 
   const project = await prisma.project.findUnique({ where: { id }, include: WITH_IMAGES });
-  revalidatePath("/");
+  revalidatePublic();
   return NextResponse.json({ project });
 }
 
@@ -132,6 +131,6 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
   await prisma.project.delete({ where: { id } });
   await Promise.all(existing.images.map((img) => deleteUpload(img.url)));
 
-  revalidatePath("/");
+  revalidatePublic();
   return NextResponse.json({ ok: true });
 }

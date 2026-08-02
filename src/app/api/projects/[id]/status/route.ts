@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { WITH_IMAGES } from "@/lib/projects";
+import { WITH_IMAGES, revalidatePublic } from "@/lib/projects";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,6 +37,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     include: WITH_IMAGES,
   });
 
-  revalidatePath("/");
+  revalidatePublic();
   return NextResponse.json({ project });
 }

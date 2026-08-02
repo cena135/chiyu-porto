@@ -1,6 +1,17 @@
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import type { Project, ProjectImage } from "@prisma/client";
 import { prisma } from "./prisma";
+
+/**
+ * Segarkan seluruh halaman publik setelah admin mengubah data.
+ * Wajib ikut menyegarkan /p/[slug] — kalau hanya "/", halaman detail akan
+ * menyajikan data basi sampai 60 detik berikutnya.
+ */
+export function revalidatePublic() {
+  revalidatePath("/");
+  revalidatePath("/p/[slug]", "page");
+}
 
 /** Bentuk data yang dipakai di seluruh UI — proyek selalu dibawa bersama galerinya. */
 export type ProjectWithImages = Project & { images: ProjectImage[] };
