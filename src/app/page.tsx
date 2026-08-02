@@ -92,7 +92,9 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section id="karya" className="scroll-mt-20">
+      {/* Offset pendaratan diatur global lewat scroll-padding-top di html,
+          jangan tambah scroll-mt di sini atau jaraknya jadi dobel. */}
+      <section id="karya">
         <div className="reveal mb-10 flex items-end justify-between gap-6 border-b border-white/8 pb-6">
           <div>
             <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">

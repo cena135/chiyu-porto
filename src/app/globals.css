@@ -25,7 +25,11 @@
 }
 
 html {
+  /* Gulir halus untuk semua anchor (#karya dari tombol "Lihat Karya"). */
   scroll-behavior: smooth;
+  /* Sisakan ruang di atas target supaya judul section tidak mepet tepi layar
+     saat pendaratan. Berlaku global, tidak perlu scroll-mt di tiap target. */
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -251,6 +255,11 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  /* Gulir meluncur ikut dimatikan — memaksa smooth scroll ke user yang minta
+     "kurangi animasi" bisa memicu motion sickness. Lompat langsung saja. */
+  html {
+    scroll-behavior: auto;
   }
   /* Jangan sampai kartu ikut tersembunyi permanen saat animasi dimatikan. */
   .slide-in {
