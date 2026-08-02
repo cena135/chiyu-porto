@@ -35,6 +35,8 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │   │                                            .card-hover, .btn-glow, .reveal, aurora-field
 │   ├── page.tsx                              <- FRONTEND PUBLIK. Grid proyek auto-grow.
 │   │                                            revalidate = 60 detik.
+│   ├── p/[slug]/page.tsx                     <- HALAMAN DETAIL PROYEK (SSG + ISR 60s)
+│   ├── not-found.tsx                         <- 404 bergaya premium
 │   ├── sign-in/[[...sign-in]]/page.tsx       <- halaman login Clerk
 │   ├── admin/
 │   │   ├── page.tsx                          <- server component, gate requireAdmin()
@@ -49,7 +51,8 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │       ├── uploads/[...path]/route.ts        <- serve gambar dari UPLOAD_DIR, anti traversal
 │       └── health/route.ts                   <- dipakai healthcheck docker-compose
 │
-├── src/components/ProjectCard.tsx            <- kartu proyek + wrapper animasi slide-in
+├── src/components/ProjectCard.tsx            <- kartu proyek, stretched link ke /p/[slug]
+├── src/components/ProjectGallery.tsx         <- galeri halaman detail (cover besar + grid)
 ├── src/components/Lightbox.tsx               <- viewer galeri (panah, Esc, thumbnail strip)
 ├── src/lib/useInView.ts                      <- hook IntersectionObserver, sekali picu
 │
@@ -152,6 +155,17 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
       status, urutan, toggle terbitkan/unggulan instan, modal Kelola Gambar, seeder dummy
 - [x] Seeder `prisma/seed.mjs` — dijalankan di server:
       `docker compose exec app node prisma/seed.mjs` (`--reset` hapus, `--force` timpa)
+
+- [x] Halaman detail `/p/[slug]` (2 Agu 2026). Kartu beranda kini menuju halaman ini, bukan
+      lightbox. Diverifikasi live: 3 slug → 200, draf → 404, slug ngawur → 404.
+
+**JEBAKAN TAMBAHAN (jangan diulang):**
+9. **Kartu memakai pola stretched link**, bukan `<a>` yang membungkus seluruh kartu — anchor
+   bersarang itu HTML tidak sah dan bikin tautan Live/Source tidak bisa diklik. Overlay
+   `<Link className="absolute inset-0 z-0">`, isi teks `pointer-events-none`, tautan keluar
+   `pointer-events-auto z-10`.
+10. **Mutasi admin wajib memanggil `revalidatePublic()`** (`src/lib/projects.ts`), bukan
+   `revalidatePath("/")` saja — kalau tidak, `/p/[slug]` menyajikan data basi sampai 60 detik.
 
 **KEPUTUSAN: `featured` & `published` TIDAK DIHAPUS.**
 CEO minta evaluasi "hapus jika tidak ada fungsinya". Hasil evaluasi: keduanya berfungsi nyata.
