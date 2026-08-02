@@ -44,7 +44,9 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │       ├── uploads/[...path]/route.ts        <- serve gambar dari UPLOAD_DIR, anti traversal
 │       └── health/route.ts                   <- dipakai healthcheck docker-compose
 │
-├── src/components/ProjectCard.tsx            <- kartu proyek di halaman publik
+├── src/components/ProjectCard.tsx            <- kartu proyek + wrapper animasi slide-in
+├── src/components/Lightbox.tsx               <- viewer galeri (panah, Esc, thumbnail strip)
+├── src/lib/useInView.ts                      <- hook IntersectionObserver, sekali picu
 │
 ├── src/lib/
 │   ├── prisma.ts                             <- singleton PrismaClient
@@ -82,6 +84,14 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
    Lapis kedua: `ADMIN_EMAILS` di `.env`, dicek di `src/lib/auth.ts`.
 5. **`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` ter-inline saat build image.** Kalau kunci Clerk
    berubah → WAJIB `docker compose build --no-cache app`. Restart doang percuma.
+6. **Animasi masuk dipasang di WRAPPER `.slide-in`, bukan di `.card-hover`.** `.card-hover`
+   memakai `transform` untuk efek angkat; kalau animasi bertumpuk di elemen yang sama,
+   `animation-fill-mode: both` mengunci transform dan hover-nya mati. Jangan digabung.
+7. **Stagger animasi pakai `index % 3`, bukan index global.** Kalau global, kartu di baris
+   ke-10 harus menunggu antrean 10 x delay saat baru di-scroll ke sana.
+8. **Migrasi TIDAK jalan di entrypoint app.** Itu tugas service `migrate` (stage builder).
+   Runner sengaja cuma bawa query engine — memetik sebagian `node_modules` bikin CLI Prisma
+   kehilangan dependensi transitif dan container restart terus.
 
 ---
 
@@ -127,6 +137,8 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 - [x] Push ke GitHub
 - [x] Galeri multi-gambar per proyek (tabel `ProjectImage`, lightbox, manajer urutan/cover)
 - [x] Deploy perdana ke T480 — verified end-to-end (tabel DB, health, tulis uploads, domain publik)
+- [x] Animasi grid slide-in kanan→kiri saat masuk viewport (2 Agu 2026) — diverifikasi di
+      produksi dengan 4 kartu uji: stagger 0/90/180/0ms benar, CSS terkirim, data uji sudah dihapus
 
 **PR/UTANG YANG MASIH MENGGANTUNG (WAJIB DIBACA AGEN BERIKUTNYA):**
 - [ ] **`ADMIN_EMAILS` di `.env` server masih `you@example.com`** → CEO belum bisa masuk `/admin`.
