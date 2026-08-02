@@ -10,7 +10,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed": "node prisma/seed.mjs",
+    "db:seed:reset": "node prisma/seed.mjs --reset"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",
