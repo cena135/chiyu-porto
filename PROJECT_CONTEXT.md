@@ -139,6 +139,9 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 - [x] Deploy perdana ke T480 — verified end-to-end (tabel DB, health, tulis uploads, domain publik)
 - [x] Animasi grid slide-in kanan→kiri saat masuk viewport (2 Agu 2026) — diverifikasi di
       produksi dengan 4 kartu uji: stagger 0/90/180/0ms benar, CSS terkirim, data uji sudah dihapus
+- [x] Smooth scroll tombol "Lihat Karya" → `#karya`. CSS-native (`scroll-behavior: smooth` +
+      `scroll-padding-top: 5rem` di `html`), nol JS. Dimatikan otomatis saat
+      `prefers-reduced-motion`. JANGAN tambah `scroll-mt-*` di section target — offset jadi dobel.
 
 **PR/UTANG YANG MASIH MENGGANTUNG (WAJIB DIBACA AGEN BERIKUTNYA):**
 - [ ] **`ADMIN_EMAILS` di `.env` server masih `you@example.com`** → CEO belum bisa masuk `/admin`.
