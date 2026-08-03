@@ -92,7 +92,7 @@ export default async function HomePage() {
       {/* ---------- Navigasi ---------- */}
       <header className="reveal flex items-center justify-between gap-4 py-8">
         <Link href="/" className="display text-lg">
-          chiyu<span className="text-aurora">.</span>
+          Porto
         </Link>
         <div className="flex items-center gap-6">
           <a href="#karya" className="eyebrow transition-colors hover:text-mist-200">
@@ -214,7 +214,7 @@ export default async function HomePage() {
           <div className="lg:col-span-7">
             <span className="eyebrow">Indeks · 01</span>
             <h2 className="display mt-4 text-[clamp(2rem,5vw,3.75rem)] text-mist-200">
-              Karya Terpilih
+              My Projects
             </h2>
           </div>
           <div className="lg:col-span-5 lg:text-right">
@@ -253,7 +253,7 @@ export default async function HomePage() {
           <div className="lg:col-span-5">
             <span className="eyebrow eyebrow-bright">Kontak</span>
             <p className="display mt-4 text-[clamp(1.75rem,4vw,3rem)] text-mist-200">
-              Punya ide yang layak dibangun?
+              Punya ide? Contact me
             </p>
           </div>
 

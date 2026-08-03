@@ -78,7 +78,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           href="/"
           className="font-display text-sm font-semibold tracking-tight text-mist-400 transition-colors hover:text-mist-200"
         >
-          chiyu<span className="text-aurora">.</span>
+          Porto
         </Link>
       </nav>
 
