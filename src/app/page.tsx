@@ -89,19 +89,11 @@ export default async function HomePage() {
         <style>{`.slide-in{opacity:1 !important}`}</style>
       </noscript>
 
-      {/* ---------- Navigasi ---------- */}
-      <header className="reveal flex items-center justify-between gap-4 py-8">
+      {/* ---------- Kepala: tinggal wordmark, menu kanan atas dihapus ---------- */}
+      <header className="reveal flex items-center py-8">
         <Link href="/" className="display text-lg">
           Porto
         </Link>
-        <div className="flex items-center gap-6">
-          <a href="#karya" className="eyebrow transition-colors hover:text-mist-200">
-            Karya
-          </a>
-          <Link href="/admin" className="eyebrow transition-colors hover:text-mist-200">
-            Admin
-          </Link>
-        </div>
       </header>
 
       {/* ---------- Hero: 12 kolom, teks berat di kiri, meta menggantung di kanan ---------- */}
