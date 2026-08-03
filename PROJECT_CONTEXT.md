@@ -164,6 +164,16 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 
 - [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
 
+**JEBAKAN CACHE — JANGAN kembalikan halaman publik ke `revalidate`:**
+`src/app/page.tsx` dan `src/app/p/[slug]/page.tsx` memakai `export const dynamic = "force-dynamic"`.
+Dengan ISR, Next mengirim `s-maxage=60, stale-while-revalidate=31535940`. `s-maxage` hanya
+berlaku untuk cache bersama, padahal Cloudflare di depan kita **tidak mencache HTML**
+(`cf-cache-status: DYNAMIC`) — jadi sia-sia. Yang tersisa `stale-while-revalidate` ~1 tahun yang
+**dipatuhi browser**, sehingga hasil edit admin baru muncul setelah hard refresh.
+Sesudah force-dynamic: `cache-control: private, no-cache, no-store` dan perubahan data langsung
+tampil pada permintaan berikutnya (sudah diuji 3 Agu 2026).
+`revalidatePublic()` tetap dipertahankan — murah, dan berguna kalau caching CDN diaktifkan nanti.
+
 **JEBAKAN GULIR #2 — kalau anchor tiba-tiba melompat lagi, CEK INI DULU:**
 Kalau OS menyalakan **reduce motion** (Windows: Settings > Accessibility > Visual effects >
 Animation effects OFF), **Chromium mematikan SELURUH smooth scroll bawaan**: CSS
