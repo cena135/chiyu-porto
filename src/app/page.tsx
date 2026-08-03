@@ -6,6 +6,59 @@ import { ProjectCard } from "@/components/ProjectCard";
 // Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
 export const revalidate = 60;
 
+/** Ikon digambar inline sebagai SVG — tidak menambah dependensi maupun request. */
+const ikon = "h-[18px] w-[18px]";
+
+const IconMail = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+    <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+    <path d="m3 7 8.2 5.6a1.4 1.4 0 0 0 1.6 0L21 7" strokeLinecap="round" />
+  </svg>
+);
+
+const IconInstagram = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const IconWhatsApp = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+    <path d="M3.8 20.2l1.2-4a8 8 0 1 1 3 3l-4.2 1z" strokeLinejoin="round" />
+    <path
+      d="M9 8.6c.3-.1.6 0 .8.3l.7 1.2c.1.3.1.6-.1.8l-.5.5a5.4 5.4 0 0 0 2.7 2.7l.5-.5c.2-.2.5-.2.8-.1l1.2.7c.3.2.4.5.3.8-.3.9-1.2 1.4-2.1 1.2A7.4 7.4 0 0 1 7.8 10c-.2-.9.3-1.8 1.2-2.1z"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const KONTAK = [
+  {
+    label: "Email",
+    tampil: "alexanderjoedo@gmail.com",
+    href: "mailto:alexanderjoedo@gmail.com",
+    eksternal: false,
+    icon: IconMail,
+  },
+  {
+    label: "Instagram",
+    tampil: "@alexanderjoedo",
+    href: "https://instagram.com/alexanderjoedo",
+    eksternal: true,
+    icon: IconInstagram,
+  },
+  {
+    label: "WhatsApp",
+    tampil: "081252729777",
+    // Nomor dipakai dalam format internasional (62...) karena wa.me menolak awalan 0.
+    href: "https://wa.me/6281252729777?text=Halo%20Alexander,%20saya%20melihat%20portofolio%20Anda%20dan%20tertarik%20untuk%20berdiskusi.",
+    eksternal: true,
+    icon: IconWhatsApp,
+  },
+];
+
 async function getProjects() {
   try {
     return await prisma.project.findMany({
@@ -104,10 +157,10 @@ export default async function HomePage() {
               Lihat Karya
             </a>
             <a
-              href="mailto:hello@chiyu.my.id"
+              href="#contact"
               className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"
             >
-              Hubungi Saya
+              Contact me
             </a>
           </div>
         </aside>
@@ -167,28 +220,52 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* ---------- Kaki ---------- */}
-      <footer className="mt-40">
-        <hr className="hairline mb-10" />
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <p className="display text-[clamp(1.75rem,4vw,3rem)] text-mist-200">
+      {/* ---------- Kaki / Kontak ---------- */}
+      <footer id="contact" className="mt-40 scroll-mt-24">
+        <hr className="hairline mb-12" />
+
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <span className="eyebrow">Kontak</span>
+            <p className="display mt-4 text-[clamp(1.75rem,4vw,3rem)] text-mist-200">
               Punya ide yang layak dibangun?
             </p>
-            <a
-              href="mailto:hello@chiyu.my.id"
-              className="group mt-5 inline-flex items-center gap-3 text-sm text-aurora"
-            >
-              hello@chiyu.my.id
-              <span className="transition-transform group-hover:translate-x-1.5">→</span>
-            </a>
           </div>
-          <div className="flex flex-col justify-end gap-2 lg:col-span-5 lg:items-end">
-            <span className="eyebrow">© {tahun} chiyu.my.id</span>
-            <span className="text-xs text-mist-400/70">
-              Di-hosting sendiri · Next.js · PostgreSQL · Docker
-            </span>
-          </div>
+
+          {/* Tiga kanal kontak, dipisah garis rambut bukan kotak-kotak */}
+          <ul className="lg:col-span-7 lg:pt-2">
+            {KONTAK.map(({ label, tampil, href, eksternal, icon }) => (
+              <li key={label} className="border-t border-white/8 first:border-t-0">
+                <a
+                  href={href}
+                  {...(eksternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="group flex items-center gap-4 py-4 transition-colors hover:text-aurora sm:gap-6"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-mist-400 transition-all group-hover:border-aurora/50 group-hover:text-aurora">
+                    {icon}
+                  </span>
+
+                  <span className="eyebrow w-24 shrink-0">{label}</span>
+
+                  <span className="min-w-0 flex-1 truncate text-sm text-mist-200 transition-colors group-hover:text-aurora">
+                    {tampil}
+                  </span>
+
+                  <span className="shrink-0 text-mist-400 transition-transform group-hover:translate-x-1.5 group-hover:text-aurora">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <hr className="hairline mt-14" />
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
+          <span className="eyebrow">© {tahun} Alexander Imanuel Joedo</span>
+          <span className="text-xs text-mist-400/70">
+            Di-hosting sendiri · Next.js · PostgreSQL · Docker
+          </span>
         </div>
       </footer>
     </main>
