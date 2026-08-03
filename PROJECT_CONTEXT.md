@@ -164,6 +164,13 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 
 - [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
 
+**JEBAKAN GULIR (sudah pernah menggigit sekali):**
+`body { overflow-x: hidden }` menjadikan **body** sebagai elemen penggulir, sehingga
+`scroll-behavior: smooth` di `html` TIDAK PERNAH berlaku — tombol anchor melompat instan
+padahal CSS-nya terlihat benar. Selalu pakai **`overflow-x: clip`**, bukan `hidden`.
+Selain itu tautan anchor memakai `src/components/SmoothScrollLink.tsx` (memaksa gulir lewat
+`window.scrollTo`), jadi tidak bergantung pada CSS sama sekali.
+
 **BAHASA VISUAL — IKUTI INI, JANGAN KEMBALI KE KARTU SERAGAM:**
 Arah desain: editorial/agency, bukan grid kartu simetris (itu ciri UI generik).
 - `.display` judul raksasa `clamp()` sampai 7rem, tracking -0.045em, leading 0.92
