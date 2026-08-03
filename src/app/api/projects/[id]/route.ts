@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { WITH_IMAGES, parseProjectForm, revalidatePublic, uniqueSlug } from "@/lib/projects";
+import {
+  PUBLIC_WHERE,
+  WITH_IMAGES,
+  parseProjectForm,
+  revalidatePublic,
+  uniqueSlug,
+} from "@/lib/projects";
 import { MAX_GALLERY, deleteUpload, saveUploads } from "@/lib/upload";
 
 export const runtime = "nodejs";
@@ -9,9 +15,27 @@ export const dynamic = "force-dynamic";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+/**
+ * Ambil satu proyek.
+ *
+ * KERENTANAN YANG DITAMBAL: dulu handler ini tidak memeriksa apa pun, dan
+ * middleware sengaja membebaskan semua GET di /api/projects. Akibatnya siapa pun
+ * tanpa login bisa membaca proyek DRAF maupun yang di-`isHidden` (internal/NDA)
+ * secara utuh — cukup tahu id-nya. Terbukti mengembalikan 200 saat diuji.
+ *
+ * Sekarang: admin boleh membaca apa pun; publik hanya boleh membaca proyek yang
+ * memang layak tampil. Selain itu dijawab 404 — bukan 403 — supaya tidak
+ * membocorkan bahwa id tersebut ada.
+ */
 export async function GET(_req: NextRequest, { params }: Ctx) {
   const { id } = await params;
-  const project = await prisma.project.findUnique({ where: { id }, include: WITH_IMAGES });
+  const gate = await requireAdmin();
+
+  const project = await prisma.project.findFirst({
+    where: gate.ok ? { id } : { id, ...PUBLIC_WHERE },
+    include: WITH_IMAGES,
+  });
+
   if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ project });
 }

@@ -13,7 +13,17 @@ export async function requireAdmin() {
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 
-  if (allow.length === 0) return { ok: true as const, userId };
+  // GAGAL-TERTUTUP. Dulu daftar kosong berarti "semua user Clerk boleh" — satu
+  // salah konfigurasi (variabel lupa diisi / typo) langsung memberi hak tulis
+  // penuh ke siapa pun yang berhasil mendaftar di instance Clerk. Sekarang
+  // ditolak, karena diam-diam terbuka jauh lebih berbahaya daripada terkunci.
+  if (allow.length === 0) {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "ADMIN_EMAILS belum diisi di server, jadi tidak ada yang berhak masuk admin.",
+    };
+  }
 
   const user = await currentUser();
   const emails = (user?.emailAddresses ?? []).map((e) => e.emailAddress.toLowerCase());
