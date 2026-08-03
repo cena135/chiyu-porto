@@ -159,6 +159,19 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 - [x] Halaman detail `/p/[slug]` (2 Agu 2026). Kartu beranda kini menuju halaman ini, bukan
       lightbox. Diverifikasi live: 3 slug → 200, draf → 404, slug ngawur → 404.
 
+- [x] Sistem gerak disatukan (3 Agu 2026). Token easing/durasi di `@theme`, modal & fokus
+      diperhalus. Diverifikasi di CSS produksi.
+
+**SISTEM GERAK — PAKAI TOKEN, JANGAN TULIS ANGKA MENTAH:**
+Semua di `src/app/globals.css` blok `@theme`:
+- Durasi: `--dur-fast 180ms` · `--dur-base 300ms` · `--dur-slow 460ms` · `--dur-entrance 700ms`
+- Easing: `--ease-out-quart` (UI umum) · `--ease-out-expo` (animasi masuk) · `--ease-spring` (modal)
+- `--default-transition-duration` & `--default-transition-timing-function` di-override, jadi
+  SEMUA utilitas `transition-*` Tailwind ikut (default aslinya cuma 150ms dan terasa patah).
+  Artinya: **tidak perlu menulis `duration-*` di tiap elemen.**
+- Kelas siap pakai: `.reveal` `.slide-in` `.fade-up` `.pop-in` `.modal-backdrop` `.modal-panel`
+  `.media-swap`
+
 **JEBAKAN TAMBAHAN (jangan diulang):**
 9. **Kartu memakai pola stretched link**, bukan `<a>` yang membungkus seluruh kartu — anchor
    bersarang itu HTML tidak sah dan bikin tautan Live/Source tidak bisa diklik. Overlay
