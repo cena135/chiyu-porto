@@ -177,11 +177,23 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 Sudah dipastikan bersih: nol kebocoran rahasia di bundel klien (password Postgres,
 `CLERK_SECRET_KEY`, `DATABASE_URL`, pola `sk_*` semuanya 0 kemunculan).
 
+3. `/api/uploads/*` dulu menyajikan berkas apa pun di folder itu, termasuk gambar proyek draf
+   dan NDA. Sekarang tiap permintaan mencari baris `ProjectImage`-nya dan memeriksa status
+   proyek induk: bebas hanya kalau `published && !isHidden`, selain itu wajib admin (kalau
+   bukan, **404**). Berkas yatim ikut ditutup.
+   **`Cache-Control` WAJIB `private`** (`private, max-age=600` untuk publik, `private, no-store`
+   untuk tertutup). Jangan kembalikan ke `public, immutable`: dengan `public`, Cloudflare
+   menyimpan salinan di edge dan tetap menyajikannya ke siapa pun walau origin sudah 404.
+
+⚠️ **UTANG SATU KALI: purge cache Cloudflare.** Berkas yang terlanjur ter-cache di edge dengan
+header lama (`public, max-age=31536000, immutable`) masih disajikan edge — terbukti
+`cf-cache-status: HIT, age: 11417` pada gambar proyek draf, padahal origin sudah 404.
+Sekali purge di dashboard Cloudflare (Caching → Configuration → Purge Everything) menyelesaikan
+ini; setelahnya `private` mencegahnya terulang.
+
 Sisa risiko yang DISADARI dan belum ditambal (bukan celah aktif):
 - Whitelist MIME upload memakai `file.type` dari klien; hanya admin yang bisa upload, dan SVG
-  disajikan dengan `Content-Security-Policy: sandbox` sehingga tidak bisa mengeksekusi skrip.
-- `/api/uploads/*` menyajikan berkas apa pun di folder itu — termasuk gambar proyek NDA — tapi
-  nama berkasnya acak dan tidak dapat ditebak.
+  disajikan dengan `Content-Security-Policy: sandbox` + `X-Content-Type-Options: nosniff`.
 - Belum ada rate limit di API.
 - Kunci Clerk masih `pk_test`/`sk_test` (instance development) di domain produksi.
 
