@@ -58,6 +58,133 @@ body {
   overflow-x: hidden;
 }
 
+/* ---------- Grain film + vignette ----------
+   Detail yang paling cepat menghapus kesan "render digital bersih": tekstur.
+   Noise dibuat lewat feTurbulence sebagai data URI — nol request, nol file.
+   Sengaja STATIS (tidak dianimasikan): grain bergerak memaksa repaint seluruh
+   viewport tiap frame, dan T480 tidak punya anggaran untuk itu. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.042;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Vignette asimetris — pusat terang digeser ke kiri atas, bukan tengah mati */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 89;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 22% 8%,
+    transparent 30%,
+    color-mix(in oklab, var(--color-ink-950) 78%, transparent) 100%
+  );
+}
+
+/* ---------- Tipografi editorial ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+/* Label kecil huruf besar berjarak — penyeimbang tipografi raksasa */
+.eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-mist-400) 85%, transparent);
+}
+
+/* Angka indeks raksasa di belakang konten, gaya majalah */
+.ghost-index {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklab, var(--color-mist-200) 16%, transparent);
+}
+
+/* Kata bergaris tepi — kontras dengan teks padat di sebelahnya */
+.outlined {
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--color-mist-200) 55%, transparent);
+}
+
+/* Garis rambut: 1px yang memudar di ujung, bukan border kaku penuh */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-mist-200) 22%, transparent),
+    transparent 85%
+  );
+}
+
+/* ---------- Grid karya asimetris ----------
+   Lebar kolom berselang-seling (7/5) dan baris digeser turun-naik supaya
+   tidak terbaca sebagai matriks seragam.
+   PENTING: pergeseran memakai margin, BUKAN transform — .slide-in menganimasikan
+   transform dengan fill-mode both, jadi transform statis di sini akan tertimpa. */
+.work-grid {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .work-grid {
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2.5rem 2rem;
+  }
+  .work-grid > *:nth-child(4n + 1) {
+    grid-column: span 7;
+  }
+  .work-grid > *:nth-child(4n + 2) {
+    grid-column: span 5;
+    margin-top: 4.5rem;
+  }
+  .work-grid > *:nth-child(4n + 3) {
+    grid-column: span 5;
+  }
+  .work-grid > *:nth-child(4n + 4) {
+    grid-column: span 7;
+    margin-top: -1.5rem;
+  }
+}
+
+/* ---------- Ticker tech stack ----------
+   Hanya menganimasikan transform, jadi composited dan murah di T480. */
+.ticker {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.ticker-track {
+  display: inline-flex;
+  gap: 2.5rem;
+  white-space: nowrap;
+  animation: ticker 38s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+@keyframes ticker {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 /* Aurora ambient — lapisan warna lembut di belakang seluruh halaman */
 .aurora-field {
   position: fixed;
@@ -66,27 +193,32 @@ body {
   pointer-events: none;
   overflow: hidden;
 }
+/* Dua noda dengan ukuran, warna, dan posisi yang sengaja TIDAK simetris —
+   gradasi yang seimbang sempurna justru terbaca sebagai template. */
 .aurora-field::before,
 .aurora-field::after {
   content: "";
   position: absolute;
-  width: 55vmax;
-  height: 55vmax;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.32;
+  filter: blur(100px);
 }
 .aurora-field::before {
-  background: radial-gradient(circle, var(--color-violet), transparent 65%);
-  top: -18vmax;
-  left: -10vmax;
-  animation: drift-a 24s ease-in-out infinite alternate;
+  width: 62vmax;
+  height: 48vmax;
+  opacity: 0.3;
+  background: radial-gradient(circle, var(--color-violet), transparent 62%);
+  top: -22vmax;
+  left: -16vmax;
+  animation: drift-a 26s ease-in-out infinite alternate;
 }
 .aurora-field::after {
-  background: radial-gradient(circle, var(--color-aurora), transparent 65%);
-  bottom: -22vmax;
-  right: -12vmax;
-  animation: drift-b 30s ease-in-out infinite alternate;
+  width: 38vmax;
+  height: 38vmax;
+  opacity: 0.22;
+  background: radial-gradient(circle, var(--color-ember), transparent 60%);
+  top: 42vmax;
+  right: -14vmax;
+  animation: drift-b 34s ease-in-out infinite alternate;
 }
 
 @keyframes drift-a {
@@ -143,9 +275,24 @@ body {
   pointer-events: none;
 }
 .card-hover:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: 0 40px 80px -40px
     color-mix(in oklab, var(--color-violet) 55%, transparent);
+}
+
+/* Radius tidak seragam: sudut kiri-atas jauh lebih besar dari sisanya.
+   Bentuk yang sedikit "salah" inilah yang membuatnya terasa digambar orang. */
+.radius-organic {
+  border-top-left-radius: 2.75rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 2rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.radius-organic-alt {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 2.75rem;
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 2rem;
 }
 .card-hover:hover::after {
   opacity: 0.85;

@@ -20,110 +20,139 @@ async function getProjects() {
 
 export default async function HomePage() {
   const projects = await getProjects();
-  const stacks = [...new Set(projects.flatMap((p) => p.techStack))].slice(
-    0,
-    12,
-  );
+  const stacks = [...new Set(projects.flatMap((p) => p.techStack))];
+  const tahun = new Date().getFullYear();
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-6 pb-28 pt-16 sm:pt-24">
+    <main className="mx-auto w-full max-w-[86rem] px-6 pb-32 sm:px-10">
       {/* Tanpa JS, IntersectionObserver tidak jalan — pastikan kartu tetap terlihat. */}
       <noscript>
         <style>{`.slide-in{opacity:1 !important}`}</style>
       </noscript>
 
-      <header className="reveal flex items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="font-display text-lg font-semibold tracking-tight"
-        >
+      {/* ---------- Navigasi ---------- */}
+      <header className="reveal flex items-center justify-between gap-4 py-8">
+        <Link href="/" className="display text-lg">
           chiyu<span className="text-aurora">.</span>
         </Link>
-        <Link
-          href="/admin"
-          className="glass rounded-full px-4 py-2 text-xs font-medium text-mist-400 transition-colors hover:text-mist-200"
-        >
-          Admin
-        </Link>
+        <div className="flex items-center gap-6">
+          <a href="#karya" className="eyebrow transition-colors hover:text-mist-200">
+            Karya
+          </a>
+          <Link href="/admin" className="eyebrow transition-colors hover:text-mist-200">
+            Admin
+          </Link>
+        </div>
       </header>
 
-      <section
-        className="reveal py-20 sm:py-28"
-        style={{ animationDelay: "80ms" }}
-      >
-        <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-mist-400">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-aurora" />
-          Tersedia untuk proyek baru
-        </span>
+      {/* ---------- Hero: 12 kolom, teks berat di kiri, meta menggantung di kanan ---------- */}
+      <section className="grid grid-cols-1 gap-10 pb-24 pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-36 lg:pt-28">
+        <div className="reveal lg:col-span-8">
+          <div className="mb-8 flex items-center gap-4">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-aurora opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-aurora" />
+            </span>
+            <span className="eyebrow">Tersedia untuk proyek baru</span>
+          </div>
 
-        <h1 className="font-display mt-7 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-6xl">
-          Saya membangun <span className="text-gradient">produk digital</span>{" "}
-          yang rapi, cepat, dan enak dipakai.
-        </h1>
-
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-mist-400">
-          Kumpulan proyek fullstack, eksperimen infrastruktur, dan hal-hal yang
-          saya kerjakan di waktu luang. Semuanya self-hosted.
-        </p>
-
-        <div className="mt-9 flex flex-wrap items-center gap-3">
-          <a
-            href="#karya"
-            className="btn-glow rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
-          >
-            Lihat Karya
-          </a>
-          <a
-            href="mailto:hello@chiyu.my.id"
-            className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"
-          >
-            Hubungi Saya
-          </a>
+          <h1 className="display text-[clamp(2.75rem,8.5vw,7rem)]">
+            <span className="block font-light text-mist-400">Saya membangun</span>
+            <span className="block text-mist-200">produk digital</span>
+            <span className="outlined block">yang terasa</span>
+            <span className="block text-gradient">mahal.</span>
+          </h1>
         </div>
 
-        {stacks.length > 0 && (
-          <div className="mt-14 flex flex-wrap gap-2 opacity-70">
-            {stacks.map((s) => (
-              <span key={s} className="text-xs tracking-wide text-mist-400">
-                {s} <span className="px-1.5 text-ink-700">/</span>
-              </span>
+        {/* Kolom meta — sengaja turun dan tidak sejajar dengan judul */}
+        <aside
+          className="reveal flex flex-col justify-end gap-6 lg:col-span-4 lg:pb-4"
+          style={{ animationDelay: "140ms" }}
+        >
+          <p className="max-w-sm text-sm leading-relaxed text-mist-400">
+            Fullstack developer yang meng-<i>hosting</i> semuanya sendiri. Dari kode sampai
+            server fisik di pojok ruangan — tanpa cloud, tanpa tagihan bulanan.
+          </p>
+
+          <dl className="space-y-0">
+            {[
+              ["Basis", "Indonesia"],
+              ["Fokus", "Web · Infrastruktur"],
+              ["Server", "ThinkPad T480, 24/7"],
+              ["Proyek", `${projects.length} dipublikasikan`],
+            ].map(([k, v]) => (
+              <div key={k} className="flex items-baseline justify-between gap-4 py-2.5">
+                <dt className="eyebrow shrink-0">{k}</dt>
+                <dd className="min-w-0 flex-1 border-b border-dotted border-white/10" />
+                <dd className="shrink-0 text-right text-xs text-mist-200">{v}</dd>
+              </div>
             ))}
+          </dl>
+
+          <div className="flex flex-wrap gap-3 pt-2">
+            <a
+              href="#karya"
+              className="btn-glow rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
+            >
+              Lihat Karya
+            </a>
+            <a
+              href="mailto:hello@chiyu.my.id"
+              className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"
+            >
+              Hubungi Saya
+            </a>
           </div>
-        )}
+        </aside>
       </section>
 
-      {/* Offset pendaratan diatur global lewat scroll-padding-top di html,
-          jangan tambah scroll-mt di sini atau jaraknya jadi dobel. */}
-      <section id="karya">
-        <div className="reveal mb-10 flex items-end justify-between gap-6 border-b border-white/8 pb-6">
-          <div>
-            <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+      {/* ---------- Ticker tech stack ---------- */}
+      {stacks.length > 0 && (
+        <div className="reveal border-y border-white/8 py-5">
+          <div className="ticker">
+            <div className="ticker-track">
+              {/* Digandakan supaya sambungan gulirnya tidak terlihat */}
+              {[...stacks, ...stacks].map((s, i) => (
+                <span key={`${s}-${i}`} className="eyebrow flex items-center gap-2.5">
+                  <span className="text-aurora/50">✦</span>
+                  {s}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------- Indeks karya ---------- */}
+      <section id="karya" className="pt-28">
+        <div className="reveal mb-16 grid grid-cols-1 items-end gap-6 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <span className="eyebrow">Indeks · 01</span>
+            <h2 className="display mt-4 text-[clamp(2rem,5vw,3.75rem)] text-mist-200">
               Karya Terpilih
             </h2>
-            <p className="mt-2 text-sm text-mist-400">
-              {projects.length} proyek dipublikasikan
+          </div>
+          <div className="lg:col-span-5 lg:text-right">
+            <p className="text-sm leading-relaxed text-mist-400">
+              Sebagian dibangun untuk klien, sebagian untuk rasa penasaran sendiri.
             </p>
           </div>
         </div>
+        <hr className="hairline reveal mb-14" />
 
         {projects.length === 0 ? (
-          <div className="glass reveal rounded-3xl px-8 py-20 text-center">
-            <p className="font-display text-lg text-mist-200">
-              Belum ada proyek di sini.
-            </p>
-            <p className="mt-2 text-sm text-mist-400">
+          <div className="glass radius-organic reveal px-8 py-24 text-center">
+            <p className="display text-2xl text-mist-200">Belum ada apa-apa di sini.</p>
+            <p className="mt-3 text-sm text-mist-400">
               Masuk ke{" "}
-              <Link
-                href="/admin"
-                className="text-aurora underline-offset-4 hover:underline"
-              >
+              <Link href="/admin" className="text-aurora underline-offset-4 hover:underline">
                 panel admin
               </Link>{" "}
               untuk menambahkan proyek pertama.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="work-grid">
             {projects.map((project, i) => (
               <ProjectCard key={project.id} project={project} index={i} />
             ))}
@@ -131,12 +160,28 @@ export default async function HomePage() {
         )}
       </section>
 
-      <footer className="mt-28 border-t border-white/8 pt-8 text-xs text-mist-400">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span>
-            © {new Date().getFullYear()} chiyu.my.id — self-hosted di rumah.
-          </span>
-          <span>Next.js · PostgreSQL · Docker · Cloudflare Tunnel</span>
+      {/* ---------- Kaki ---------- */}
+      <footer className="mt-40">
+        <hr className="hairline mb-10" />
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="display text-[clamp(1.75rem,4vw,3rem)] text-mist-200">
+              Punya ide yang layak dibangun?
+            </p>
+            <a
+              href="mailto:hello@chiyu.my.id"
+              className="group mt-5 inline-flex items-center gap-3 text-sm text-aurora"
+            >
+              hello@chiyu.my.id
+              <span className="transition-transform group-hover:translate-x-1.5">→</span>
+            </a>
+          </div>
+          <div className="flex flex-col justify-end gap-2 lg:col-span-5 lg:items-end">
+            <span className="eyebrow">© {tahun} chiyu.my.id</span>
+            <span className="text-xs text-mist-400/70">
+              Di-hosting sendiri · Next.js · PostgreSQL · Docker
+            </span>
+          </div>
         </div>
       </footer>
     </main>

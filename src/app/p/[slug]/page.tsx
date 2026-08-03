@@ -64,7 +64,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   });
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 pb-28 pt-10 sm:pt-14">
+    <main className="mx-auto w-full max-w-[76rem] px-6 pb-32 pt-8 sm:px-10">
       {/* ---------- Navigasi atas ---------- */}
       <nav className="reveal flex items-center justify-between gap-4">
         <Link
@@ -82,42 +82,40 @@ export default async function ProjectDetailPage({ params }: Props) {
         </Link>
       </nav>
 
-      {/* ---------- Kepala ---------- */}
-      <header className="reveal py-12 sm:py-16" style={{ animationDelay: "80ms" }}>
-        <div className="flex flex-wrap items-center gap-3">
-          {project.featured && (
-            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wide text-aurora backdrop-blur-md">
-              Unggulan
-            </span>
-          )}
-          <span className="text-[11px] tracking-wide text-mist-400/70">{dibuat}</span>
+      {/* ---------- Kepala: judul raksasa di kiri, meta menggantung di kanan ---------- */}
+      <header className="reveal py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
+        <div className="flex flex-wrap items-center gap-4">
+          {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
+          <span className="eyebrow">{dibuat}</span>
           {project.images.length > 0 && (
-            <span className="text-[11px] tracking-wide text-mist-400/70">
-              · {project.images.length} screenshot
-            </span>
+            <span className="eyebrow">{project.images.length} screenshot</span>
           )}
         </div>
 
-        <h1 className="font-display mt-5 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
+        <h1 className="display mt-6 text-[clamp(2.5rem,7vw,5.5rem)]">
           <span className="text-gradient">{project.title}</span>
         </h1>
 
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-mist-400">
-          {project.description}
-        </p>
+        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <p className="text-base leading-relaxed text-mist-400 lg:col-span-7">
+            {project.description}
+          </p>
 
-        {project.techStack.length > 0 && (
-          <div className="mt-7 flex flex-wrap gap-2">
-            {project.techStack.map((tech) => (
-              <span
-                key={tech}
-                className="glass rounded-full px-3 py-1.5 text-xs text-mist-200 transition-colors hover:border-white/25"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        )}
+          {project.techStack.length > 0 && (
+            <dl className="lg:col-span-5">
+              <dt className="eyebrow mb-3">Dibangun dengan</dt>
+              <dd className="flex flex-wrap gap-x-5 gap-y-2">
+                {project.techStack.map((tech) => (
+                  <span key={tech} className="text-sm text-mist-200">
+                    {tech}
+                  </span>
+                ))}
+              </dd>
+            </dl>
+          )}
+        </div>
+
+        <hr className="hairline mt-10" />
 
         {(project.liveUrl || project.repoUrl) && (
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -156,10 +154,13 @@ export default async function ProjectDetailPage({ params }: Props) {
       {/* ---------- Catatan panjang ---------- */}
       {project.content && (
         <section
-          className="glass reveal mt-8 rounded-3xl p-7 sm:p-9"
+          className="radius-organic reveal mt-10 border border-white/8 bg-ink-900/30 p-8 backdrop-blur-xl sm:p-11"
           style={{ animationDelay: "220ms" }}
         >
-          <h2 className="font-display text-lg font-semibold tracking-tight">Tentang Proyek Ini</h2>
+          <span className="eyebrow">Catatan</span>
+          <h2 className="display mt-3 text-[clamp(1.5rem,3vw,2.25rem)] text-mist-200">
+            Tentang Proyek Ini
+          </h2>
           <div className="mt-4 space-y-4 text-sm leading-relaxed text-mist-400">
             {project.content.split(/\n\s*\n/).map((paragraf, i) => (
               <p key={i} className="whitespace-pre-line">
