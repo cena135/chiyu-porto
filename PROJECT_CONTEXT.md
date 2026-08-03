@@ -216,6 +216,21 @@ Semua di `src/app/globals.css` blok `@theme`:
 10. **Mutasi admin wajib memanggil `revalidatePublic()`** (`src/lib/projects.ts`), bukan
    `revalidatePath("/")` saja — kalau tidak, `/p/[slug]` menyajikan data basi sampai 60 detik.
 
+**TIGA FLAG VISIBILITAS — jangan tertukar:**
+| Flag | Arti | Efek publik |
+|---|---|---|
+| `published: false` | draf, pekerjaan **belum selesai** | disembunyikan |
+| `isHidden: true` | **selesai** tapi internal / NDA | disembunyikan |
+| `featured: true` | naik ke urutan atas + badge | tetap tampil |
+
+Filter publik SELALU lewat `PUBLIC_WHERE` di `src/lib/projects.ts`
+(`{ published: true, isHidden: false }`). Dipakai halaman utama, `/p/[slug]`,
+`generateStaticParams`, dan `GET /api/projects`. **Jangan tulis ulang filternya di tempat lain.**
+
+Catatan: `published` dan `isHidden` efeknya sama-sama menyembunyikan — redundansi ini disadari
+dan disetujui owner (3 Agu 2026), dibedakan hanya lewat makna di UI. Kalau suatu saat mau
+disederhanakan jadi satu flag, itu keputusan owner.
+
 **KEPUTUSAN: `featured` & `published` TIDAK DIHAPUS.**
 CEO minta evaluasi "hapus jika tidak ada fungsinya". Hasil evaluasi: keduanya berfungsi nyata.
 `published` menggerakkan fitur draf (`page.tsx` filter `where: { published: true }`),
