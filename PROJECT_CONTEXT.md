@@ -164,6 +164,16 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 
 - [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
 
+**JEBAKAN GULIR #2 — PALING PENTING:**
+Kalau OS menyalakan **reduce motion** (Windows: Settings > Accessibility > Visual effects >
+Animation effects OFF — owner memakainya demi baterai), **Chromium mematikan SELURUH smooth
+scroll bawaan**: CSS `scroll-behavior` maupun `scrollTo`/`scrollIntoView` dengan
+`behavior:"smooth"` akan langsung melompat, tanpa error apa pun. Menambah JS `behavior:"smooth"`
+TIDAK akan menolong. Satu-satunya cara: animasikan `window.scrollY` sendiri per frame lewat
+`requestAnimationFrame` — lihat `src/components/SmoothScrollLink.tsx`.
+Konsekuensi lain: blok `@media (prefers-reduced-motion: reduce)` di globals.css membuat semua
+animasi lain (slide-in kartu, modal, reveal) TIDAK terlihat oleh owner di laptopnya.
+
 **JEBAKAN GULIR (sudah pernah menggigit sekali):**
 `body { overflow-x: hidden }` menjadikan **body** sebagai elemen penggulir, sehingga
 `scroll-behavior: smooth` di `html` TIDAK PERNAH berlaku — tombol anchor melompat instan
