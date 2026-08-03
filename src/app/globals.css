@@ -81,17 +81,21 @@ body::after {
   background-size: 140px 140px;
 }
 
-/* Vignette asimetris — pusat terang digeser ke kiri atas, bukan tengah mati */
+/* Vignette asimetris — pusat terang digeser ke kiri atas, bukan tengah mati.
+   PENTING: z-index -1, HARUS di belakang konten. Dulu 89 (di depan), dan karena
+   lapisan ini `fixed`, apa pun yang bergulir ke bagian bawah layar tertutup
+   tirai gelap — daftar proyek di admin jadi makin tidak terbaca saat di-scroll.
+   Kepekatannya juga diturunkan 78% -> 55%. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 89;
+  z-index: -1;
   pointer-events: none;
   background: radial-gradient(
-    120% 90% at 22% 8%,
-    transparent 30%,
-    color-mix(in oklab, var(--color-ink-950) 78%, transparent) 100%
+    130% 100% at 22% 8%,
+    transparent 38%,
+    color-mix(in oklab, var(--color-ink-950) 55%, transparent) 100%
   );
 }
 
@@ -204,7 +208,9 @@ body::before {
 .aurora-field {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  /* -2 supaya vignette (-1) tetap jatuh di atas aurora, tapi keduanya
+     tetap di belakang seluruh konten halaman. */
+  z-index: -2;
   pointer-events: none;
   overflow: hidden;
 }
