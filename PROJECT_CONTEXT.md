@@ -164,6 +164,27 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 
 - [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
 
+**AUDIT KEAMANAN (3 Agu 2026) — dua celah ditutup, jangan dibuka lagi:**
+1. `GET /api/projects/[id]` dulu **tanpa penjaga sama sekali**, dan middleware sengaja
+   membebaskan semua GET di `/api/projects`. Siapa pun tanpa login bisa membaca proyek draf
+   maupun `isHidden` (NDA) secara utuh — terbukti balas **200** saat diuji. Sekarang: admin
+   bebas, publik disaring `PUBLIC_WHERE`, selain itu **404** (bukan 403, supaya keberadaan id
+   tidak terkonfirmasi). **Setiap handler GET baru wajib memutuskan sendiri**, jangan
+   mengandalkan middleware.
+2. `requireAdmin` dulu **gagal-terbuka**: `ADMIN_EMAILS` kosong = semua user Clerk jadi admin.
+   Sekarang gagal-tertutup (403 + pesan jelas).
+
+Sudah dipastikan bersih: nol kebocoran rahasia di bundel klien (password Postgres,
+`CLERK_SECRET_KEY`, `DATABASE_URL`, pola `sk_*` semuanya 0 kemunculan).
+
+Sisa risiko yang DISADARI dan belum ditambal (bukan celah aktif):
+- Whitelist MIME upload memakai `file.type` dari klien; hanya admin yang bisa upload, dan SVG
+  disajikan dengan `Content-Security-Policy: sandbox` sehingga tidak bisa mengeksekusi skrip.
+- `/api/uploads/*` menyajikan berkas apa pun di folder itu — termasuk gambar proyek NDA — tapi
+  nama berkasnya acak dan tidak dapat ditebak.
+- Belum ada rate limit di API.
+- Kunci Clerk masih `pk_test`/`sk_test` (instance development) di domain produksi.
+
 **JEBAKAN CACHE — JANGAN kembalikan halaman publik ke `revalidate`:**
 `src/app/page.tsx` dan `src/app/p/[slug]/page.tsx` memakai `export const dynamic = "force-dynamic"`.
 Dengan ISR, Next mengirim `s-maxage=60, stale-while-revalidate=31535940`. `s-maxage` hanya
