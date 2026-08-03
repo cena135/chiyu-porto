@@ -60,13 +60,13 @@ export default async function HomePage() {
             <span className="eyebrow">Lagi terima proyek baru</span>
           </div>
 
-          {/* Skala diturunkan dari 8.5vw/7rem: baris terpanjang kini 17 karakter
-              ("nge-host sendiri.") dan pada layar lebar akan meluber dari kolom. */}
-          <h1 className="display text-[clamp(2.4rem,7vw,5.75rem)]">
-            <span className="block font-light text-mist-400">Halo, saya Chiyu.</span>
-            <span className="block text-mist-200">Saya bikin web,</span>
-            <span className="outlined block">terus nekat</span>
-            <span className="block text-gradient">nge-host sendiri.</span>
+          {/* Kalimatnya utuh "I build and host websites.", dipecah tiga baris supaya
+              tiap bagian dapat perlakuan berbeda. Baris terpanjang cuma 9 karakter,
+              jadi skalanya aman dinaikkan sampai 8rem tanpa meluber dari kolom. */}
+          <h1 className="display text-[clamp(3rem,9vw,8rem)]">
+            <span className="block font-light text-mist-400">I build</span>
+            <span className="outlined block">and host</span>
+            <span className="block text-gradient">websites.</span>
           </h1>
         </div>
 
@@ -75,10 +75,12 @@ export default async function HomePage() {
           className="reveal flex flex-col justify-end gap-6 lg:col-span-4 lg:pb-4"
           style={{ animationDelay: "140ms" }}
         >
-          <p className="max-w-sm text-sm leading-relaxed text-mist-400">
-            Semua yang ada di sini jalan di ThinkPad bekas yang nyala 24 jam di pojok kamar.
-            Bukan di cloud, jadi nggak ada tagihan bulanan. Sejauh ini sih belum ada yang
-            meledak.
+          {/* Ditulis sebagai string JS, bukan teks JSX langsung: apostrof di
+              "you're" akan diprotes aturan lint react/no-unescaped-entities. */}
+          <p className="max-w-md text-sm leading-relaxed text-mist-400">
+            {
+              "Hai, aku Alexander Imanuel Joedo, Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)"
+            }
           </p>
 
           <dl className="space-y-0">
