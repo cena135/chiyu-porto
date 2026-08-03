@@ -113,14 +113,15 @@ export default async function HomePage() {
             <span className="eyebrow">Lagi terima proyek baru</span>
           </div>
 
-          {/* Kalimatnya utuh "I BUILD AND HOST WEBSITES.", dipecah tiga baris supaya
-              tiap bagian dapat perlakuan berbeda. Batas atas diturunkan dari 8rem
-              ke 7.5rem: huruf kapital ~20% lebih lebar dari huruf kecil, dan
-              "WEBSITES." pada 8rem sudah menyenggol tepi kolom di layar lebar. */}
+          {/* Kalimatnya utuh "I Build and Host Websites.", dipecah tiga baris supaya
+              tiap bagian dapat perlakuan berbeda. Kapitalisasi ditulis langsung di
+              teksnya — tidak ada class `uppercase` yang perlu dilepas. Batas atas
+              tetap 7.5rem: "Websites." diawali W yang lebar, jadi belum aman
+              dikembalikan ke 8rem. */}
           <h1 className="display text-[clamp(2.75rem,8vw,7.5rem)]">
-            <span className="block font-light text-mist-400">I BUILD</span>
-            <span className="outlined block">AND HOST</span>
-            <span className="block text-gradient">WEBSITES.</span>
+            <span className="block font-light text-mist-400">I Build</span>
+            <span className="outlined block">and Host</span>
+            <span className="block text-gradient">Websites.</span>
           </h1>
         </div>
 
