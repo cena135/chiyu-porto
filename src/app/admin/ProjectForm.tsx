@@ -127,7 +127,7 @@ export function ProjectForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="glass reveal rounded-3xl p-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="glass fade-up rounded-3xl p-6">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="font-display text-base font-semibold">
           {editing ? `Ubah: ${editing.title}` : "Proyek Baru"}

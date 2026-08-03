@@ -202,7 +202,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
 
       {toast && (
         <p
-          className={`rounded-xl border px-4 py-2.5 text-xs ${
+          className={`pop-in rounded-xl border px-4 py-2.5 text-xs ${
             toast.kind === "ok"
               ? "border-aurora/30 bg-aurora/10 text-aurora"
               : "border-ember/30 bg-ember/10 text-ember"
@@ -213,6 +213,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
       )}
 
       {/* ---------- Isi tab ---------- */}
+      {/* Render kondisional sudah memasang ulang isi tab, jadi animasi fade-up
+          terpicu sendiri tiap berpindah — tidak perlu key khusus. */}
       {tab === "form" ? (
         <ProjectForm
           editing={editing}
@@ -230,7 +232,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
       ) : (
         <>
           {/* Pencarian + filter */}
-          <div className="glass flex flex-wrap items-center gap-3 rounded-2xl p-4">
+          <div className="glass fade-up flex flex-wrap items-center gap-3 rounded-2xl p-4">
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}

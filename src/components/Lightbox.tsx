@@ -47,8 +47,7 @@ export function Lightbox({
       aria-modal="true"
       aria-label={`Galeri ${title}`}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-ink-950/85 p-4 backdrop-blur-xl sm:p-8"
-      style={{ animation: "reveal .25s ease both" }}
+      className="modal-backdrop fixed inset-0 z-50 flex flex-col items-center justify-center bg-ink-950/85 p-4 backdrop-blur-xl sm:p-8"
     >
       <div className="flex w-full max-w-5xl items-center justify-between pb-4">
         <div className="min-w-0">
@@ -68,7 +67,7 @@ export function Lightbox({
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex w-full max-w-5xl flex-1 items-center justify-center"
+        className="modal-panel relative flex w-full max-w-5xl flex-1 items-center justify-center"
       >
         {images.length > 1 && (
           <button
@@ -85,8 +84,7 @@ export function Lightbox({
           key={current.id}
           src={current.url}
           alt={current.alt || `${title} — gambar ${i + 1}`}
-          className="max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/10 object-contain shadow-2xl"
-          style={{ animation: "reveal .35s ease both" }}
+          className="media-swap max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/10 object-contain shadow-2xl"
         />
 
         {images.length > 1 && (

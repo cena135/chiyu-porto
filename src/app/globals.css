@@ -16,6 +16,23 @@
   --color-aurora: oklch(0.78 0.15 195);
   --color-violet: oklch(0.7 0.19 300);
   --color-ember: oklch(0.79 0.16 55);
+
+  /* ---------- Sistem gerak (satu sumber kebenaran) ----------
+     Sebelumnya 42 utilitas transition-* jalan di default Tailwind 150ms —
+     terlalu cepat, terasa patah dibanding kartu yang 450ms. Dua baris di
+     bawah mengubah SELURUH utilitas transition-* sekaligus. */
+  --default-transition-duration: 300ms;
+  --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Easing: keluar cepat lalu mendarat pelan — kesan mahal, bukan linear. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  --dur-fast: 180ms;
+  --dur-base: 300ms;
+  --dur-slow: 460ms;
+  --dur-entrance: 700ms;
 }
 
 :root {
@@ -98,10 +115,11 @@ body {
 .card-hover {
   position: relative;
   transition:
-    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
-    border-color 0.45s ease,
-    box-shadow 0.45s ease;
-  will-change: transform;
+    transform var(--dur-slow) var(--ease-out-quart),
+    border-color var(--dur-slow) var(--ease-out-quart),
+    box-shadow var(--dur-slow) var(--ease-out-quart);
+  /* Tanpa will-change permanen: dulu tiap kartu menahan satu layer GPU
+     sepanjang waktu — boros di T480. transform sudah composited sendiri. */
 }
 .card-hover::after {
   content: "";
@@ -121,7 +139,7 @@ body {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
-  transition: opacity 0.45s ease;
+  transition: opacity var(--dur-slow) var(--ease-out-quart);
   pointer-events: none;
 }
 .card-hover:hover {
@@ -137,7 +155,7 @@ body {
 }
 
 .card-media img {
-  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform var(--dur-entrance) var(--ease-out-quart);
 }
 
 /* Tombol utama dengan kilau bergerak */
@@ -146,8 +164,8 @@ body {
   overflow: hidden;
   isolation: isolate;
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+    transform var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
 }
 .btn-glow::before {
   content: "";
@@ -156,7 +174,7 @@ body {
   z-index: -1;
   background: linear-gradient(115deg, var(--color-violet), var(--color-aurora));
   background-size: 200% 100%;
-  transition: background-position 0.6s ease;
+  transition: background-position var(--dur-slow) var(--ease-out-quart);
 }
 .btn-glow:hover {
   transform: translateY(-2px);
@@ -169,7 +187,7 @@ body {
 
 /* Masuk berurutan saat halaman dibuka */
 .reveal {
-  animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: reveal var(--dur-entrance) var(--ease-out-expo) both;
 }
 @keyframes reveal {
   from {
@@ -189,7 +207,7 @@ body {
 
 .slide-in.is-visible {
   /* easing expo-out: cepat di awal, mendarat pelan — terasa mahal, bukan kaku */
-  animation: slide-in-right 0.78s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: slide-in-right 780ms var(--ease-out-expo) both;
   animation-delay: var(--stagger, 0ms);
 }
 
@@ -217,6 +235,68 @@ body {
 
 /* Tanpa JS: IntersectionObserver tidak pernah jalan. Fallback-nya dipasang lewat
    <noscript> di src/app/page.tsx supaya kartu tidak tersangkut tak terlihat. */
+
+/* ---------- Modal: backdrop dan panel dianimasikan TERPISAH ----------
+   Dulu keduanya satu blok `reveal .25s`, jadi seluruh layar ikut meluncur.
+   Sekarang backdrop cuma memudar, panelnya yang memuai — terasa jauh lebih
+   tenang dan mahal. */
+.modal-backdrop {
+  animation: backdrop-in var(--dur-base) var(--ease-out-quart) both;
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.modal-panel {
+  animation: panel-in 420ms var(--ease-spring) both;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.965);
+  }
+}
+
+/* Ganti gambar di lightbox: silang-pudar halus, bukan lompat instan */
+.media-swap {
+  animation: media-swap 340ms var(--ease-out-quart) both;
+}
+@keyframes media-swap {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+/* Notifikasi & pergantian tab admin */
+.pop-in {
+  animation: pop-in var(--dur-base) var(--ease-out-expo) both;
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 380ms var(--ease-out-quart) both;
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+/* Fokus keyboard: cincin yang ikut beranimasi, bukan outline mendadak */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-aurora) 75%, transparent);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
 
 .text-gradient {
   background: linear-gradient(

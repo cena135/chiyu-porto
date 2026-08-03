@@ -96,12 +96,11 @@ export function GalleryManager({
       aria-modal="true"
       aria-label={`Kelola galeri ${project.title}`}
       onClick={() => !busy && onClose()}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/80 p-4 backdrop-blur-xl"
-      style={{ animation: "reveal .25s ease both" }}
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-ink-950/80 p-4 backdrop-blur-xl"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="glass max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl p-6"
+        className="glass modal-panel max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl p-6"
       >
         <div className="mb-5 flex items-start justify-between gap-4">
           <div className="min-w-0">
