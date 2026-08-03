@@ -162,6 +162,21 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 - [x] Sistem gerak disatukan (3 Agu 2026). Token easing/durasi di `@theme`, modal & fokus
       diperhalus. Diverifikasi di CSS produksi.
 
+- [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
+
+**BAHASA VISUAL — IKUTI INI, JANGAN KEMBALI KE KARTU SERAGAM:**
+Arah desain: editorial/agency, bukan grid kartu simetris (itu ciri UI generik).
+- `.display` judul raksasa `clamp()` sampai 7rem, tracking -0.045em, leading 0.92
+- `.eyebrow` label huruf besar berjarak sebagai penyeimbang
+- `.outlined` & `.ghost-index` teks bergaris tepi (nomor indeks kartu)
+- `.hairline` garis yang memudar di ujung — hindari border kotak penuh
+- `.radius-organic` / `-alt` sudut TIDAK seragam, berselang-seling antar kartu
+- `.work-grid` 12 kolom, lebar 7/5 berselang-seling, baris digeser pakai
+  **margin** (transform akan ditimpa `.slide-in`)
+- Grain film + vignette asimetris di `body::after` / `body::before`
+- Panel admin sengaja TIDAK ikut dirombak — itu alat internal, keterbacaan
+  lebih penting daripada gaya.
+
 **SISTEM GERAK — PAKAI TOKEN, JANGAN TULIS ANGKA MENTAH:**
 Semua di `src/app/globals.css` blok `@theme`:
 - Durasi: `--dur-fast 180ms` · `--dur-base 300ms` · `--dur-slow 460ms` · `--dur-entrance 700ms`
