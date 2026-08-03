@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
+import { SmoothScrollLink } from "@/components/SmoothScrollLink";
 
 // Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
 export const revalidate = 60;
@@ -36,9 +37,12 @@ export default async function HomePage() {
           chiyu<span className="text-aurora">.</span>
         </Link>
         <div className="flex items-center gap-6">
-          <a href="#karya" className="eyebrow transition-colors hover:text-mist-200">
+          <SmoothScrollLink
+            targetId="karya"
+            className="eyebrow transition-colors hover:text-mist-200"
+          >
             Karya
-          </a>
+          </SmoothScrollLink>
           <Link href="/admin" className="eyebrow transition-colors hover:text-mist-200">
             Admin
           </Link>
@@ -53,14 +57,16 @@ export default async function HomePage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-aurora opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-aurora" />
             </span>
-            <span className="eyebrow">Tersedia untuk proyek baru</span>
+            <span className="eyebrow">Lagi terima proyek baru</span>
           </div>
 
-          <h1 className="display text-[clamp(2.75rem,8.5vw,7rem)]">
-            <span className="block font-light text-mist-400">Saya membangun</span>
-            <span className="block text-mist-200">produk digital</span>
-            <span className="outlined block">yang terasa</span>
-            <span className="block text-gradient">mahal.</span>
+          {/* Skala diturunkan dari 8.5vw/7rem: baris terpanjang kini 17 karakter
+              ("nge-host sendiri.") dan pada layar lebar akan meluber dari kolom. */}
+          <h1 className="display text-[clamp(2.4rem,7vw,5.75rem)]">
+            <span className="block font-light text-mist-400">Halo, saya Chiyu.</span>
+            <span className="block text-mist-200">Saya bikin web,</span>
+            <span className="outlined block">terus nekat</span>
+            <span className="block text-gradient">nge-host sendiri.</span>
           </h1>
         </div>
 
@@ -70,8 +76,9 @@ export default async function HomePage() {
           style={{ animationDelay: "140ms" }}
         >
           <p className="max-w-sm text-sm leading-relaxed text-mist-400">
-            Fullstack developer yang meng-<i>hosting</i> semuanya sendiri. Dari kode sampai
-            server fisik di pojok ruangan — tanpa cloud, tanpa tagihan bulanan.
+            Semua yang ada di sini jalan di ThinkPad bekas yang nyala 24 jam di pojok kamar.
+            Bukan di cloud, jadi nggak ada tagihan bulanan. Sejauh ini sih belum ada yang
+            meledak.
           </p>
 
           <dl className="space-y-0">
@@ -90,12 +97,12 @@ export default async function HomePage() {
           </dl>
 
           <div className="flex flex-wrap gap-3 pt-2">
-            <a
-              href="#karya"
+            <SmoothScrollLink
+              targetId="karya"
               className="btn-glow rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
             >
               Lihat Karya
-            </a>
+            </SmoothScrollLink>
             <a
               href="mailto:hello@chiyu.my.id"
               className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"

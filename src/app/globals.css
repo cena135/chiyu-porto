@@ -44,6 +44,11 @@
 html {
   /* Gulir halus untuk semua anchor (#karya dari tombol "Lihat Karya"). */
   scroll-behavior: smooth;
+  /* `clip`, BUKAN `hidden`. `overflow: hidden` di body membuat body menjadi
+     elemen penggulir, sehingga scroll-behavior di html tidak pernah berlaku —
+     itulah sebab tombol "Lihat Karya" dulu melompat instan. `clip` menahan
+     luberan horizontal tanpa membuat kotak gulir baru. */
+  overflow-x: clip;
   /* Sisakan ruang di atas target supaya judul section tidak mepet tepi layar
      saat pendaratan. Berlaku global, tidak perlu scroll-mt di tiap target. */
   scroll-padding-top: 5rem;
@@ -55,7 +60,9 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
-  overflow-x: hidden;
+  overflow-x: clip;
+  /* Cadangan: kalau browser tetap menjadikan body sebagai penggulir. */
+  scroll-behavior: smooth;
 }
 
 /* ---------- Grain film + vignette ----------
