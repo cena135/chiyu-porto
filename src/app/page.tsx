@@ -57,7 +57,7 @@ const KONTAK = [
     label: "WhatsApp",
     tampil: "081252729777",
     // Nomor dipakai dalam format internasional (62...) karena wa.me menolak awalan 0.
-    href: "https://wa.me/6281252729777?text=Halo%20Alexander,%20saya%20melihat%20portofolio%20Anda%20dan%20tertarik%20untuk%20berdiskusi.",
+    href: "https://wa.me/6281252729777?text=Hai%20alex%2C%20aku%20tertarik%20untuk%20diskusi%20projek",
     eksternal: true,
     icon: IconWhatsApp,
   },
@@ -113,13 +113,14 @@ export default async function HomePage() {
             <span className="eyebrow">Lagi terima proyek baru</span>
           </div>
 
-          {/* Kalimatnya utuh "I build and host websites.", dipecah tiga baris supaya
-              tiap bagian dapat perlakuan berbeda. Baris terpanjang cuma 9 karakter,
-              jadi skalanya aman dinaikkan sampai 8rem tanpa meluber dari kolom. */}
-          <h1 className="display text-[clamp(3rem,9vw,8rem)]">
-            <span className="block font-light text-mist-400">I build</span>
-            <span className="outlined block">and host</span>
-            <span className="block text-gradient">websites.</span>
+          {/* Kalimatnya utuh "I BUILD AND HOST WEBSITES.", dipecah tiga baris supaya
+              tiap bagian dapat perlakuan berbeda. Batas atas diturunkan dari 8rem
+              ke 7.5rem: huruf kapital ~20% lebih lebar dari huruf kecil, dan
+              "WEBSITES." pada 8rem sudah menyenggol tepi kolom di layar lebar. */}
+          <h1 className="display text-[clamp(2.75rem,8vw,7.5rem)]">
+            <span className="block font-light text-mist-400">I BUILD</span>
+            <span className="outlined block">AND HOST</span>
+            <span className="block text-gradient">WEBSITES.</span>
           </h1>
         </div>
 
@@ -159,7 +160,6 @@ export default async function HomePage() {
               ["Basis", "Indonesia"],
               ["Fokus", "Web · Infrastruktur"],
               ["Server", "ThinkPad T480, 24/7"],
-              ["Proyek", `${projects.length} dipublikasikan`],
             ].map(([k, v]) => (
               <div key={k} className="flex items-baseline justify-between gap-4 py-2.5">
                 <dt className="eyebrow shrink-0">{k}</dt>
