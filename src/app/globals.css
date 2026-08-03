@@ -109,7 +109,15 @@ body::before {
   font-size: 0.6875rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-mist-400) 85%, transparent);
+  /* Dulu mist-400 pada 85% opasitas — efektif turun ke ~L 0.64 dan makin sulit
+     dibaca di area yang tertutup vignette (bagian bawah halaman). Dibuat solid. */
+  color: var(--color-mist-400);
+}
+
+/* Varian terang untuk label yang harus terbaca jelas, mis. daftar kontak.
+   Ditaruh setelah .eyebrow supaya menang tanpa perlu !important. */
+.eyebrow-bright {
+  color: var(--color-mist-200);
 }
 
 /* Angka indeks raksasa di belakang konten, gaya majalah */

@@ -226,7 +226,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <span className="eyebrow">Kontak</span>
+            <span className="eyebrow eyebrow-bright">Kontak</span>
             <p className="display mt-4 text-[clamp(1.75rem,4vw,3rem)] text-mist-200">
               Punya ide yang layak dibangun?
             </p>
@@ -235,23 +235,25 @@ export default async function HomePage() {
           {/* Tiga kanal kontak, dipisah garis rambut bukan kotak-kotak */}
           <ul className="lg:col-span-7 lg:pt-2">
             {KONTAK.map(({ label, tampil, href, eksternal, icon }) => (
-              <li key={label} className="border-t border-white/8 first:border-t-0">
+              <li key={label} className="border-t border-white/12 first:border-t-0">
                 <a
                   href={href}
                   {...(eksternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="group flex items-center gap-4 py-4 transition-colors hover:text-aurora sm:gap-6"
+                  className="group flex items-center gap-4 py-4 sm:gap-6"
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-mist-400 transition-all group-hover:border-aurora/50 group-hover:text-aurora">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 text-mist-200 transition-all group-hover:border-aurora/60 group-hover:bg-aurora/10 group-hover:text-aurora">
                     {icon}
                   </span>
 
-                  <span className="eyebrow w-24 shrink-0">{label}</span>
+                  <span className="eyebrow eyebrow-bright w-24 shrink-0 transition-colors group-hover:text-aurora">
+                    {label}
+                  </span>
 
-                  <span className="min-w-0 flex-1 truncate text-sm text-mist-200 transition-colors group-hover:text-aurora">
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-mist-200 transition-colors group-hover:text-aurora">
                     {tampil}
                   </span>
 
-                  <span className="shrink-0 text-mist-400 transition-transform group-hover:translate-x-1.5 group-hover:text-aurora">
+                  <span className="shrink-0 text-mist-200 transition-all group-hover:translate-x-1.5 group-hover:text-aurora">
                     →
                   </span>
                 </a>
