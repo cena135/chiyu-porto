@@ -18,6 +18,10 @@ model Project {
   techStack   String[] @default([])
   featured    Boolean  @default(false)
   published   Boolean  @default(true)
+  // Beda dengan `published`: itu untuk draf yang belum selesai.
+  // `isHidden` untuk proyek yang SUDAH selesai tapi sengaja tidak ditampilkan
+  // ke publik — mis. proyek internal perusahaan atau terikat NDA.
+  isHidden    Boolean  @default(false)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -26,6 +30,7 @@ model Project {
   images ProjectImage[]
 
   @@index([published, order])
+  @@index([published, isHidden, order])
 }
 
 model ProjectImage {

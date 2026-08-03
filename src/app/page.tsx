@@ -4,7 +4,7 @@ import Image from "next/image";
 // dipesan sebelum berkasnya turun (tidak ada layout shift).
 import avatar from "../../public/avatar.jpg";
 import { prisma } from "@/lib/prisma";
-import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
+import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
 
 // Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
@@ -66,7 +66,7 @@ const KONTAK = [
 async function getProjects() {
   try {
     return await prisma.project.findMany({
-      where: { published: true },
+      where: PUBLIC_WHERE,
       orderBy: PROJECT_ORDER,
       include: WITH_IMAGES,
     });

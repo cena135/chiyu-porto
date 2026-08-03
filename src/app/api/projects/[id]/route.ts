@@ -99,6 +99,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
           techStack: data.techStack,
           featured: data.featured,
           published: data.published,
+          isHidden: data.isHidden,
           order: data.order,
         },
       }),

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { WITH_IMAGES } from "@/lib/projects";
+import { PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectGallery } from "@/components/ProjectGallery";
 
 export const revalidate = 60;
@@ -13,7 +13,7 @@ type Props = { params: Promise<{ slug: string }> };
 async function getProject(slug: string) {
   try {
     return await prisma.project.findFirst({
-      where: { slug, published: true },
+      where: { slug, ...PUBLIC_WHERE },
       include: WITH_IMAGES,
     });
   } catch {
@@ -25,7 +25,7 @@ async function getProject(slug: string) {
 export async function generateStaticParams() {
   try {
     const projects = await prisma.project.findMany({
-      where: { published: true },
+      where: PUBLIC_WHERE,
       select: { slug: true },
     });
     return projects.map((p) => ({ slug: p.slug }));

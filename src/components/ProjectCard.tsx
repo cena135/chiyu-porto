@@ -4,13 +4,6 @@ import Link from "next/link";
 import type { ProjectWithImages } from "@/lib/projects";
 import { useInView } from "@/lib/useInView";
 
-const initials = (title: string) =>
-  title
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
-
 export function ProjectCard({
   project,
   index = 0,
@@ -58,8 +51,33 @@ export function ProjectCard({
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-ink-900 to-ink-950">
-              <span className="ghost-index text-7xl">{initials(project.title)}</span>
+            /* Tanpa screenshot — lazim untuk proyek internal/NDA. Bukan keadaan
+               error, jadi tidak ada ikon rusak: tampilkan blok gradien yang
+               justru menonjolkan nama dan tech stack-nya. */
+            <div className="relative flex h-full w-full flex-col justify-between overflow-hidden bg-[radial-gradient(120%_120%_at_15%_0%,color-mix(in_oklab,var(--color-violet)_28%,transparent),transparent_60%),linear-gradient(150deg,var(--color-ink-900),var(--color-ink-950))] p-6">
+              {/* Garis halus sebagai tekstur, menghindari bidang datar kosong */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 11px)",
+                }}
+              />
+
+              <span className="eyebrow eyebrow-bright relative">
+                {project.techStack.length > 0 ? "Internal / NDA" : "Tanpa pratinjau"}
+              </span>
+
+              <span className="display relative text-[clamp(1.5rem,3.4vw,2.5rem)] text-mist-200/90">
+                {project.title}
+              </span>
+
+              {project.techStack.length > 0 && (
+                <span className="eyebrow relative truncate">
+                  {project.techStack.slice(0, 4).join(" · ")}
+                </span>
+              )}
             </div>
           )}
 

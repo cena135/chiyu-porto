@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
-import { PROJECT_ORDER, WITH_IMAGES, parseProjectForm, revalidatePublic, uniqueSlug } from "@/lib/projects";
+import {
+  PROJECT_ORDER,
+  PUBLIC_WHERE,
+  WITH_IMAGES,
+  parseProjectForm,
+  revalidatePublic,
+  uniqueSlug,
+} from "@/lib/projects";
 import { MAX_GALLERY, saveUploads } from "@/lib/upload";
 
 export const runtime = "nodejs";
@@ -10,7 +17,7 @@ export const dynamic = "force-dynamic";
 /** Publik: daftar proyek yang published, lengkap dengan galeri. */
 export async function GET() {
   const projects = await prisma.project.findMany({
-    where: { published: true },
+    where: PUBLIC_WHERE,
     orderBy: PROJECT_ORDER,
     include: WITH_IMAGES,
   });
@@ -51,6 +58,7 @@ export async function POST(req: NextRequest) {
       techStack: data.techStack,
       featured: data.featured,
       published: data.published,
+      isHidden: data.isHidden,
       order: data.order,
       images: {
         create: uploaded.urls.map((url, i) => ({ url, order: i })),

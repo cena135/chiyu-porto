@@ -16,6 +16,14 @@ export function revalidatePublic() {
 /** Bentuk data yang dipakai di seluruh UI — proyek selalu dibawa bersama galerinya. */
 export type ProjectWithImages = Project & { images: ProjectImage[] };
 
+/**
+ * Syarat sebuah proyek boleh tampil di publik. SATU sumber kebenaran — dipakai
+ * halaman utama, halaman detail, dan API. Jangan tulis ulang filternya di tempat lain.
+ * - published: false  -> masih draf, belum selesai
+ * - isHidden: true    -> selesai tapi sengaja disembunyikan (internal / NDA)
+ */
+export const PUBLIC_WHERE = { published: true, isHidden: false } as const;
+
 /** Urutan tampil standar: unggulan dulu, lalu kolom order, lalu terbaru. */
 export const PROJECT_ORDER = [
   { featured: "desc" as const },
@@ -37,8 +45,12 @@ export const projectSchema = z.object({
   techStack: z.array(z.string().trim().min(1)).max(20).default([]),
   featured: z.boolean().default(false),
   published: z.boolean().default(true),
+  isHidden: z.boolean().default(false),
   order: z.number().int().min(0).max(9999).default(0),
 });
+// Catatan: liveUrl, repoUrl, dan content memang sudah opsional sejak awal
+// (boleh string kosong), dan gambar tidak pernah diwajibkan — proyek internal
+// tanpa tautan maupun screenshot sudah bisa disimpan.
 
 export type ProjectInput = z.infer<typeof projectSchema>;
 
@@ -78,6 +90,7 @@ export function parseProjectForm(form: FormData) {
       .filter(Boolean),
     featured: form.get("featured") === "on" || form.get("featured") === "true",
     published: form.get("published") === "on" || form.get("published") === "true",
+    isHidden: form.get("isHidden") === "on" || form.get("isHidden") === "true",
     order: Number(form.get("order") ?? 0) || 0,
   };
   return projectSchema.safeParse(raw);

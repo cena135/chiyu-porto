@@ -346,6 +346,24 @@ export function ProjectForm({
             <label className="flex cursor-pointer items-start gap-3 py-2">
               <input
                 type="checkbox"
+                name="isHidden"
+                defaultChecked={editing?.isHidden ?? false}
+                className="mt-0.5 h-4 w-4 accent-ember"
+              />
+              <span>
+                <span className="block text-xs font-medium text-mist-200">
+                  Sembunyikan dari publik (Hide)
+                </span>
+                <span className="block text-[11px] text-mist-400/70">
+                  Untuk proyek <b>internal / NDA</b>: pekerjaannya sudah selesai, tapi tidak boleh
+                  tampil di situs. Beda dengan draf di atas yang artinya belum kelar.
+                </span>
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-3 py-2">
+              <input
+                type="checkbox"
                 name="featured"
                 defaultChecked={editing?.featured ?? false}
                 className="mt-0.5 h-4 w-4 accent-violet"

@@ -7,7 +7,7 @@ import { ProjectForm } from "./ProjectForm";
 import { GalleryManager } from "./GalleryManager";
 
 type Tab = "list" | "form";
-type StatusFilter = "semua" | "publik" | "draf";
+type StatusFilter = "semua" | "publik" | "draf" | "tersembunyi";
 type SortBy = "urutan" | "terbaru" | "judul";
 type Toast = { kind: "ok" | "err"; msg: string } | null;
 
@@ -37,8 +37,10 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
   const stats = useMemo(
     () => ({
       total: projects.length,
-      publik: projects.filter((p) => p.published).length,
+      // "Tampil publik" harus lolos KEDUA syarat, sama seperti PUBLIC_WHERE di server.
+      publik: projects.filter((p) => p.published && !p.isHidden).length,
       draf: projects.filter((p) => !p.published).length,
+      tersembunyi: projects.filter((p) => p.isHidden).length,
       unggulan: projects.filter((p) => p.featured).length,
       gambar: projects.reduce((n, p) => n + p.images.length, 0),
       tanpaGambar: projects.filter((p) => p.images.length === 0).length,
@@ -49,8 +51,9 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
   const shown = useMemo(() => {
     const term = q.trim().toLowerCase();
     let out = projects.filter((p) => {
-      if (status === "publik" && !p.published) return false;
+      if (status === "publik" && (!p.published || p.isHidden)) return false;
       if (status === "draf" && p.published) return false;
+      if (status === "tersembunyi" && !p.isHidden) return false;
       if (!term) return true;
       return (
         p.title.toLowerCase().includes(term) ||
@@ -80,7 +83,10 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
     if (gallery?.id === p.id) setGallery(p);
   }
 
-  async function toggle(p: ProjectWithImages, patch: { published?: boolean; featured?: boolean }) {
+  async function toggle(
+    p: ProjectWithImages,
+    patch: { published?: boolean; featured?: boolean; isHidden?: boolean },
+  ) {
     setBusyId(p.id);
     const res = await fetch(`/api/projects/${p.id}/status`, {
       method: "PATCH",
@@ -100,9 +106,13 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
         ? patch.published
           ? "Ditampilkan di publik."
           : "Disimpan sebagai draf."
-        : patch.featured
-          ? "Ditandai unggulan."
-          : "Dilepas dari unggulan.";
+        : patch.isHidden !== undefined
+          ? patch.isHidden
+            ? "Disembunyikan dari publik (internal/NDA)."
+            : "Ditampilkan kembali ke publik."
+          : patch.featured
+            ? "Ditandai unggulan."
+            : "Dilepas dari unggulan.";
     setToast({ kind: "ok", msg: what });
     refresh();
   }
@@ -159,8 +169,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
           { label: "Total proyek", value: stats.total, tone: "text-mist-200" },
           { label: "Tampil publik", value: stats.publik, tone: "text-aurora" },
           { label: "Draf", value: stats.draf, tone: "text-ember" },
+          { label: "Disembunyikan", value: stats.tersembunyi, tone: "text-ember" },
           { label: "Unggulan", value: stats.unggulan, tone: "text-violet" },
-          { label: "Total gambar", value: stats.gambar, tone: "text-mist-200" },
         ].map((s) => (
           <div key={s.label} className="glass reveal rounded-2xl px-4 py-3">
             <p className={`font-display text-2xl font-semibold ${s.tone}`}>{s.value}</p>
@@ -241,7 +251,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
             />
 
             <div className="flex gap-1 rounded-xl border border-white/10 p-1">
-              {(["semua", "publik", "draf"] as StatusFilter[]).map((s) => (
+              {(["semua", "publik", "draf", "tersembunyi"] as StatusFilter[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => setStatus(s)}
@@ -317,14 +327,19 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                           unggulan
                         </span>
                       )}
+                      {p.isHidden && (
+                        <span className="rounded-full bg-ember/20 px-2 py-0.5 text-[10px] text-ember">
+                          disembunyikan
+                        </span>
+                      )}
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] ${
-                          p.published
+                          p.published && !p.isHidden
                             ? "bg-aurora/15 text-aurora"
                             : "bg-ember/15 text-ember"
                         }`}
                       >
-                        {p.published ? "publik" : "draf"}
+                        {!p.published ? "draf" : p.isHidden ? "internal" : "publik"}
                       </span>
                     </div>
                     <p className="mt-1 line-clamp-1 text-xs text-mist-400">{p.description}</p>
@@ -341,6 +356,18 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                       className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-aurora/50 hover:text-aurora disabled:opacity-40"
                     >
                       {p.published ? "Jadikan draf" : "Terbitkan"}
+                    </button>
+                    <button
+                      onClick={() => toggle(p, { isHidden: !p.isHidden })}
+                      disabled={busyId === p.id}
+                      title={
+                        p.isHidden
+                          ? "Tampilkan kembali ke publik"
+                          : "Sembunyikan (proyek internal / NDA)"
+                      }
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-ember/50 hover:text-ember disabled:opacity-40"
+                    >
+                      {p.isHidden ? "Tampilkan" : "Sembunyikan"}
                     </button>
                     <button
                       onClick={() => toggle(p, { featured: !p.featured })}

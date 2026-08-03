@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 const schema = z.object({
   published: z.boolean().optional(),
   featured: z.boolean().optional(),
+  isHidden: z.boolean().optional(),
   order: z.number().int().min(0).max(9999).optional(),
 });
 
