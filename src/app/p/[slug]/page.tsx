@@ -5,7 +5,9 @@ import { prisma } from "@/lib/prisma";
 import { PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectGallery } from "@/components/ProjectGallery";
 
-export const revalidate = 60;
+// Alasan sama seperti di src/app/page.tsx: ISR mengirim stale-while-revalidate
+// ~1 tahun yang dipatuhi browser, sehingga hasil edit admin telat muncul.
+export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,18 +23,8 @@ async function getProject(slug: string) {
   }
 }
 
-/** Pra-render halaman detail proyek yang sudah ada; slug baru tetap dilayani on-demand. */
-export async function generateStaticParams() {
-  try {
-    const projects = await prisma.project.findMany({
-      where: PUBLIC_WHERE,
-      select: { slug: true },
-    });
-    return projects.map((p) => ({ slug: p.slug }));
-  } catch {
-    return [];
-  }
-}
+// generateStaticParams dihapus: tidak ada gunanya berdampingan dengan
+// force-dynamic, karena halaman tetap dirender per permintaan.
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

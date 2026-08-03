@@ -7,8 +7,21 @@ import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
 
-// Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
-export const revalidate = 60;
+/**
+ * Selalu render ulang per permintaan — JANGAN kembalikan ke `revalidate`.
+ *
+ * Dengan ISR, Next mengirim `s-maxage=60, stale-while-revalidate=31535940`.
+ * `s-maxage` cuma berlaku untuk cache bersama (CDN), padahal Cloudflare di depan
+ * kita tidak mencache HTML sama sekali (cf-cache-status: DYNAMIC) — jadi tidak
+ * ada manfaatnya. Yang tersisa justru `stale-while-revalidate` ~1 tahun yang
+ * DIPATUHI BROWSER: pengunjung disuguhi salinan basi lebih dulu, dan proyek baru
+ * baru muncul setelah hard refresh.
+ *
+ * force-dynamic membuat Next mengirim `no-store`, jadi selalu segar. Biayanya
+ * satu query Prisma per permintaan atas 6 baris di Postgres lokal — tidak berarti
+ * untuk trafik situs ini.
+ */
+export const dynamic = "force-dynamic";
 
 /** Ikon digambar inline sebagai SVG — tidak menambah dependensi maupun request. */
 const ikon = "h-[18px] w-[18px]";
