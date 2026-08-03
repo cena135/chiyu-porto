@@ -42,8 +42,10 @@ const KONTAK = [
   {
     label: "Email",
     tampil: "alexanderjoedo@gmail.com",
-    href: "mailto:alexanderjoedo@gmail.com",
-    eksternal: false,
+    // Buka jendela tulis Gmail di web, bukan mailto: — banyak orang tidak punya
+    // aplikasi email terpasang, dan mailto pada mereka tidak melakukan apa-apa.
+    href: "https://mail.google.com/mail/?view=cm&fs=1&to=alexanderjoedo@gmail.com",
+    eksternal: true,
     icon: IconMail,
   },
   {
