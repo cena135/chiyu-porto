@@ -164,15 +164,19 @@ Container: `porto-app` (healthy), `porto-db` (healthy), `porto-migrate` (Exited 
 
 - [x] Rombak estetika jadi editorial/agency (3 Agu 2026). Diverifikasi live.
 
-**JEBAKAN GULIR #2 — PALING PENTING:**
+**JEBAKAN GULIR #2 — kalau anchor tiba-tiba melompat lagi, CEK INI DULU:**
 Kalau OS menyalakan **reduce motion** (Windows: Settings > Accessibility > Visual effects >
-Animation effects OFF — owner memakainya demi baterai), **Chromium mematikan SELURUH smooth
-scroll bawaan**: CSS `scroll-behavior` maupun `scrollTo`/`scrollIntoView` dengan
-`behavior:"smooth"` akan langsung melompat, tanpa error apa pun. Menambah JS `behavior:"smooth"`
-TIDAK akan menolong. Satu-satunya cara: animasikan `window.scrollY` sendiri per frame lewat
-`requestAnimationFrame` — lihat `src/components/SmoothScrollLink.tsx`.
-Konsekuensi lain: blok `@media (prefers-reduced-motion: reduce)` di globals.css membuat semua
-animasi lain (slide-in kartu, modal, reveal) TIDAK terlihat oleh owner di laptopnya.
+Animation effects OFF), **Chromium mematikan SELURUH smooth scroll bawaan**: CSS
+`scroll-behavior` maupun `scrollTo`/`scrollIntoView` dengan `behavior:"smooth"` langsung
+melompat, tanpa error apa pun. Menambah JS `behavior:"smooth"` TIDAK menolong.
+Semua animasi lain (slide-in, modal, reveal) juga ikut mati.
+Owner sempat mengaktifkannya demi baterai, lalu **dinyalakan lagi (3 Agu 2026)**.
+→ Jangan buru-buru menyalahkan kode. Tanya dulu setelan animasi OS-nya.
+
+Pernah dibuat `SmoothScrollLink` berbasis `requestAnimationFrame` untuk menembus batasan itu,
+tapi **sudah dihapus** atas permintaan owner: easing `easeInOutCubic` terasa lamban di awal
+dibanding native. Sekarang murni anchor `<a href="#karya">` + CSS. **Jangan dibuat ulang**
+kecuali reduce-motion menyala lagi DAN owner minta.
 
 **JEBAKAN GULIR (sudah pernah menggigit sekali):**
 `body { overflow-x: hidden }` menjadikan **body** sebagai elemen penggulir, sehingga

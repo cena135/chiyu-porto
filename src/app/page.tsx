@@ -2,7 +2,6 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
-import { SmoothScrollLink } from "@/components/SmoothScrollLink";
 
 // Grid tumbuh otomatis: revalidate tiap 60 detik + di-revalidate manual saat admin CRUD.
 export const revalidate = 60;
@@ -37,12 +36,9 @@ export default async function HomePage() {
           chiyu<span className="text-aurora">.</span>
         </Link>
         <div className="flex items-center gap-6">
-          <SmoothScrollLink
-            targetId="karya"
-            className="eyebrow transition-colors hover:text-mist-200"
-          >
+          <a href="#karya" className="eyebrow transition-colors hover:text-mist-200">
             Karya
-          </SmoothScrollLink>
+          </a>
           <Link href="/admin" className="eyebrow transition-colors hover:text-mist-200">
             Admin
           </Link>
@@ -99,12 +95,14 @@ export default async function HomePage() {
           </dl>
 
           <div className="flex flex-wrap gap-3 pt-2">
-            <SmoothScrollLink
-              targetId="karya"
+            {/* Anchor biasa: gulir halus ditangani CSS scroll-behavior di html.
+                Tidak ada JS — tidak ada easing buatan yang bikin terasa lamban. */}
+            <a
+              href="#karya"
               className="btn-glow rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
             >
               Lihat Karya
-            </SmoothScrollLink>
+            </a>
             <a
               href="mailto:hello@chiyu.my.id"
               className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"
