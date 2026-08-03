@@ -50,8 +50,8 @@ const KONTAK = [
   },
   {
     label: "Instagram",
-    tampil: "@alexanderjoedo",
-    href: "https://instagram.com/alexanderjoedo",
+    tampil: "@alexander_joedo",
+    href: "https://instagram.com/alexander_joedo",
     eksternal: true,
     icon: IconInstagram,
   },
