@@ -1,4 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
+// Impor statis: Next membaca dimensi aslinya saat build, jadi ruang gambar sudah
+// dipesan sebelum berkasnya turun (tidak ada layout shift).
+import avatar from "../../public/avatar.jpg";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -124,13 +128,31 @@ export default async function HomePage() {
           className="reveal flex flex-col justify-end gap-6 lg:col-span-4 lg:pb-4"
           style={{ animationDelay: "140ms" }}
         >
-          {/* Ditulis sebagai string JS, bukan teks JSX langsung: apostrof di
-              "you're" akan diprotes aturan lint react/no-unescaped-entities. */}
-          <p className="max-w-md text-sm leading-relaxed text-mist-400">
-            {
-              "Hai, aku Alexander Imanuel Joedo, Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)"
-            }
-          </p>
+          <div className="flex max-w-md items-start gap-5">
+            {/* Cincin gradien tipis sebagai bingkai — menyatu dengan latar gelap
+                tanpa garis keras. p-[3px] yang membentuk cincinnya. */}
+            <span className="shrink-0 rounded-full bg-gradient-to-br from-aurora/45 via-white/10 to-violet/45 p-[3px] shadow-[0_18px_40px_-20px_rgba(0,0,0,0.9)]">
+              <Image
+                src={avatar}
+                alt="Foto Alexander Imanuel Joedo"
+                priority
+                placeholder="blur"
+                // Berkasnya hanya 65 KB dan tampil 96–112px. Mengoptimalkan ulang
+                // butuh paket `sharp` (~40 MB di image Docker) dan CPU T480 untuk
+                // hasil yang nyaris tak berbeda — tidak sepadan.
+                unoptimized
+                className="h-24 w-24 rounded-full object-cover ring-1 ring-white/15 sm:h-28 sm:w-28"
+              />
+            </span>
+
+            {/* Ditulis sebagai string JS, bukan teks JSX langsung: apostrof di
+                "you're" akan diprotes aturan lint react/no-unescaped-entities. */}
+            <p className="text-sm leading-relaxed text-mist-400">
+              {
+                "Hai, aku Alexander Imanuel Joedo, Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)"
+              }
+            </p>
+          </div>
 
           <dl className="space-y-0">
             {[
