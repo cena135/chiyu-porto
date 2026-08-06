@@ -4,6 +4,37 @@ import Link from "next/link";
 import type { ProjectWithImages } from "@/lib/projects";
 import { useInView } from "@/lib/useInView";
 
+/**
+ * Palet mesh gradient untuk kartu tanpa screenshot.
+ *
+ * Dipilih dengan `index % PALETTES.length`, bukan dari hash judul: cara ini
+ * MENJAMIN dua kartu bersebelahan tidak pernah kembar warnanya. Hash akan
+ * terlihat lebih "pintar" tapi bisa memberi warna sama ke kartu bertetangga.
+ *
+ * Tiap palet berisi tiga titik cahaya. Alpha-nya sengaja rendah (0x4d–0x66,
+ * sekitar 30–40%), lalu masih ditumpuk peredam gelap di atasnya — supaya
+ * warnanya terbaca sebagai nuansa, bukan lampu neon.
+ */
+const PALETTES: [string, string, string][] = [
+  ["#6366f166", "#a855f74d", "#22d3ee4d"], // indigo · violet · cyan
+  ["#fb718566", "#f59e0b4d", "#f472b64d"], // rose · amber · pink
+  ["#34d39966", "#14b8a64d", "#38bdf84d"], // emerald · teal · sky
+  ["#a78bfa66", "#f472b64d", "#fbbf244d"], // violet · pink · amber
+  ["#22d3ee66", "#3b82f64d", "#8b5cf64d"], // cyan · blue · violet
+  ["#e879f966", "#8b5cf64d", "#6366f14d"], // fuchsia · violet · indigo
+  ["#a3e63566", "#34d3994d", "#22d3ee4d"], // lime · emerald · cyan
+  ["#38bdf866", "#6366f14d", "#fb71854d"], // sky · indigo · rose
+];
+
+/** Tiga sumber cahaya di sudut berbeda — pola mesh yang lembut, bukan gradien lurus. */
+function meshGradient([a, b, c]: [string, string, string]) {
+  return [
+    `radial-gradient(120% 120% at 12% 8%, ${a} 0%, transparent 58%)`,
+    `radial-gradient(110% 110% at 88% 18%, ${b} 0%, transparent 55%)`,
+    `radial-gradient(130% 130% at 55% 105%, ${c} 0%, transparent 62%)`,
+  ].join(", ");
+}
+
 /** Ikon gembok kecil — penanda tenang untuk proyek tanpa screenshot. */
 const IconLock = (
   <svg
@@ -61,11 +92,22 @@ export function ProjectCard({
             </>
           ) : (
             /* Tanpa screenshot — biasa untuk proyek internal/NDA.
-               Sengaja dibiarkan HAMPIR KOSONG: gradien sangat halus, satu ikon
-               kecil, tanpa pola garis dan tanpa tipografi raksasa. Bidang tenang
-               ini yang membuat judul di bawahnya jadi fokus utama. */
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-ink-800/60 via-ink-900/40 to-ink-950/60 backdrop-blur-xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-mist-400/80">
+               Tiap kartu dapat mesh gradient sendiri supaya deretannya tidak
+               terbaca monoton, tapi tetap diredam agar bernuansa gelap. */
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-ink-950">
+              {/* Lapisan warna. Membesar halus saat kartu disorot — hanya
+                  transform, jadi murah untuk CPU T480. */}
+              <div
+                aria-hidden
+                className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
+                style={{ backgroundImage: meshGradient(PALETTES[index % PALETTES.length]) }}
+              />
+
+              {/* Peredam: menahan warna agar tidak menyilaukan dan menjaga
+                  kontras lencana putih di atasnya. */}
+              <div aria-hidden className="absolute inset-0 bg-ink-950/45" />
+
+              <span className="relative inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-white/90 backdrop-blur-md">
                 {IconLock}
                 <span className="text-[10px] uppercase tracking-[0.18em]">Internal</span>
               </span>
