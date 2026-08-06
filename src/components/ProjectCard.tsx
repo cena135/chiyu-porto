@@ -5,14 +5,12 @@ import type { ProjectWithImages } from "@/lib/projects";
 import { useInView } from "@/lib/useInView";
 
 /**
- * Palet mesh gradient untuk kartu tanpa screenshot.
+ * Palet mesh gradient untuk proyek tanpa screenshot.
  *
  * Dipilih dengan `index % PALETTES.length`, bukan dari hash judul: cara ini
- * MENJAMIN dua kartu bersebelahan tidak pernah kembar warnanya. Hash akan
- * terlihat lebih "pintar" tapi bisa memberi warna sama ke kartu bertetangga.
+ * MENJAMIN dua baris bersebelahan tidak pernah kembar warnanya.
  *
- * Tiap palet berisi tiga titik cahaya. Alpha-nya sengaja rendah (0x4d–0x66,
- * sekitar 30–40%), lalu masih ditumpuk peredam gelap di atasnya — supaya
+ * Alpha tiap warna sengaja rendah, lalu masih ditumpuk peredam gelap — supaya
  * warnanya terbaca sebagai nuansa, bukan lampu neon.
  */
 const PALETTES: [string, string, string][] = [
@@ -26,16 +24,24 @@ const PALETTES: [string, string, string][] = [
   ["#38bdf866", "#6366f14d", "#fb71854d"], // sky · indigo · rose
 ];
 
-/** Tiga sumber cahaya di sudut berbeda — pola mesh yang lembut, bukan gradien lurus. */
-function meshGradient([a, b, c]: [string, string, string]) {
+/** Panel ramping: titik cahaya disebar MENDATAR, mengikuti bentuk baris. */
+function meshPanel([a, b, c]: [string, string, string]) {
   return [
-    `radial-gradient(120% 120% at 12% 8%, ${a} 0%, transparent 58%)`,
-    `radial-gradient(110% 110% at 88% 18%, ${b} 0%, transparent 55%)`,
-    `radial-gradient(130% 130% at 55% 105%, ${c} 0%, transparent 62%)`,
+    `radial-gradient(90% 160% at 10% 20%, ${a} 0%, transparent 60%)`,
+    `radial-gradient(80% 150% at 55% 90%, ${b} 0%, transparent 58%)`,
+    `radial-gradient(90% 160% at 95% 15%, ${c} 0%, transparent 60%)`,
   ].join(", ");
 }
 
-/** Ikon gembok kecil — penanda tenang untuk proyek tanpa screenshot. */
+/** Sapuan warna selebar baris, muncul hanya saat disorot. */
+function meshRow([a, b, c]: [string, string, string]) {
+  return [
+    `radial-gradient(40% 180% at 8% 50%, ${a} 0%, transparent 70%)`,
+    `radial-gradient(35% 160% at 45% 50%, ${b} 0%, transparent 70%)`,
+    `radial-gradient(40% 180% at 85% 50%, ${c} 0%, transparent 70%)`,
+  ].join(", ");
+}
+
 const IconLock = (
   <svg
     viewBox="0 0 24 24"
@@ -44,7 +50,7 @@ const IconLock = (
     strokeWidth="1.4"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="h-4 w-4"
+    className="h-3.5 w-3.5"
   >
     <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
     <path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7" />
@@ -60,109 +66,84 @@ export function ProjectCard({
 }) {
   const { ref, inView } = useInView<HTMLDivElement>();
 
-  const images = project.images;
-  const cover = images[0];
-  const stagger = (index % 3) * 90;
+  const cover = project.images[0];
+  const palette = PALETTES[index % PALETTES.length];
+  const nomor = String(index + 1).padStart(2, "0");
 
   return (
-    <div
-      ref={ref}
-      className={`slide-in h-full ${inView ? "is-visible" : ""}`}
-      style={{ "--stagger": `${stagger}ms` } as React.CSSProperties}
-    >
-      <article className="card-hover group relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-white/8 bg-ink-900/40 backdrop-blur-xl">
+    <div ref={ref} className={`slide-in ${inView ? "is-visible" : ""}`}>
+      <article className="group relative border-t border-white/8 last:border-b">
+        {/* Sapuan warna sepanjang baris — 0 saat diam, muncul halus saat disorot */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ backgroundImage: meshRow(palette) }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-ink-950/55 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        />
+
         <Link
           href={`/p/${project.slug}`}
           aria-label={`Lihat detail proyek ${project.title}`}
           className="absolute inset-0 z-0"
         />
 
-        {/* 16:9 — lebih pendek dari sebelumnya, jadi kartu tidak menjulang */}
-        <div className="card-media relative aspect-video overflow-hidden">
-          {cover ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+        <div className="pointer-events-none relative flex flex-col gap-5 px-1 py-7 sm:flex-row sm:items-center sm:gap-7 sm:py-8">
+          {/* Nomor indeks */}
+          <span className="eyebrow shrink-0 text-mist-400/60 sm:w-10">{nomor}</span>
+
+          {/* Panel gambar / gradien — ramping, mengikuti bentuk baris */}
+          <div className="card-media relative h-24 w-full shrink-0 overflow-hidden rounded-xl border border-white/8 bg-ink-950 sm:h-20 sm:w-36 lg:h-24 lg:w-48">
+            {cover ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={cover.url}
                 alt={cover.alt || project.title}
                 loading={index < 3 ? "eager" : "lazy"}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/70 to-transparent" />
-            </>
-          ) : (
-            /* Tanpa screenshot — biasa untuk proyek internal/NDA.
-               Tiap kartu dapat mesh gradient sendiri supaya deretannya tidak
-               terbaca monoton, tapi tetap diredam agar bernuansa gelap. */
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-ink-950">
-              {/* Lapisan warna. Membesar halus saat kartu disorot — hanya
-                  transform, jadi murah untuk CPU T480. */}
-              <div
-                aria-hidden
-                className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
-                style={{ backgroundImage: meshGradient(PALETTES[index % PALETTES.length]) }}
-              />
+            ) : (
+              <>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
+                  style={{ backgroundImage: meshPanel(palette) }}
+                />
+                <div aria-hidden className="absolute inset-0 bg-ink-950/35" />
+                <span className="absolute inset-0 flex items-center justify-center text-white/70">
+                  {IconLock}
+                </span>
+              </>
+            )}
+          </div>
 
-              {/* Peredam: menahan warna agar tidak menyilaukan dan menjaga
-                  kontras lencana putih di atasnya. */}
-              <div aria-hidden className="absolute inset-0 bg-ink-950/45" />
-
-              <span className="relative inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-white/90 backdrop-blur-md">
-                {IconLock}
-                <span className="text-[10px] uppercase tracking-[0.18em]">Internal</span>
-              </span>
+          {/* Teks — bergeser ke kanan saat baris disorot */}
+          <div className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-mist-300 transition-colors duration-300 group-hover:text-mist-200">
+                {project.title}
+              </h3>
+              {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
+              {!cover && <span className="eyebrow text-mist-400/70">Internal</span>}
             </div>
-          )}
 
-          {project.featured && (
-            <span className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/12 bg-black/40 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-aurora backdrop-blur-md">
-              Unggulan
-            </span>
-          )}
+            <p className="mt-2 line-clamp-2 max-w-2xl text-[13px] leading-relaxed text-mist-400/90 sm:line-clamp-1">
+              {project.description}
+            </p>
+          </div>
 
-          {images.length > 1 && (
-            <span className="pointer-events-none absolute right-4 top-4 rounded-full border border-white/12 bg-black/40 px-2.5 py-1 text-[10px] text-mist-300 backdrop-blur-md">
-              {images.length} foto
-            </span>
-          )}
-        </div>
-
-        {/* pointer-events-none: klik di area teks tembus ke stretched link */}
-        <div className="pointer-events-none flex flex-1 flex-col gap-3 border-t border-white/6 p-5">
-          <h3 className="font-display text-lg font-medium leading-snug tracking-tight text-mist-300 transition-colors group-hover:text-mist-200">
-            {project.title}
-          </h3>
-
-          <p className="line-clamp-2 text-[13px] leading-relaxed text-mist-400/90">
-            {project.description}
-          </p>
-
+          {/* Tech stack — sembunyi di layar sempit supaya baris tetap padat */}
           {project.techStack.length > 0 && (
-            <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-              {project.techStack.slice(0, 3).map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-md border border-white/6 bg-white/[0.03] px-2 py-0.5 text-[10.5px] text-mist-400/80"
-                >
-                  {tech}
-                </span>
-              ))}
-              {project.techStack.length > 3 && (
-                <span className="px-1 py-0.5 text-[10.5px] text-mist-400/60">
-                  +{project.techStack.length - 3}
-                </span>
-              )}
-            </div>
+            <p className="eyebrow hidden max-w-[13rem] shrink-0 truncate text-right text-mist-400/70 lg:block">
+              {project.techStack.slice(0, 3).join(" · ")}
+            </p>
           )}
 
-          <div className="flex items-center justify-between gap-3 border-t border-white/6 pt-3 text-[11px]">
-            <span className="inline-flex items-center gap-1.5 text-mist-400 transition-colors group-hover:text-aurora">
-              Lihat detail
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </span>
-
-            {/* pointer-events-auto + z-10: menembus overlay stretched link */}
-            <span className="flex items-center gap-3">
+          {/* Tautan keluar + panah */}
+          <div className="flex shrink-0 items-center gap-4">
+            <span className="flex items-center gap-3 text-[11px]">
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
@@ -183,6 +164,16 @@ export function ProjectCard({
                   Source
                 </a>
               )}
+            </span>
+
+            {/* Panah meluncur masuk dari kiri saat disorot */}
+            <span
+              aria-hidden
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-mist-400 transition-all duration-500 group-hover:-translate-x-0 group-hover:border-aurora/50 group-hover:bg-aurora/10 group-hover:text-aurora"
+            >
+              <span className="-translate-x-1 opacity-70 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100">
+                →
+              </span>
             </span>
           </div>
         </div>
