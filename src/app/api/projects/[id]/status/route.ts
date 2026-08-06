@@ -11,6 +11,7 @@ const schema = z.object({
   published: z.boolean().optional(),
   featured: z.boolean().optional(),
   isHidden: z.boolean().optional(),
+  isWip: z.boolean().optional(),
   order: z.number().int().min(0).max(9999).optional(),
 });
 

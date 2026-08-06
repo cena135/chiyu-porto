@@ -125,6 +125,12 @@ export function ProjectCard({
               <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-mist-300 transition-colors duration-300 group-hover:text-mist-200">
                 {project.title}
               </h3>
+              {project.isWip && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ember/30 bg-ember/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.16em] text-ember">
+                  <span className="h-1 w-1 rounded-full bg-ember" />
+                  WIP
+                </span>
+              )}
               {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
               {!cover && <span className="eyebrow text-mist-400/70">Internal</span>}
             </div>

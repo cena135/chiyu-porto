@@ -127,6 +127,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
           featured: data.featured,
           published: data.published,
           isHidden: data.isHidden,
+          isWip: data.isWip,
           order: data.order,
         },
       }),

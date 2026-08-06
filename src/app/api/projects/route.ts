@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
       featured: data.featured,
       published: data.published,
       isHidden: data.isHidden,
+      isWip: data.isWip,
       order: data.order,
       images: {
         create: uploaded.urls.map((url, i) => ({ url, order: i })),

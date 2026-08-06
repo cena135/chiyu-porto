@@ -327,6 +327,11 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                           unggulan
                         </span>
                       )}
+                      {p.isWip && (
+                        <span className="rounded-full bg-ember/20 px-2 py-0.5 text-[10px] text-ember">
+                          WIP
+                        </span>
+                      )}
                       {p.isHidden && (
                         <span className="rounded-full bg-ember/20 px-2 py-0.5 text-[10px] text-ember">
                           disembunyikan

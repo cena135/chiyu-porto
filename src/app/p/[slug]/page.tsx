@@ -77,6 +77,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       {/* ---------- Kepala: judul raksasa di kiri, meta menggantung di kanan ---------- */}
       <header className="reveal py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
         <div className="flex flex-wrap items-center gap-4">
+          {project.isWip && (
+            <span className="inline-flex items-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-ember">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ember" />
+              Work in Progress
+            </span>
+          )}
           {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
           <span className="eyebrow">{dibuat}</span>
           {project.images.length > 0 && (
@@ -118,7 +124,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="btn-glow group inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
               >
-                Buka Situs
+                Kunjungi Website
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
                   ↗
                 </span>

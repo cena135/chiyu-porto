@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN "isWip" BOOLEAN NOT NULL DEFAULT false;

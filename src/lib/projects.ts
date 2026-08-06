@@ -51,6 +51,7 @@ export const projectSchema = z.object({
   featured: z.boolean().default(false),
   published: z.boolean().default(true),
   isHidden: z.boolean().default(false),
+  isWip: z.boolean().default(false),
   order: z.number().int().min(0).max(9999).default(0),
 });
 // Catatan: liveUrl, repoUrl, dan content memang sudah opsional sejak awal
@@ -87,6 +88,7 @@ export function parseProjectForm(form: FormData) {
     featured: form.get("featured") === "on" || form.get("featured") === "true",
     published: form.get("published") === "on" || form.get("published") === "true",
     isHidden: form.get("isHidden") === "on" || form.get("isHidden") === "true",
+    isWip: form.get("isWip") === "on" || form.get("isWip") === "true",
     order: Number(form.get("order") ?? 0) || 0,
   };
   return projectSchema.safeParse(raw);

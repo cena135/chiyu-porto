@@ -22,6 +22,9 @@ model Project {
   // `isHidden` untuk proyek yang SUDAH selesai tapi sengaja tidak ditampilkan
   // ke publik — mis. proyek internal perusahaan atau terikat NDA.
   isHidden    Boolean  @default(false)
+  // Masih dikerjakan. Beda dengan `published: false` (draf, belum layak tampil):
+  // proyek WIP TETAP tampil di publik, hanya diberi penanda bahwa belum rampung.
+  isWip       Boolean  @default(false)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

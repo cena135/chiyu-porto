@@ -420,6 +420,24 @@ export function ProjectForm({
             <label className="flex cursor-pointer items-start gap-3 py-2">
               <input
                 type="checkbox"
+                name="isWip"
+                defaultChecked={editing?.isWip ?? false}
+                className="mt-0.5 h-4 w-4 accent-ember"
+              />
+              <span>
+                <span className="block text-xs font-medium text-mist-200">
+                  Work in Progress (masih dikerjakan)
+                </span>
+                <span className="block text-[11px] text-mist-400/70">
+                  Proyek <b>tetap tampil</b> di publik, hanya diberi lencana “WIP”. Beda dengan
+                  draf di atas yang menyembunyikannya sama sekali.
+                </span>
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-3 py-2">
+              <input
+                type="checkbox"
                 name="isHidden"
                 defaultChecked={editing?.isHidden ?? false}
                 className="mt-0.5 h-4 w-4 accent-ember"
