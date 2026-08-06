@@ -158,7 +158,7 @@ export default async function HomePage() {
                 "you're" akan diprotes aturan lint react/no-unescaped-entities. */}
             <p className="text-sm leading-relaxed text-mist-400">
               {
-                "Hai, aku Alexander Imanuel Joedo, Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)"
+                "Hai, aku Alexander Imanuel Joedo (22 tahun), Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)"
               }
             </p>
           </div>
