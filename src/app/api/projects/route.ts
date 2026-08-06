@@ -50,7 +50,9 @@ export async function POST(req: NextRequest) {
   const project = await prisma.project.create({
     data: {
       title: data.title,
-      slug: await uniqueSlug(data.title),
+      // Slug pilihan admin dipakai kalau diisi; kalau kosong, diturunkan dari
+      // judul. uniqueSlug tetap menjaga keunikan (menambah -2, -3, ...).
+      slug: await uniqueSlug(data.slug?.trim() || data.title),
       description: data.description,
       content: data.content || null,
       liveUrl: data.liveUrl || null,

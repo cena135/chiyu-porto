@@ -2,6 +2,9 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import type { Project, ProjectImage } from "@prisma/client";
 import { prisma } from "./prisma";
+import { slugify } from "./slugify";
+
+export { slugify };
 
 /**
  * Segarkan seluruh halaman publik setelah admin mengubah data.
@@ -38,6 +41,8 @@ export const WITH_IMAGES = {
 
 export const projectSchema = z.object({
   title: z.string().trim().min(2, "Judul minimal 2 karakter").max(120),
+  // Opsional: kalau dikosongkan, slug diturunkan dari judul.
+  slug: z.string().trim().max(80).optional(),
   description: z.string().trim().min(5, "Deskripsi minimal 5 karakter").max(600),
   content: z.string().trim().max(20000).optional().nullable(),
   liveUrl: z.string().trim().url("URL live tidak valid").optional().or(z.literal("")),
@@ -54,16 +59,6 @@ export const projectSchema = z.object({
 
 export type ProjectInput = z.infer<typeof projectSchema>;
 
-export function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
 
 /** Slug unik; kalau bentrok tambahkan sufiks -2, -3, ... */
 export async function uniqueSlug(title: string, ignoreId?: string) {
@@ -80,6 +75,7 @@ export async function uniqueSlug(title: string, ignoreId?: string) {
 export function parseProjectForm(form: FormData) {
   const raw = {
     title: String(form.get("title") ?? ""),
+    slug: String(form.get("slug") ?? ""),
     description: String(form.get("description") ?? ""),
     content: (form.get("content") as string) || null,
     liveUrl: String(form.get("liveUrl") ?? ""),

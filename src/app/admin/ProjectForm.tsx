@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ProjectWithImages } from "@/lib/projects";
+import { slugify } from "@/lib/slugify";
 
 export const MAX_GALLERY = 12;
 
@@ -23,6 +24,17 @@ export function ProjectForm({
   onSaved: (msg: string) => void;
   onCancel: () => void;
 }) {
+  const [judul, setJudul] = useState(editing?.title ?? "");
+  const [slug, setSlug] = useState(editing?.slug ?? "");
+  /**
+   * Pengisian otomatis berhenti begitu slug disunting manual.
+   *
+   * Untuk proyek yang SUDAH ADA, dianggap tersunting sejak awal — slug-nya
+   * sudah beredar sebagai URL publik, jadi tidak boleh ikut berubah diam-diam
+   * hanya karena judulnya dirapikan.
+   */
+  const [slugManual, setSlugManual] = useState(Boolean(editing));
+
   const [slots, setSlots] = useState<Slot[]>([]);
   const [removedIds, setRemovedIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -30,13 +42,16 @@ export function ProjectForm({
   const formRef = useRef<HTMLFormElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Muat ulang galeri tiap kali proyek yang diedit berganti.
+  // Muat ulang isi form tiap kali proyek yang diedit berganti.
   useEffect(() => {
     setSlots(
       editing ? editing.images.map((img) => ({ kind: "existing", id: img.id, url: img.url })) : [],
     );
     setRemovedIds([]);
     setError(null);
+    setJudul(editing?.title ?? "");
+    setSlug(editing?.slug ?? "");
+    setSlugManual(Boolean(editing));
   }, [editing]);
 
   // Bebaskan object URL pratinjau saat komponen dilepas.
@@ -121,6 +136,11 @@ export function ProjectForm({
     }
 
     formRef.current?.reset();
+    // reset() bawaan browser tidak menyentuh state terkendali — judul dan slug
+    // harus dikosongkan sendiri, kalau tidak akan tertinggal di form berikutnya.
+    setJudul("");
+    setSlug("");
+    setSlugManual(false);
     setSlots([]);
     setRemovedIds([]);
     onSaved(editing ? "Proyek diperbarui." : "Proyek ditambahkan.");
@@ -152,10 +172,64 @@ export function ProjectForm({
               name="title"
               required
               maxLength={120}
-              defaultValue={editing?.title ?? ""}
+              value={judul}
+              onChange={(e) => {
+                setJudul(e.target.value);
+                // Ikut mengisi slug HANYA selama belum disunting manual.
+                if (!slugManual) setSlug(slugify(e.target.value));
+              }}
               placeholder="Sistem ERP Produksi"
               className={field}
             />
+          </div>
+
+          <div>
+            <div className="mb-1.5 flex items-baseline justify-between gap-3">
+              <label className={`${label} mb-0`} htmlFor="slug">
+                Slug URL
+              </label>
+              {slugManual && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSlugManual(false);
+                    setSlug(slugify(judul));
+                  }}
+                  className="text-[11px] text-mist-400 transition-colors hover:text-aurora"
+                >
+                  Samakan dengan judul
+                </button>
+              )}
+            </div>
+
+            <input
+              id="slug"
+              name="slug"
+              maxLength={80}
+              value={slug}
+              onChange={(e) => {
+                setSlugManual(true);
+                setSlug(e.target.value);
+              }}
+              // Dirapikan saat fokus lepas, bukan tiap ketikan — kalau tiap
+              // ketikan, strip di ujung langsung dibuang dan kata kedua
+              // mustahil diketik.
+              onBlur={() => setSlug(slugify(slug))}
+              placeholder="otomatis dari judul"
+              className={field}
+            />
+
+            <p className="mt-1.5 text-[11px] text-mist-400/70">
+              Alamat halaman:{" "}
+              <span className="text-aurora/80">
+                /p/{slugify(slug || judul) || "…"}
+              </span>
+              {editing && slugify(slug) !== editing.slug && (
+                <span className="ml-2 text-ember">
+                  · URL berubah, tautan lama tidak lagi berlaku
+                </span>
+              )}
+            </p>
           </div>
 
           <div>

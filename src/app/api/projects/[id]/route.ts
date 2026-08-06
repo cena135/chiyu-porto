@@ -112,10 +112,13 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
         where: { id },
         data: {
           title: data.title,
-          slug:
-            data.title === existing.title
-              ? existing.slug
-              : await uniqueSlug(data.title, existing.id),
+          /**
+           * Slug mengikuti apa yang dikirim form. Form selalu mengirimkan slug
+           * yang sedang tampil, jadi slug proyek lama TIDAK berubah diam-diam
+           * hanya karena judulnya disunting — URL yang sudah beredar tetap aman.
+           * Kalau field-nya dikosongkan, barulah diturunkan ulang dari judul.
+           */
+          slug: await uniqueSlug(data.slug?.trim() || data.title, existing.id),
           description: data.description,
           content: data.content || null,
           liveUrl: data.liveUrl || null,
