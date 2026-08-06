@@ -11,6 +11,9 @@
   --color-ink-800: oklch(0.26 0.024 274);
   --color-ink-700: oklch(0.35 0.026 273);
   --color-mist-400: oklch(0.72 0.02 272);
+  /* Nada antara: judul kartu tidak seterang teks utama, jadi kontrasnya lebih
+     lembut di mata tanpa kehilangan keterbacaan. */
+  --color-mist-300: oklch(0.81 0.016 271);
   --color-mist-200: oklch(0.88 0.014 270);
 
   --color-aurora: oklch(0.78 0.15 195);
@@ -156,29 +159,25 @@ body::before {
    tidak terbaca sebagai matriks seragam.
    PENTING: pergeseran memakai margin, BUKAN transform — .slide-in menganimasikan
    transform dengan fill-mode both, jadi transform statis di sini akan tertimpa. */
+/* Tiga kolom seragam dan ramping.
+   Dulu 12 kolom berselang-seling 7/5 dengan baris digeser. Itu bekerja waktu
+   tiap kartu punya screenshot berbeda. Begitu delapan proyek tampil TANPA
+   gambar, hasilnya jadi delapan blok raksasa yang sama kosongnya — asimetrinya
+   tidak lagi terbaca sebagai gaya, cuma sebagai ruang terbuang. */
 .work-grid {
   display: grid;
-  gap: 1.75rem;
+  gap: 1.5rem;
   grid-template-columns: 1fr;
 }
-@media (min-width: 900px) {
+@media (min-width: 700px) {
   .work-grid {
-    grid-template-columns: repeat(12, 1fr);
-    gap: 2.5rem 2rem;
+    grid-template-columns: repeat(2, 1fr);
   }
-  .work-grid > *:nth-child(4n + 1) {
-    grid-column: span 7;
-  }
-  .work-grid > *:nth-child(4n + 2) {
-    grid-column: span 5;
-    margin-top: 4.5rem;
-  }
-  .work-grid > *:nth-child(4n + 3) {
-    grid-column: span 5;
-  }
-  .work-grid > *:nth-child(4n + 4) {
-    grid-column: span 7;
-    margin-top: -1.5rem;
+}
+@media (min-width: 1100px) {
+  .work-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
   }
 }
 
