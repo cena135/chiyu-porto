@@ -8,8 +8,8 @@
  * dua kali TIDAK menggandakan data — yang sudah ada diperbarui isinya.
  *
  * Catatan: proyek-proyek ini sengaja tanpa gambar dan tanpa liveUrl/repoUrl.
- * Kartu di halaman depan otomatis memakai tampilan cadangan bergradien
- * ("Internal / NDA") yang menonjolkan judul dan tech stack.
+ * Baris di halaman depan otomatis memakai panel mesh gradient dengan lencana
+ * "Internal", warnanya berbeda tiap baris.
  */
 import { PrismaClient } from "@prisma/client";
 
@@ -29,45 +29,45 @@ function slugify(input) {
 
 const PROJECTS = [
   {
-    title: "AADK Analytics",
+    title: "AADK",
     description:
       "Data warehouse ETL pipeline and internal analytics dashboard for a coffee shop chain.",
     techStack: ["Python", "FastAPI", "SQLite", "Vanilla JS"],
   },
   {
-    title: "Havanna CRM & Feedback System",
+    title: "Havanna",
     description:
       "Customer feedback and complaint management platform (Web & Mobile) to streamline multi-branch operations.",
     techStack: ["Python Flask", "PostgreSQL", "Flutter"],
   },
   {
-    title: "RNKD Padel League",
+    title: "RNKD",
     description:
       "Cross-platform mobile application and web admin panel for a sports community, featuring live match scoring, matchmaking ranking (MMR), dan leaderboards.",
     techStack: ["React Native (Expo)", "Supabase", "Next.js"],
   },
   {
-    title: "SNC Internal App",
+    title: "SNC",
     description:
       "Mobile application for field data collection, seamlessly integrated with a custom web-based admin dashboard to monitor operations.",
     techStack: ["React", "Next.js", "Flutter"],
   },
   {
-    title: "Flat Production ERP",
+    title: "Flat",
     description:
       "Internal management system to automate equipment borrowing processes and simplify bookkeeping.",
     techStack: ["Web", "Flutter"],
   },
   {
-    title: "Allohaus POS & Finance",
+    title: "Allohaus",
     description:
       "Point of Sale (POS) and financial tracking application for a padel sports facility to manage daily transactions.",
     techStack: ["Web", "Flutter"],
   },
   {
-    title: "Skripsi - Computer Vision & Management",
+    title: "SIRUAN (Sistem Informasi Ruangan UPFK)",
     description:
-      "A dual-system thesis project featuring a YOLOv8-based AI model for automated object detection, integrated with a Laravel Filament admin panel for data management.",
+      "Aplikasi pemetaan aset gedung terpusat dengan asisten deteksi AI (YOLOv8) dan sistem Audit Trail otomatis untuk transparansi perubahan data.",
     techStack: ["Python", "YOLOv8", "Laravel", "Filament"],
   },
   {
@@ -76,6 +76,25 @@ const PROJECTS = [
       "A full-stack web application featuring secure authentication and automated end-to-end testing.",
     techStack: ["React", "Vite", "Supabase", "Clerk", "Playwright"],
   },
+];
+
+/**
+ * Slug dari penamaan LAMA yang sudah diganti judulnya.
+ *
+ * Perlu didaftarkan eksplisit karena mengganti judul menghasilkan slug baru —
+ * upsert akan membuat baris baru dan baris lama tetap tertinggal, sehingga
+ * daftarnya jadi berlipat. Sengaja daftar tertutup, BUKAN "hapus apa pun yang
+ * tidak ada di PROJECTS": aturan sapu bersih akan ikut menghapus proyek yang
+ * ditambahkan lewat panel admin.
+ */
+const SLUG_LAMA = [
+  "aadk-analytics",
+  "havanna-crm-feedback-system",
+  "rnkd-padel-league",
+  "snc-internal-app",
+  "flat-production-erp",
+  "allohaus-pos-finance",
+  "skripsi-computer-vision-management",
 ];
 
 async function list() {
@@ -111,7 +130,6 @@ async function main() {
 
     const sudahAda = await prisma.project.findUnique({ where: { slug } });
 
-    // upsert: aman dijalankan berulang, tidak menggandakan data.
     await prisma.project.upsert({
       where: { slug },
       create: { ...data, slug },
@@ -127,7 +145,22 @@ async function main() {
     }
   }
 
-  console.log(`\n[seed] Selesai. ${baru} baru, ${diperbarui} diperbarui.\n`);
+  // Bersihkan sisa penamaan lama. Gambarnya ikut terhapus lewat onDelete: Cascade.
+  const slugBaru = new Set(PROJECTS.map((p) => slugify(p.title)));
+  const targetHapus = SLUG_LAMA.filter((s) => !slugBaru.has(s));
+  const usang = await prisma.project.findMany({
+    where: { slug: { in: targetHapus } },
+    select: { slug: true, title: true },
+  });
+
+  if (usang.length > 0) {
+    await prisma.project.deleteMany({ where: { slug: { in: usang.map((u) => u.slug) } } });
+    for (const u of usang) console.log(`[seed] - dihapus (nama lama): ${u.title}  (/${u.slug})`);
+  }
+
+  console.log(
+    `\n[seed] Selesai. ${baru} baru, ${diperbarui} diperbarui, ${usang.length} dihapus.\n`,
+  );
   await list();
 }
 
