@@ -272,7 +272,14 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
           </p>
         </div>
       ) : (
-      <div id="karya" className="mt-4 scroll-mt-24 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        /* Tiga kolom, bukan empat: dengan 8 proyek, empat kolom hanya
+           menghasilkan dua baris pendek. Tiga kolom memberi tiga baris, dan
+           jarak antar kotak yang lebar itulah yang membuat area ini terasa
+           panjang saat digulir. */
+        <div
+        id="karya"
+        className="mt-12 grid scroll-mt-28 grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10 lg:grid-cols-3 lg:gap-12"
+      >
         {projects.map((p, i) => (
           <motion.div
             key={p.id}
@@ -282,7 +289,7 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
             viewport={{ once: true, amount: 0.2 }}
             variants={masuk}
             whileHover="hover"
-            className="bento group relative overflow-hidden rounded-3xl p-6"
+            className="bento group relative flex min-h-[19rem] flex-col overflow-hidden rounded-3xl p-7 md:min-h-[23rem]"
           >
             <motion.div
               aria-hidden
@@ -293,7 +300,10 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
             />
             <Link href={`/p/${p.slug}`} className="absolute inset-0 z-10" aria-label={p.title} />
 
-            <div className="relative">
+            {/* `flex-1` + `justify-between`: nomor menempel di atas, judul dan
+                panah turun ke dasar. Tanpa ini, kotak yang ditinggikan hanya
+                menyisakan ruang kosong menganga di bawah teks. */}
+            <div className="relative flex flex-1 flex-col justify-between">
               <motion.span
                 className="eyebrow"
                 variants={{ hover: { color: "rgba(255,255,255,0.8)" } }}
@@ -302,6 +312,7 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
                 {String(i + 1).padStart(2, "0")}
               </motion.span>
 
+              <div className="mt-8">
               <motion.h3
                 className="display mt-3 text-xl font-bold"
                 variants={{ hover: { color: "#ffffff", x: 4 } }}
@@ -311,7 +322,7 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
               </motion.h3>
 
               <motion.p
-                className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-text-dim"
+                className="mt-3 line-clamp-3 text-sm leading-relaxed text-text-dim"
                 variants={{ hover: { color: "rgba(255,255,255,0.85)" } }}
                 transition={{ duration: 0.3 }}
               >
@@ -319,13 +330,14 @@ export function Bento({ projects }: { projects: ProjectWithImages[] }) {
               </motion.p>
 
               <motion.span
-                className="mt-5 inline-flex h-9 w-9 items-center justify-center rounded-full text-white"
+                className="mt-6 inline-flex h-10 w-10 items-center justify-center rounded-full text-white"
                 style={{ background: i % 2 === 0 ? BLUE : PURPLE }}
                 variants={{ hover: { background: "#ffffff", color: i % 2 === 0 ? BLUE : PURPLE, scale: 1.15 } }}
                 transition={pegas}
               >
                 →
               </motion.span>
+              </div>
             </div>
           </motion.div>
         ))}
