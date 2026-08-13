@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { Typewriter } from "@/components/ui/Typewriter";
 import { DotPattern } from "@/components/ui/DotPattern";
@@ -57,12 +56,23 @@ export function HeroV3() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <MagneticButton
+          {/* Kurung siku merenggang saat disorot — isyarat khas terminal,
+              jauh lebih pas di sini daripada tombol yang mengejar kursor. */}
+          <motion.a
             href="#karya-demo"
-            className="inline-block rounded-md border border-[#22d3ee]/50 bg-[#22d3ee]/10 px-6 py-3 text-sm font-semibold text-[#22d3ee] shadow-[0_0_28px_-8px_#22d3ee]"
+            initial="rest"
+            whileHover="hover"
+            whileTap={{ scale: 0.96 }}
+            className="group inline-flex items-center gap-1 rounded-md border border-[#22d3ee]/50 bg-[#22d3ee]/10 px-5 py-3 text-sm font-semibold text-[#22d3ee] shadow-[0_0_28px_-8px_#22d3ee]"
           >
-            ./lihat-karya
-          </MagneticButton>
+            <motion.span variants={{ rest: { x: 0 }, hover: { x: -4 } }}>
+              [
+            </motion.span>
+            <span>lihat-karya</span>
+            <motion.span variants={{ rest: { x: 0 }, hover: { x: 4 } }}>
+              ]
+            </motion.span>
+          </motion.a>
           <motion.a
             href="#karya-demo"
             whileHover={{ scale: 1.05 }}

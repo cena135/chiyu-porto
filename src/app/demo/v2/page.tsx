@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getDemoProjects } from "../_data";
-import { ProjectCard } from "@/components/ProjectCard";
+import { ProjectCardV2 } from "@/components/demo/ProjectCardV2";
+import { CursorMode } from "@/components/ui/cursor-store";
 import { HeroV2 } from "@/components/demo/HeroV2";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export default async function Page() {
     /* Seluruh gaya tema ini di-scope ke `.theme-v2` — tidak ada satu pun
        aturannya yang bocor ke halaman utama. */
     <main className="theme-v2 mx-auto w-full max-w-[86rem] px-6 pb-32 sm:px-10">
+      <CursorMode mode="smart" />
       <HeroV2 />
 
       <section id="karya-demo" className="pt-10">
@@ -35,9 +37,9 @@ export default async function Page() {
             Belum ada proyek di database.
           </p>
         ) : (
-          <div className="work-grid">
+          <div className="flex flex-col gap-5">
             {projects.map((p, i) => (
-              <ProjectCard key={p.id} project={p} index={i} />
+              <ProjectCardV2 key={p.id} project={p} index={i} />
             ))}
           </div>
         )}

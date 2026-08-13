@@ -336,10 +336,10 @@ body:has(.theme-v2) .aurora-field::after {
   --color-ember: #22d3ee;
   --color-text: #d7ffe9;
   --color-text-dim: #4ade80;
-  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
 }
 .theme-v3 .display {
-  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  font-family: var(--font-mono), ui-monospace, monospace;
   letter-spacing: -0.02em;
 }
 .theme-v3 [data-mesh] {

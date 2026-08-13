@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { DotPattern } from "@/components/ui/DotPattern";
 
@@ -70,12 +69,18 @@ export function HeroV1() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <MagneticButton
+          {/* Fade sederhana, TANPA magnetic. Tombol yang mengejar kursor
+              bertentangan dengan bahasa Apple Pro: di sana elemen diam dan
+              tenang, yang berubah hanya keterangannya. */}
+          <motion.a
             href="#karya-demo"
-            className="inline-block rounded-full bg-text px-6 py-3 text-sm font-semibold text-black"
+            whileHover={{ opacity: 0.85 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.2 }}
+            className="rounded-full bg-text px-6 py-3 text-sm font-semibold text-black"
           >
             Lihat Karya
-          </MagneticButton>
+          </motion.a>
           <motion.a
             href="#karya-demo"
             whileHover={{ scale: 1.05 }}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { CursorProvider } from "@/components/ui/cursor-store";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -13,6 +13,14 @@ const inter = Inter({
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+// Dipakai tema demo V3 (Pro Hacker). Dimuat di layout, bukan di halaman demo,
+// supaya next/font tetap self-hosting dan preload.
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -38,7 +46,10 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider appearance={{ variables: { colorPrimary: "#ffffff" } }}>
-      <html lang="id" className={`${inter.variable} ${outfit.variable}`}>
+      <html
+        lang="id"
+        className={`${inter.variable} ${outfit.variable} ${mono.variable}`}
+      >
         <body>
           {/* Aurora ambient global — dipasang di layout, bukan page, supaya
               halaman detail proyek dan panel admin ikut mendapat cahayanya.

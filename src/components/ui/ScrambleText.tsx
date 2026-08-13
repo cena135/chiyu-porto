@@ -18,11 +18,14 @@ export function ScrambleText({
   /** Berapa frame yang dibutuhkan tiap huruf untuk mengunci. */
   speed = 2,
   delay = 0,
+  replayKey = 0,
 }: {
   text: string;
   className?: string;
   speed?: number;
   delay?: number;
+  /** Naikkan nilainya untuk memutar ulang efek — dipakai saat hover. */
+  replayKey?: number;
 }) {
   const [tampil, setTampil] = useState(text);
   const rafRef = useRef<number | null>(null);
@@ -81,7 +84,7 @@ export function ScrambleText({
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [text, speed, delay]);
+  }, [text, speed, delay, replayKey]);
 
   return (
     <span className={className}>

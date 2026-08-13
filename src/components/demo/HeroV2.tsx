@@ -11,13 +11,22 @@ const wadah = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
+/** Pantulan cairan: damping rendah memberi overshoot, dan skala yang ikut
+ *  bergerak membuat katanya terasa "memuai" saat mendarat — bukan sekadar
+ *  bergeser naik. */
 const kata = {
-  hidden: { opacity: 0, y: "0.6em", filter: "blur(6px)" },
+  hidden: { opacity: 0, y: "0.7em", scale: 0.92, filter: "blur(8px)" },
   show: {
     opacity: 1,
     y: 0,
+    scale: 1,
     filter: "blur(0px)",
-    transition: { type: "spring" as const, stiffness: 110, damping: 17 },
+    transition: {
+      type: "spring" as const,
+      stiffness: 140,
+      damping: 11,
+      mass: 0.9,
+    },
   },
 };
 
