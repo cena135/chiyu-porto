@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Outfit } from "next/font/google";
+import { Chakra_Petch, Inter, JetBrains_Mono, Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { CursorProvider } from "@/components/ui/cursor-store";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -21,6 +21,15 @@ const outfit = Outfit({
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
+});
+
+// Dipakai tema demo V1 (Vibrant Bento). Chakra Petch wajib menyebutkan weight
+// karena bukan variable font — tanpa itu next/font menolak memuatnya.
+const chakra = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-chakra",
   display: "swap",
 });
 
@@ -48,7 +57,7 @@ export default function RootLayout({
     <ClerkProvider appearance={{ variables: { colorPrimary: "#ffffff" } }}>
       <html
         lang="id"
-        className={`${inter.variable} ${outfit.variable} ${mono.variable}`}
+        className={`${inter.variable} ${outfit.variable} ${mono.variable} ${chakra.variable}`}
       >
         <body>
           {/* Aurora ambient global — dipasang di layout, bukan page, supaya

@@ -7,7 +7,7 @@ import Link from "next/link";
  * menggulir balik ke atas — inti dari uji A/B adalah membandingkan cepat.
  */
 const VERSI = [
-  { href: "/demo/v1", label: "V1", nama: "Clean Modern" },
+  { href: "/demo/v1", label: "V1", nama: "Bento Grid" },
   { href: "/demo/v2", label: "V2", nama: "Liquid Glass" },
   { href: "/demo/v3", label: "V3", nama: "Hacker" },
 ];

@@ -62,6 +62,17 @@ export function ProjectCardV2({
   const gy = useMotionValue(50);
   const glare = useMotionTemplate`radial-gradient(circle at ${gx}% ${gy}%, rgb(255 255 255 / 0.22), transparent 55%)`;
 
+  // --- Parallax kedalaman ---
+  // Isi kartu diangkat di sumbu Z sebanding dengan seberapa miring kartunya,
+  // jadi thumbnail dan judul benar-benar MENGAMBANG di atas kaca saat digerakkan,
+  // bukan sekadar ikut berputar rata bersama permukaannya.
+  const miring = useTransform([sx, sy], ([x, y]: number[]) =>
+    Math.min(1, (Math.abs(x) + Math.abs(y)) * 2.4),
+  );
+  const zThumb = useTransform(miring, [0, 1], [12, 42]);
+  const zJudul = useTransform(miring, [0, 1], [8, 30]);
+  const zPanah = useTransform(miring, [0, 1], [6, 24]);
+
   const { setVariant } = useCursor();
 
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -90,6 +101,10 @@ export function ProjectCardV2({
       className="group relative"
       style={{ perspective: 1000 }}
     >
+      {/* Kartu ini TIDAK boleh diberi `overflow-hidden`: CSS memaksa
+          `transform-style` kembali ke `flat` begitu overflow bukan `visible`,
+          dan seluruh lapisan Z di dalamnya ikut mati. Karena itu tiap lapisan
+          di dalamnya membulatkan sudutnya sendiri. */}
       <motion.div
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
@@ -100,18 +115,18 @@ export function ProjectCardV2({
         animate="rest"
         whileTap="tap"
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className="glass-liquid radius-modern relative overflow-hidden p-5 sm:p-6"
+        className="glass-liquid radius-modern relative p-5 sm:p-6"
       >
         {/* Kilau kaca mengikuti kursor */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="radius-modern pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{ backgroundImage: glare }}
         />
         <div
           aria-hidden
           data-mesh
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          className="radius-modern pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{ backgroundImage: meshRow(palette) }}
         />
 
@@ -121,10 +136,16 @@ export function ProjectCardV2({
           className="absolute inset-0 z-0"
         />
 
-        <div className="pointer-events-none relative flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
+        <div
+          className="pointer-events-none relative flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7"
+          style={{ transformStyle: "preserve-3d" }}
+        >
           <span className="eyebrow shrink-0 sm:w-10">{nomor}</span>
 
-          <div className="relative h-20 w-full shrink-0 overflow-hidden rounded-xl border border-white/10 bg-base sm:w-32 lg:w-44">
+          <motion.div
+            style={{ z: zThumb }}
+            className="relative h-20 w-full shrink-0 overflow-hidden rounded-xl border border-white/10 bg-base shadow-[0_20px_40px_-16px_rgb(0_0_0/0.9)] sm:w-32 lg:w-44"
+          >
             {cover ? (
               <motion.img
                 src={cover.url}
@@ -148,9 +169,12 @@ export function ProjectCardV2({
                 </span>
               </>
             )}
-          </div>
+          </motion.div>
 
-          <div className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2">
+          <motion.div
+            style={{ z: zJudul }}
+            className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2"
+          >
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h3 className="display text-[clamp(1.2rem,2.6vw,2rem)] text-text-dim transition-colors group-hover:text-aurora">
                 {project.title}
@@ -165,7 +189,7 @@ export function ProjectCardV2({
             <p className="mt-2 line-clamp-1 max-w-2xl text-[13px] leading-relaxed text-text-dim">
               {project.description}
             </p>
-          </div>
+          </motion.div>
 
           {project.techStack.length > 0 && (
             <p className="eyebrow hidden max-w-[13rem] shrink-0 truncate text-right lg:block">
@@ -173,12 +197,13 @@ export function ProjectCardV2({
             </p>
           )}
 
-          <span
+          <motion.span
             aria-hidden
+            style={{ z: zPanah }}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-text-dim transition-all group-hover:border-aurora/50 group-hover:bg-aurora/10 group-hover:text-aurora"
           >
             →
-          </span>
+          </motion.span>
         </div>
       </motion.div>
     </motion.article>
