@@ -103,6 +103,11 @@ export default async function HomePage() {
         <style>{`.slide-in{opacity:1 !important}`}</style>
       </noscript>
 
+      {/* Latar sequence: canvas-nya `fixed`, jadi tidak menempati ruang di
+          aliran dokumen. Letaknya di sini murni supaya mudah ditemukan —
+          memindahkannya ke mana pun tidak mengubah tata letak. */}
+      <HeroSequence />
+
       {/* ---------- Kepala: tinggal wordmark, menu kanan atas dihapus ---------- */}
       <header className="reveal flex items-center py-8">
         <Link href="/" className="display text-lg">
@@ -196,14 +201,6 @@ export default async function HomePage() {
           </div>
         </aside>
       </section>
-
-      {/* ---------- Sequence 3D terikat scroll ----------
-          Diletakkan tepat setelah judul hero: pengunjung membaca kalimatnya,
-          lalu guliran pertamanya langsung memutar bola kawat. Full-bleed —
-          menembus padding <main> supaya benar-benar selebar layar. */}
-      <div className="relative left-1/2 w-screen -translate-x-1/2">
-        <HeroSequence />
-      </div>
 
       {/* ---------- Ticker tech stack ---------- */}
       {stacks.length > 0 && (

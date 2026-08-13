@@ -12,9 +12,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.mjs",
-    "db:seed:reset": "node prisma/seed.mjs --reset",
-    "prebuild": "node scripts/generate-hero-frames.mjs",
-    "frames": "node scripts/generate-hero-frames.mjs"
+    "db:seed:reset": "node prisma/seed.mjs --reset"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",

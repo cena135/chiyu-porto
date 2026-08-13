@@ -3,38 +3,88 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Sequence gambar yang terikat scroll — teknik yang dipakai halaman produk Apple.
+ * Sequence gambar yang di-scrub oleh guliran SELURUH halaman, dipasang sebagai
+ * latar tetap (fixed) di belakang konten.
  *
- * Cara kerjanya: SEMUA frame di-preload lebih dulu, lalu posisi scroll dipetakan
- * ke indeks frame. Yang digambar cuma satu <canvas>, bukan 36 <img> — jadi tidak
- * ada gambar yang baru diunduh saat sedang digulir, dan itu sumber utama stutter
- * pada implementasi naif.
+ * Cara kerjanya: semua frame di-preload lebih dulu, lalu posisi scroll dokumen
+ * dipetakan ke indeks frame dan digambar ke satu <canvas>. Karena hanya satu
+ * elemen yang digambar dari memori, tidak ada gambar yang baru diunduh saat
+ * sedang digulir — itu sumber utama stutter pada implementasi naif.
  *
- * GSAP + ScrollTrigger di-import DINAMIS di dalam efek. Kalau di-import statis,
- * ~70 KB ikut terunduh oleh semua pengunjung — termasuk yang cuma membuka
- * halaman detail proyek yang tidak memakai komponen ini sama sekali.
+ * GSAP di-import DINAMIS. Kalau statis, ~70 KB ikut terunduh oleh semua
+ * pengunjung termasuk yang cuma membuka halaman detail proyek.
  */
 export function HeroSequence({
-  frames = 36,
-  dir = "/hero-frames",
-  ext = "svg",
-  /** Panjang scroll saat canvas dipaku, relatif tinggi layar. */
-  scrollLength = "+=220%",
+  frames = 151,
+  dir = "/sequence",
+  /** Nama berkas: {dir}/{prefix}{nomor 3 digit}.{ext} */
+  prefix = "ezgif-frame-",
+  ext = "jpg",
+  /**
+   * Perbesaran untuk memotong watermark di pinggir frame.
+   * 1.08 memangkas ~4% dari tiap sisi. Naikkan kalau watermark masih terlihat.
+   */
+  zoom = 1.08,
+  /** Peredam inersia ScrollTrigger. Angka kecil = lebih responsif. */
+  scrub = 0.5,
 }: {
   frames?: number;
   dir?: string;
+  prefix?: string;
   ext?: string;
-  scrollLength?: string;
+  zoom?: number;
+  scrub?: number;
 }) {
-  const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const frameRef = useRef(-1);
+  const siapRef = useRef(false);
 
+  const [progres, setProgres] = useState(0);
   const [siap, setSiap] = useState(false);
-  const [progresMuat, setProgresMuat] = useState(0);
 
-  const src = (i: number) => `${dir}/frame-${String(i + 1).padStart(3, "0")}.${ext}`;
+  const src = (i: number) => `${dir}/${prefix}${String(i + 1).padStart(3, "0")}.${ext}`;
+
+  /* ---------- Menggambar satu frame: cover-fit, terpusat, tajam ---------- */
+  function ukurCanvas() {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // DPR dibatasi 2: di layar 3x, buffer-nya jadi 9x luas dan T480 kewalahan
+    // tanpa perbedaan yang benar-benar terlihat.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(window.innerWidth * dpr);
+    canvas.height = Math.round(window.innerHeight * dpr);
+  }
+
+  function gambar(index: number) {
+    const canvas = canvasRef.current;
+    const img = imagesRef.current[index];
+    if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) return;
+
+    const cw = canvas.width;
+    const ch = canvas.height;
+
+    /**
+     * cover-fit dihitung manual di sini.
+     *
+     * `object-fit: cover` di CSS TIDAK berpengaruh pada isi <canvas> — properti
+     * itu hanya berlaku untuk elemen tergantikan seperti <img>/<video>. Kalau
+     * hanya mengandalkan CSS, gambarnya akan gepeng mengikuti rasio layar.
+     */
+    const skala = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+    const w = img.naturalWidth * skala;
+    const h = img.naturalHeight * skala;
+
+    ctx.fillStyle = "#0b0d15"; // ink-950, mencegah kedip putih di sela frame
+    ctx.fillRect(0, 0, cw, ch);
+    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+
+    frameRef.current = index;
+  }
 
   /* ---------- 1. Preload semua frame ---------- */
   useEffect(() => {
@@ -49,19 +99,28 @@ export function HeroSequence({
       const tandai = () => {
         if (batal) return;
         selesai++;
-        setProgresMuat(Math.round((selesai / frames) * 100));
-        // Frame pertama sudah cukup untuk menggambar sesuatu lebih awal.
-        if (i === 0) gambar(0);
-        if (selesai === frames) setSiap(true);
+        setProgres(Math.round((selesai / frames) * 100));
+
+        // Gambar frame pertama begitu tersedia supaya latar tidak kosong
+        // selama sisa frame masih diunduh.
+        if (i === 0) {
+          ukurCanvas();
+          gambar(0);
+        }
+        if (selesai === frames) {
+          siapRef.current = true;
+          setSiap(true);
+        }
       };
 
-      img.onload = tandai;
       // Frame rusak tidak boleh menggantung seluruh preload.
+      img.onload = tandai;
       img.onerror = tandai;
       return img;
     });
 
     imagesRef.current = daftar;
+
     return () => {
       batal = true;
       for (const img of daftar) {
@@ -70,68 +129,30 @@ export function HeroSequence({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frames, dir, ext]);
+  }, [frames, dir, prefix, ext]);
 
-  /* ---------- 2. Menggambar satu frame (cover-fit, tajam di layar HiDPI) ---------- */
-  function ukurCanvas() {
-    const canvas = canvasRef.current;
-    const wrap = wrapRef.current;
-    if (!canvas || !wrap) return;
-
-    // DPR dibatasi 2: di layar 3x, buffer-nya jadi 9x luas dan T480 kewalahan
-    // tanpa perbedaan yang benar-benar terlihat.
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const { width, height } = wrap.getBoundingClientRect();
-
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-  }
-
-  function gambar(index: number) {
-    const canvas = canvasRef.current;
-    const img = imagesRef.current[index];
-    if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const cw = canvas.width;
-    const ch = canvas.height;
-    ctx.clearRect(0, 0, cw, ch);
-
-    // cover-fit: isi penuh tanpa gepeng, selalu terpusat — termasuk di ponsel
-    // yang rasionya jauh lebih tinggi daripada frame persegi.
-    const skala = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
-    const w = img.naturalWidth * skala;
-    const h = img.naturalHeight * skala;
-    ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
-
-    frameRef.current = index;
-  }
-
-  /* ---------- 3. Hubungkan ke scroll ---------- */
+  /* ---------- 2. Hubungkan ke guliran seluruh halaman ---------- */
   useEffect(() => {
+    // Sesuai permintaan: GSAP baru dijalankan SETELAH semua frame siap.
+    if (!siap) return;
+
     let mati = false;
     let bersihkan: (() => void) | undefined;
-
-    const kurangiGerak =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     const onResize = () => {
       ukurCanvas();
       gambar(frameRef.current < 0 ? 0 : frameRef.current);
     };
 
+    const kurangiGerak = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
     (async () => {
       ukurCanvas();
+      gambar(0);
       window.addEventListener("resize", onResize);
 
       if (kurangiGerak) {
-        // Hormati setelan aksesibilitas: tampilkan satu frame diam, tanpa
-        // memaku layar dan tanpa animasi apa pun.
+        // Hormati setelan aksesibilitas: satu frame diam, tanpa animasi.
         gambar(Math.floor(frames / 2));
         bersihkan = () => window.removeEventListener("resize", onResize);
         return;
@@ -145,21 +166,19 @@ export function HeroSequence({
 
       gsap.registerPlugin(ScrollTrigger);
 
-      const proxy = { f: 0 };
       const st = ScrollTrigger.create({
-        trigger: wrapRef.current,
+        trigger: document.body,
         start: "top top",
-        end: scrollLength,
-        pin: true,
-        // scrub angka (bukan `true`) memberi peredam inersia — inilah yang
-        // membuat gerakannya terasa mulus, bukan menempel kaku ke roda scroll.
-        scrub: 0.6,
+        end: "bottom bottom",
+        scrub,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          proxy.f = self.progress * (frames - 1);
-          const idx = Math.min(frames - 1, Math.max(0, Math.round(proxy.f)));
-          // Gambar ulang HANYA kalau indeksnya benar-benar berganti. Tanpa
-          // penjaga ini, satu frame bisa digambar puluhan kali per detik.
+          const idx = Math.min(
+            frames - 1,
+            Math.max(0, Math.round(self.progress * (frames - 1))),
+          );
+          // Gambar ulang HANYA saat indeksnya benar-benar berganti — tanpa
+          // penjaga ini satu frame bisa digambar puluhan kali per detik.
           if (idx !== frameRef.current) gambar(idx);
         },
       });
@@ -177,29 +196,28 @@ export function HeroSequence({
       bersihkan?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frames, scrollLength]);
+  }, [siap, frames, scrub]);
 
   return (
-    <section
-      ref={wrapRef}
-      aria-label="Animasi bola kawat yang berputar mengikuti guliran"
-      className="relative h-screen w-full overflow-hidden"
-    >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+    <>
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        className="pointer-events-none fixed inset-0 h-screen w-screen"
+        style={{
+          zIndex: -5,
+          // Memotong watermark di pinggir dengan memperbesar sedikit.
+          transform: `scale(${zoom})`,
+          transformOrigin: "center center",
+        }}
+      />
 
-      {/* Keterangan editorial, mengikuti gaya situs */}
-      <div className="pointer-events-none absolute inset-x-0 top-10 flex justify-center px-6">
-        <span className="eyebrow eyebrow-bright">Gulir untuk memutar</span>
-      </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-10 flex flex-col items-center gap-2 px-6 text-center">
-        <p className="display max-w-2xl text-[clamp(1.1rem,2.4vw,1.9rem)] text-mist-300">
-          Dibangun sendiri, dijalankan sendiri.
-        </p>
-        <span className="eyebrow text-mist-400/70">
-          {siap ? "Self-hosted · ThinkPad T480 · Cloudflare Tunnel" : `Memuat ${progresMuat}%`}
+      {/* Penanda muat — hilang sendiri setelah semua frame siap */}
+      {!siap && (
+        <span className="eyebrow pointer-events-none fixed bottom-5 right-5 z-10 text-mist-400/60">
+          Memuat latar {progres}%
         </span>
-      </div>
-    </section>
+      )}
+    </>
   );
 }
