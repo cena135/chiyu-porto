@@ -277,6 +277,115 @@ body {
   }
 }
 
+/* ============================================================
+   TEMA DEMO (A/B TEST) — semuanya di-scope ke .theme-v*
+   Tidak ada satu pun aturan di bawah ini yang bocor ke halaman
+   utama, karena semuanya butuh kelas pembungkusnya.
+   ============================================================ */
+
+/* ---------- V1 · Apple Pro Clean Modern ----------
+   Monokrom presisi. Aurora global dimatikan lewat :has() pada body —
+   `.aurora-field` hidup di layout, jadi tidak bisa disembunyikan dari dalam
+   halaman tanpa cara ini. */
+body:has(.theme-v1) .aurora-field {
+  display: none;
+}
+.theme-v1 {
+  --color-aurora: #ffffff;
+  --color-violet: #ffffff;
+  --color-ember: #ffffff;
+}
+/* Mesh warna pada kartu diredam jadi abu — v1 harus benar-benar monokrom */
+.theme-v1 [data-mesh] {
+  filter: grayscale(1) opacity(0.45);
+}
+.theme-v1 .glass {
+  background: rgb(255 255 255 / 0.02);
+  backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid rgb(255 255 255 / 0.07);
+  box-shadow: none;
+}
+
+/* ---------- V2 · Liquid Glass + Aurora Reborn ----------
+   Kaca tebal yang benar-benar membiaskan cahaya di belakangnya. */
+.theme-v2 .glass,
+.theme-v2 .glass-liquid {
+  background: rgb(255 255 255 / 0.04);
+  backdrop-filter: blur(64px) saturate(260%) brightness(1.1);
+  border-top: 1px solid rgb(255 255 255 / 0.22);
+  border-left: 1px solid rgb(255 255 255 / 0.08);
+  border-right: 1px solid rgb(255 255 255 / 0.04);
+  box-shadow:
+    0 40px 80px -24px rgb(0 0 0 / 0.85),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.12);
+}
+/* Aurora dibuat lebih berani dan lebih ramai di v2 */
+body:has(.theme-v2) .aurora-field::before {
+  opacity: 0.42;
+  filter: blur(90px);
+}
+body:has(.theme-v2) .aurora-field::after {
+  opacity: 0.34;
+  filter: blur(90px);
+}
+
+/* ---------- V3 · Pro Veteran Coder / Hacker ---------- */
+.theme-v3 {
+  --color-aurora: #22d3ee; /* neon cyan */
+  --color-violet: #22c55e; /* matrix green */
+  --color-ember: #22d3ee;
+  --color-text: #d7ffe9;
+  --color-text-dim: #4ade80;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+}
+.theme-v3 .display {
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  letter-spacing: -0.02em;
+}
+.theme-v3 [data-mesh] {
+  filter: hue-rotate(120deg) saturate(1.6);
+}
+.theme-v3 .glass {
+  background: rgb(0 20 12 / 0.5);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgb(34 211 238 / 0.25);
+  box-shadow: 0 0 24px -8px rgb(34 211 238 / 0.35);
+}
+body:has(.theme-v3) {
+  background: #00060a;
+}
+body:has(.theme-v3) .aurora-field::before {
+  background: radial-gradient(circle, #22c55e, transparent 62%);
+  opacity: 0.16;
+}
+body:has(.theme-v3) .aurora-field::after {
+  background: radial-gradient(circle, #22d3ee, transparent 60%);
+  opacity: 0.14;
+}
+/* Garis pindai tipis — hanya tekstur, tidak boleh mengganggu keterbacaan */
+.theme-v3 .scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(34 211 238 / 0.05) 0 1px,
+    transparent 1px 3px
+  );
+}
+/* Kursor blok ala terminal */
+.caret::after {
+  content: "▋";
+  margin-left: 0.15em;
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* ---------- Fokus keyboard ---------- */
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid rgb(255 255 255 / 0.7);

@@ -24,14 +24,26 @@ export const dynamic = "force-dynamic";
 const ikon = "h-[18px] w-[18px]";
 
 const IconMail = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    className={ikon}
+  >
     <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
     <path d="m3 7 8.2 5.6a1.4 1.4 0 0 0 1.6 0L21 7" strokeLinecap="round" />
   </svg>
 );
 
 const IconInstagram = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    className={ikon}
+  >
     <rect x="3" y="3" width="18" height="18" rx="5" />
     <circle cx="12" cy="12" r="4" />
     <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none" />
@@ -39,7 +51,13 @@ const IconInstagram = (
 );
 
 const IconWhatsApp = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={ikon}>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    className={ikon}
+  >
     <path d="M3.8 20.2l1.2-4a8 8 0 1 1 3 3l-4.2 1z" strokeLinejoin="round" />
     <path
       d="M9 8.6c.3-.1.6 0 .8.3l.7 1.2c.1.3.1.6-.1.8l-.5.5a5.4 5.4 0 0 0 2.7 2.7l.5-.5c.2-.2.5-.2.8-.1l1.2.7c.3.2.4.5.3.8-.3.9-1.2 1.4-2.1 1.2A7.4 7.4 0 0 1 7.8 10c-.2-.9.3-1.8 1.2-2.1z"
@@ -100,6 +118,25 @@ export default async function HomePage() {
         <style>{`[data-motion-card]{opacity:1 !important;transform:none !important}`}</style>
       </noscript>
 
+      {/* ---------- Pintasan uji A/B (SEMENTARA) ----------
+          Fixed di pojok kanan bawah supaya tidak mengganggu tata letak dan
+          tetap terjangkau dari posisi gulir mana pun. Hapus blok ini setelah
+          satu tema dipilih. */}
+      <div className="glass fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-full p-1.5">
+        <span className="px-2 text-[10px] uppercase tracking-[0.18em] text-text-dim">
+          Demo
+        </span>
+        {["v1", "v2", "v3"].map((v) => (
+          <Link
+            key={v}
+            href={`/demo/${v}`}
+            className="rounded-full px-3 py-1.5 text-xs font-semibold text-text-dim transition-colors hover:bg-white/10 hover:text-text"
+          >
+            {v.toUpperCase()}
+          </Link>
+        ))}
+      </div>
+
       {/* ---------- Kepala: tinggal wordmark, menu kanan atas dihapus ---------- */}
       <header className="fade-up flex items-center py-8">
         <Link href="/" className="display text-lg">
@@ -116,7 +153,10 @@ export default async function HomePage() {
             <div className="ticker-track">
               {/* Digandakan supaya sambungan gulirnya tidak terlihat */}
               {[...stacks, ...stacks].map((s, i) => (
-                <span key={`${s}-${i}`} className="eyebrow flex items-center gap-2.5">
+                <span
+                  key={`${s}-${i}`}
+                  className="eyebrow flex items-center gap-2.5"
+                >
                   <span className="text-text/50">✦</span>
                   {s}
                 </span>
@@ -137,7 +177,8 @@ export default async function HomePage() {
           </div>
           <div className="lg:col-span-5 lg:text-right">
             <p className="text-sm leading-relaxed text-text-dim">
-              Sebagian dibangun untuk klien, sebagian untuk rasa penasaran sendiri.
+              Sebagian dibangun untuk klien, sebagian untuk rasa penasaran
+              sendiri.
             </p>
           </div>
         </div>
@@ -145,10 +186,15 @@ export default async function HomePage() {
 
         {projects.length === 0 ? (
           <div className="glass radius-modern fade-up px-8 py-24 text-center">
-            <p className="display text-2xl text-text">Belum ada apa-apa di sini.</p>
+            <p className="display text-2xl text-text">
+              Belum ada apa-apa di sini.
+            </p>
             <p className="mt-3 text-sm text-text-dim">
               Masuk ke{" "}
-              <Link href="/admin" className="text-text underline-offset-4 hover:underline">
+              <Link
+                href="/admin"
+                className="text-text underline-offset-4 hover:underline"
+              >
                 panel admin
               </Link>{" "}
               untuk menambahkan proyek pertama.
@@ -178,10 +224,15 @@ export default async function HomePage() {
           {/* Tiga kanal kontak, dipisah garis rambut bukan kotak-kotak */}
           <ul className="lg:col-span-7 lg:pt-2">
             {KONTAK.map(({ label, tampil, href, eksternal, icon }) => (
-              <li key={label} className="border-t border-white/12 first:border-t-0">
+              <li
+                key={label}
+                className="border-t border-white/12 first:border-t-0"
+              >
                 <a
                   href={href}
-                  {...(eksternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...(eksternal
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
                   className="group flex items-center gap-4 py-4 sm:gap-6"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 text-text transition-all group-hover:border-text/60 group-hover:bg-text/10 group-hover:text-text">

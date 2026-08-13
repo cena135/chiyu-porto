@@ -124,6 +124,7 @@ export function ProjectCard({
         {/* Sapuan aurora sepanjang baris — 0 saat diam, muncul halus saat disorot */}
         <div
           aria-hidden
+          data-mesh
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           style={{ backgroundImage: meshRow(palette) }}
         />
@@ -158,6 +159,7 @@ export function ProjectCard({
               <>
                 <div
                   aria-hidden
+                  data-mesh
                   className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
                   style={{ backgroundImage: meshPanel(palette) }}
                 />
