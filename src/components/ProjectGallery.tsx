@@ -5,7 +5,13 @@ import type { ProjectImage } from "@prisma/client";
 import { Lightbox } from "./Lightbox";
 
 /** Galeri di halaman detail: kotak besar untuk cover, sisanya grid. Klik = lightbox. */
-export function ProjectGallery({ images, title }: { images: ProjectImage[]; title: string }) {
+export function ProjectGallery({
+  images,
+  title,
+}: {
+  images: ProjectImage[];
+  title: string;
+}) {
   const [open, setOpen] = useState<number | null>(null);
 
   if (images.length === 0) return null;
@@ -61,7 +67,12 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
       </section>
 
       {open !== null && (
-        <Lightbox images={images} title={title} startAt={open} onClose={() => setOpen(null)} />
+        <Lightbox
+          images={images}
+          title={title}
+          startAt={open}
+          onClose={() => setOpen(null)}
+        />
       )}
     </>
   );

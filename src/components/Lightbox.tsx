@@ -20,7 +20,10 @@ export function Lightbox({
     () => setI((n) => (n - 1 + images.length) % images.length),
     [images.length],
   );
-  const next = useCallback(() => setI((n) => (n + 1) % images.length), [images.length]);
+  const next = useCallback(
+    () => setI((n) => (n + 1) % images.length),
+    [images.length],
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -51,7 +54,9 @@ export function Lightbox({
     >
       <div className="flex w-full max-w-5xl items-center justify-between pb-4">
         <div className="min-w-0">
-          <p className="font-display truncate text-sm font-semibold text-text">{title}</p>
+          <p className="font-display truncate text-sm font-semibold text-text">
+            {title}
+          </p>
           <p className="text-xs text-text-dim">
             {i + 1} / {images.length}
           </p>
@@ -115,7 +120,11 @@ export function Lightbox({
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <img
+                src={img.url}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             </button>
           ))}
         </div>

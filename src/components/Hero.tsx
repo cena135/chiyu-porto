@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { DotPattern } from "@/components/ui/DotPattern";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import avatar from "../../public/avatar.jpg";
 
 /**
@@ -179,15 +180,12 @@ export function Hero() {
         </dl>
 
         <div className="flex flex-wrap gap-3 pt-2">
-          <motion.a
+          <MagneticButton
             href="#karya"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-gradient-to-r from-aurora to-violet px-6 py-3 text-sm font-semibold text-black shadow-[0_10px_40px_-12px_var(--color-aurora)]"
+            className="inline-block rounded-full bg-gradient-to-r from-aurora to-violet px-6 py-3 text-sm font-semibold text-black shadow-[0_10px_40px_-12px_var(--color-aurora)]"
           >
             Lihat Karya
-          </motion.a>
+          </MagneticButton>
 
           <motion.a
             href="#contact"

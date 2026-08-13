@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { DotPattern } from "@/components/ui/DotPattern";
 
@@ -69,15 +70,12 @@ export function HeroV1() {
         </p>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <motion.a
+          <MagneticButton
             href="#karya-demo"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-text px-6 py-3 text-sm font-semibold text-black"
+            className="inline-block rounded-full bg-text px-6 py-3 text-sm font-semibold text-black"
           >
             Lihat Karya
-          </motion.a>
+          </MagneticButton>
           <motion.a
             href="#karya-demo"
             whileHover={{ scale: 1.05 }}

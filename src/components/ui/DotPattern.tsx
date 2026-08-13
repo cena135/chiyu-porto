@@ -34,12 +34,19 @@ export function DotPattern({
         className,
       )}
       style={{
-        maskImage: "radial-gradient(60% 60% at 50% 40%, #000 20%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(60% 60% at 50% 40%, #000 20%, transparent 100%)",
+        maskImage:
+          "radial-gradient(60% 60% at 50% 40%, #000 20%, transparent 100%)",
+        WebkitMaskImage:
+          "radial-gradient(60% 60% at 50% 40%, #000 20%, transparent 100%)",
       }}
     >
       <defs>
-        <pattern id={id} width={width} height={height} patternUnits="userSpaceOnUse">
+        <pattern
+          id={id}
+          width={width}
+          height={height}
+          patternUnits="userSpaceOnUse"
+        >
           <circle cx={radius + 1} cy={radius + 1} r={radius} />
         </pattern>
       </defs>

@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { useCursor } from "@/components/ui/cursor-store";
 import type { ProjectWithImages } from "@/lib/projects";
 
 /**
@@ -87,15 +94,36 @@ export function ProjectCard({
   const rotateX = useTransform(sy, [-0.5, 0.5], [TILT_X, -TILT_X]);
   const rotateY = useTransform(sx, [-0.5, 0.5], [-TILT_Y, TILT_Y]);
 
+  /* ---------- Glare: kilau yang mengikuti kursor ----------
+     Dibangun dari motion value, bukan state: posisi mouse berubah puluhan kali
+     per detik dan menaruhnya di state akan memicu render sebanyak itu. */
+  const gx = useMotionValue(50);
+  const gy = useMotionValue(50);
+  const glare = useMotionTemplate`radial-gradient(circle at ${gx}% ${gy}%, rgb(255 255 255 / 0.16), transparent 55%)`;
+
+  /* Kursor berubah jadi lingkaran EXPLORE saat berada di atas baris ini. */
+  const { setVariant } = useCursor();
+
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
     const r = e.currentTarget.getBoundingClientRect();
-    px.set((e.clientX - r.left) / r.width - 0.5);
-    py.set((e.clientY - r.top) / r.height - 0.5);
+    const nx = (e.clientX - r.left) / r.width;
+    const ny = (e.clientY - r.top) / r.height;
+    px.set(nx - 0.5);
+    py.set(ny - 0.5);
+    gx.set(nx * 100);
+    gy.set(ny * 100);
   }
 
+  /**
+   * SATU handler untuk dua urusan: mengembalikan tilt ke tengah DAN
+   * mengecilkan kursor. Sebelumnya keduanya dipasang terpisah — yang satu
+   * lewat prop, yang lain lewat spread — dan spread-nya menimpa yang pertama
+   * sehingga tilt tidak pernah kembali ke posisi semula.
+   */
   function handleLeave() {
     px.set(0);
     py.set(0);
+    setVariant("default");
   }
 
   return (
@@ -117,10 +145,23 @@ export function ProjectCard({
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         /* Amblas saat ditekan. Tidak mengganggu Link: whileTap hanya mengubah
            transform, sedangkan tautannya tetap menerima pointer event. */
-        whileTap={{ scale: 0.97 }}
+        /* Varian bernama, bukan objek: Framer meneruskan nama varian ke
+           seluruh anak motion, jadi thumbnail bisa ikut bereaksi pada tap yang
+           sama tanpa perlu state tambahan. */
+        variants={{ rest: { scale: 1 }, tap: { scale: 0.97 } }}
+        initial="rest"
+        animate="rest"
+        whileTap="tap"
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className="relative"
+        onMouseEnter={() => setVariant("explore")}
       >
+        {/* Kilau kaca — hanya terlihat saat baris disorot */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{ backgroundImage: glare }}
+        />
         {/* Sapuan aurora sepanjang baris — 0 saat diam, muncul halus saat disorot */}
         <div
           aria-hidden

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Hero } from "@/components/Hero";
+import { RevealText } from "@/components/ui/RevealText";
 
 /**
  * Selalu render ulang per permintaan — JANGAN kembalikan ke `revalidate`.
@@ -243,8 +244,10 @@ export default async function HomePage() {
                     {label}
                   </span>
 
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-text transition-colors group-hover:text-text">
-                    {tampil}
+                  {/* Bergulir seperti silinder saat disorot: teks terlempar ke
+                      atas, salinannya masuk dari bawah. */}
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-text">
+                    <RevealText swap={tampil}>{tampil}</RevealText>
                   </span>
 
                   <span className="shrink-0 text-text transition-all group-hover:translate-x-1.5 group-hover:text-text">
