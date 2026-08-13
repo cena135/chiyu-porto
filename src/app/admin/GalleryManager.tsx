@@ -96,7 +96,7 @@ export function GalleryManager({
       aria-modal="true"
       aria-label={`Kelola galeri ${project.title}`}
       onClick={() => !busy && onClose()}
-      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-ink-950/80 p-4 backdrop-blur-xl"
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-base/80 p-4 backdrop-blur-xl"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -107,7 +107,7 @@ export function GalleryManager({
             <h2 className="font-display truncate text-base font-semibold">
               Kelola Screenshot — {project.title}
             </h2>
-            <p className="mt-1 text-xs text-mist-400">
+            <p className="mt-1 text-xs text-text-dim">
               {images.length}/{MAX_GALLERY} gambar · perubahan langsung tersimpan · gambar pertama
               jadi cover
             </p>
@@ -115,7 +115,7 @@ export function GalleryManager({
           <button
             onClick={onClose}
             disabled={busy}
-            className="glass shrink-0 rounded-full px-4 py-2 text-xs text-mist-200 transition-colors hover:text-ember disabled:opacity-50"
+            className="glass shrink-0 rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text disabled:opacity-50"
           >
             Tutup ✕
           </button>
@@ -128,22 +128,22 @@ export function GalleryManager({
           disabled={busy || full}
           accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/svg+xml"
           onChange={(e) => addFiles(e.target.files)}
-          className="w-full cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-xs text-mist-400 transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-violet/20 file:px-3 file:py-1.5 file:text-xs file:text-mist-200 hover:border-aurora/40 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-xs text-text-dim transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-text/20 file:px-3 file:py-1.5 file:text-xs file:text-text hover:border-text/40 disabled:cursor-not-allowed disabled:opacity-40"
         />
         {full && (
-          <p className="mt-1.5 text-[11px] text-ember">
+          <p className="mt-1.5 text-[11px] text-text">
             Galeri penuh ({MAX_GALLERY}). Hapus salah satu dulu untuk menambah.
           </p>
         )}
 
         {error && (
-          <p className="mt-3 rounded-xl border border-ember/30 bg-ember/10 px-4 py-2.5 text-xs text-ember">
+          <p className="mt-3 rounded-xl border border-text/30 bg-text/10 px-4 py-2.5 text-xs text-text">
             {error}
           </p>
         )}
 
         {images.length === 0 ? (
-          <p className="mt-6 rounded-2xl border border-white/8 px-6 py-12 text-center text-sm text-mist-400">
+          <p className="mt-6 rounded-2xl border border-white/8 px-6 py-12 text-center text-sm text-text-dim">
             Belum ada screenshot. Tambahkan lewat kotak di atas.
           </p>
         ) : (
@@ -152,14 +152,14 @@ export function GalleryManager({
               <div
                 key={img.id}
                 className={`group relative overflow-hidden rounded-xl border transition-opacity ${
-                  idx === 0 ? "border-aurora/60" : "border-white/10"
+                  idx === 0 ? "border-text/60" : "border-white/10"
                 } ${busy ? "opacity-60" : ""}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.url} alt={img.alt ?? ""} className="h-28 w-full object-cover" />
 
                 {idx === 0 && (
-                  <span className="absolute left-1.5 top-1.5 rounded bg-aurora/90 px-2 py-0.5 text-[9px] font-semibold text-ink-950">
+                  <span className="absolute left-1.5 top-1.5 rounded bg-text/90 px-2 py-0.5 text-[9px] font-semibold text-black">
                     COVER
                   </span>
                 )}
@@ -169,7 +169,7 @@ export function GalleryManager({
                     onClick={() => move(idx, -1)}
                     disabled={busy || idx === 0}
                     title="Geser kiri"
-                    className="rounded px-2 text-xs text-mist-200 hover:text-aurora disabled:opacity-25"
+                    className="rounded px-2 text-xs text-text hover:text-text disabled:opacity-25"
                   >
                     ‹
                   </button>
@@ -177,7 +177,7 @@ export function GalleryManager({
                     onClick={() => makeCover(idx)}
                     disabled={busy || idx === 0}
                     title="Jadikan cover"
-                    className="rounded px-2 text-xs text-mist-200 hover:text-aurora disabled:opacity-25"
+                    className="rounded px-2 text-xs text-text hover:text-text disabled:opacity-25"
                   >
                     ★
                   </button>
@@ -185,7 +185,7 @@ export function GalleryManager({
                     onClick={() => move(idx, 1)}
                     disabled={busy || idx === images.length - 1}
                     title="Geser kanan"
-                    className="rounded px-2 text-xs text-mist-200 hover:text-aurora disabled:opacity-25"
+                    className="rounded px-2 text-xs text-text hover:text-text disabled:opacity-25"
                   >
                     ›
                   </button>
@@ -193,7 +193,7 @@ export function GalleryManager({
                     onClick={() => removeImage(img.id)}
                     disabled={busy}
                     title="Hapus gambar"
-                    className="rounded px-2 text-xs text-mist-200 hover:text-ember disabled:opacity-25"
+                    className="rounded px-2 text-xs text-text hover:text-text disabled:opacity-25"
                   >
                     ✕
                   </button>

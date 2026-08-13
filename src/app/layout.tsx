@@ -23,10 +23,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider appearance={{ variables: { colorPrimary: "#8b5cf6" } }}>
+    <ClerkProvider appearance={{ variables: { colorPrimary: "#ffffff" } }}>
       <html lang="id" className={`${inter.variable} ${outfit.variable}`}>
         <body>
-          <div className="aurora-field" aria-hidden />
           {children}
         </body>
       </html>

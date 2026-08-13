@@ -16,8 +16,8 @@ export default async function AdminPage() {
       <main className="flex min-h-dvh items-center justify-center px-6">
         <div className="glass max-w-md rounded-3xl p-10 text-center">
           <h1 className="font-display text-xl font-semibold">Akses ditolak</h1>
-          <p className="mt-3 text-sm text-mist-400">{gate.message}</p>
-          <Link href="/" className="mt-6 inline-block text-sm text-aurora hover:underline">
+          <p className="mt-3 text-sm text-text-dim">{gate.message}</p>
+          <Link href="/" className="mt-6 inline-block text-sm text-text hover:underline">
             ← Kembali ke beranda
           </Link>
         </div>
@@ -32,13 +32,13 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 pb-24 pt-12">
-      <header className="reveal glass flex items-center justify-between gap-4 rounded-2xl px-6 py-4">
+      <header className="fade-up glass flex items-center justify-between gap-4 rounded-2xl px-6 py-4">
         <div>
           <h1 className="font-display text-lg font-semibold tracking-tight">Dashboard Proyek</h1>
-          <p className="text-xs text-mist-400">{projects.length} proyek tersimpan</p>
+          <p className="text-xs text-text-dim">{projects.length} proyek tersimpan</p>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-xs text-mist-400 transition-colors hover:text-mist-200">
+          <Link href="/" className="text-xs text-text-dim transition-colors hover:text-text">
             Lihat situs ↗
           </Link>
           <UserButton afterSignOutUrl="/" />

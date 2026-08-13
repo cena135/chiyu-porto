@@ -58,32 +58,32 @@ export default async function ProjectDetailPage({ params }: Props) {
   return (
     <main className="mx-auto w-full max-w-[76rem] px-6 pb-32 pt-8 sm:px-10">
       {/* ---------- Navigasi atas ---------- */}
-      <nav className="reveal flex items-center justify-between gap-4">
+      <nav className="fade-up flex items-center justify-between gap-4">
         <Link
           href="/#karya"
-          className="glass group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-mist-400 transition-all hover:border-white/25 hover:text-mist-200"
+          className="glass group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-text-dim transition-all hover:border-white/25 hover:text-text"
         >
           <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
           Kembali ke daftar proyek
         </Link>
         <Link
           href="/"
-          className="font-display text-sm font-semibold tracking-tight text-mist-400 transition-colors hover:text-mist-200"
+          className="font-display text-sm font-semibold tracking-tight text-text-dim transition-colors hover:text-text"
         >
           Porto
         </Link>
       </nav>
 
       {/* ---------- Kepala: judul raksasa di kiri, meta menggantung di kanan ---------- */}
-      <header className="reveal py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
+      <header className="fade-up py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
         <div className="flex flex-wrap items-center gap-4">
           {project.isWip && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-ember/30 bg-ember/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-ember">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ember" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-text/30 bg-text/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-text">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-text" />
               Work in Progress
             </span>
           )}
-          {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
+          {project.featured && <span className="eyebrow text-text">Unggulan</span>}
           <span className="eyebrow">{dibuat}</span>
           {project.images.length > 0 && (
             <span className="eyebrow">{project.images.length} screenshot</span>
@@ -91,11 +91,11 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
 
         <h1 className="display mt-6 text-[clamp(2.5rem,7vw,5.5rem)]">
-          <span className="text-gradient">{project.title}</span>
+          <span className="text-text">{project.title}</span>
         </h1>
 
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <p className="text-base leading-relaxed text-mist-400 lg:col-span-7">
+          <p className="text-base leading-relaxed text-text-dim lg:col-span-7">
             {project.description}
           </p>
 
@@ -104,7 +104,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               <dt className="eyebrow mb-3">Dibangun dengan</dt>
               <dd className="flex flex-wrap gap-x-5 gap-y-2">
                 {project.techStack.map((tech) => (
-                  <span key={tech} className="text-sm text-mist-200">
+                  <span key={tech} className="text-sm text-text">
                     {tech}
                   </span>
                 ))}
@@ -122,7 +122,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-glow group inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-ink-950"
+                className="group inline-flex items-center gap-2 rounded-full bg-text px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-white/90"
               >
                 Kunjungi Website
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -135,7 +135,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-full px-6 py-3 text-sm font-medium text-mist-200 transition-colors hover:border-white/25"
+                className="glass rounded-full px-6 py-3 text-sm font-medium text-text transition-colors hover:border-white/25"
               >
                 Lihat Source Code
               </a>
@@ -145,21 +145,21 @@ export default async function ProjectDetailPage({ params }: Props) {
       </header>
 
       {/* ---------- Galeri ---------- */}
-      <div className="reveal" style={{ animationDelay: "160ms" }}>
+      <div className="fade-up" style={{ animationDelay: "160ms" }}>
         <ProjectGallery images={project.images} title={project.title} />
       </div>
 
       {/* ---------- Catatan panjang ---------- */}
       {project.content && (
         <section
-          className="radius-organic reveal mt-10 border border-white/8 bg-ink-900/30 p-8 backdrop-blur-xl sm:p-11"
+          className="radius-modern fade-up mt-10 border border-white/8 bg-surface/30 p-8 backdrop-blur-xl sm:p-11"
           style={{ animationDelay: "220ms" }}
         >
           <span className="eyebrow">Catatan</span>
-          <h2 className="display mt-3 text-[clamp(1.5rem,3vw,2.25rem)] text-mist-200">
+          <h2 className="display mt-3 text-[clamp(1.5rem,3vw,2.25rem)] text-text">
             Tentang Proyek Ini
           </h2>
-          <div className="mt-4 space-y-4 text-sm leading-relaxed text-mist-400">
+          <div className="mt-4 space-y-4 text-sm leading-relaxed text-text-dim">
             {project.content.split(/\n\s*\n/).map((paragraf, i) => (
               <p key={i} className="whitespace-pre-line">
                 {paragraf}
@@ -173,7 +173,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <footer className="mt-16 border-t border-white/8 pt-8">
         <Link
           href="/#karya"
-          className="glass group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-medium text-mist-400 transition-all hover:border-white/25 hover:text-mist-200"
+          className="glass group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-medium text-text-dim transition-all hover:border-white/25 hover:text-text"
         >
           <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
           Kembali ke daftar proyek

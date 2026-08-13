@@ -47,19 +47,19 @@ export function Lightbox({
       aria-modal="true"
       aria-label={`Galeri ${title}`}
       onClick={onClose}
-      className="modal-backdrop fixed inset-0 z-50 flex flex-col items-center justify-center bg-ink-950/85 p-4 backdrop-blur-xl sm:p-8"
+      className="modal-backdrop fixed inset-0 z-50 flex flex-col items-center justify-center bg-base/85 p-4 backdrop-blur-xl sm:p-8"
     >
       <div className="flex w-full max-w-5xl items-center justify-between pb-4">
         <div className="min-w-0">
-          <p className="font-display truncate text-sm font-semibold text-mist-200">{title}</p>
-          <p className="text-xs text-mist-400">
+          <p className="font-display truncate text-sm font-semibold text-text">{title}</p>
+          <p className="text-xs text-text-dim">
             {i + 1} / {images.length}
           </p>
         </div>
         <button
           onClick={onClose}
           aria-label="Tutup galeri"
-          className="glass rounded-full px-4 py-2 text-xs text-mist-200 transition-colors hover:text-ember"
+          className="glass rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text"
         >
           Tutup ✕
         </button>
@@ -73,7 +73,7 @@ export function Lightbox({
           <button
             onClick={prev}
             aria-label="Gambar sebelumnya"
-            className="glass absolute left-2 z-10 h-11 w-11 rounded-full text-mist-200 transition-all hover:scale-110 hover:text-aurora"
+            className="glass absolute left-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ‹
           </button>
@@ -91,7 +91,7 @@ export function Lightbox({
           <button
             onClick={next}
             aria-label="Gambar berikutnya"
-            className="glass absolute right-2 z-10 h-11 w-11 rounded-full text-mist-200 transition-all hover:scale-110 hover:text-aurora"
+            className="glass absolute right-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ›
           </button>
@@ -110,7 +110,7 @@ export function Lightbox({
               aria-label={`Ke gambar ${n + 1}`}
               className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition-all ${
                 n === i
-                  ? "border-aurora opacity-100"
+                  ? "border-text opacity-100"
                   : "border-white/10 opacity-50 hover:opacity-90"
               }`}
             >

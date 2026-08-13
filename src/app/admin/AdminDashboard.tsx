@@ -157,8 +157,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
   const tabBtn = (t: Tab) =>
     `rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
       tab === t
-        ? "bg-white/10 text-mist-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-        : "text-mist-400 hover:text-mist-200"
+        ? "bg-white/10 text-text shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+        : "text-text-dim hover:text-text"
     }`;
 
   return (
@@ -166,21 +166,21 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
       {/* ---------- Statistik ---------- */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {[
-          { label: "Total proyek", value: stats.total, tone: "text-mist-200" },
-          { label: "Tampil publik", value: stats.publik, tone: "text-aurora" },
-          { label: "Draf", value: stats.draf, tone: "text-ember" },
-          { label: "Disembunyikan", value: stats.tersembunyi, tone: "text-ember" },
-          { label: "Unggulan", value: stats.unggulan, tone: "text-violet" },
+          { label: "Total proyek", value: stats.total, tone: "text-text" },
+          { label: "Tampil publik", value: stats.publik, tone: "text-text" },
+          { label: "Draf", value: stats.draf, tone: "text-text" },
+          { label: "Disembunyikan", value: stats.tersembunyi, tone: "text-text" },
+          { label: "Unggulan", value: stats.unggulan, tone: "text-text" },
         ].map((s) => (
-          <div key={s.label} className="glass reveal rounded-2xl px-4 py-3">
+          <div key={s.label} className="glass fade-up rounded-2xl px-4 py-3">
             <p className={`font-display text-2xl font-semibold ${s.tone}`}>{s.value}</p>
-            <p className="mt-0.5 text-[11px] text-mist-400">{s.label}</p>
+            <p className="mt-0.5 text-[11px] text-text-dim">{s.label}</p>
           </div>
         ))}
       </div>
 
       {stats.tanpaGambar > 0 && (
-        <p className="rounded-xl border border-ember/25 bg-ember/8 px-4 py-2.5 text-xs text-ember">
+        <p className="rounded-xl border border-text/25 bg-text/8 px-4 py-2.5 text-xs text-text">
           {stats.tanpaGambar} proyek belum punya screenshot — kartunya tampil polos di halaman
           depan.
         </p>
@@ -203,7 +203,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
         {tab === "list" && (
           <button
             onClick={startCreate}
-            className="btn-glow rounded-xl px-5 py-2.5 text-sm font-semibold text-ink-950"
+            className="rounded-xl bg-text px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-white/90"
           >
             + Proyek Baru
           </button>
@@ -214,8 +214,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
         <p
           className={`pop-in rounded-xl border px-4 py-2.5 text-xs ${
             toast.kind === "ok"
-              ? "border-aurora/30 bg-aurora/10 text-aurora"
-              : "border-ember/30 bg-ember/10 text-ember"
+              ? "border-text/30 bg-text/10 text-text"
+              : "border-text/30 bg-text/10 text-text"
           }`}
         >
           {toast.msg}
@@ -247,7 +247,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Cari judul, deskripsi, atau tech stack..."
-              className="min-w-52 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-mist-200 placeholder:text-mist-400/50 outline-none transition-all focus:border-aurora/60 focus:ring-2 focus:ring-aurora/15"
+              className="min-w-52 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-text placeholder:text-text-dim/50 outline-none transition-all focus:border-text/60 focus:ring-2 focus:ring-text/15"
             />
 
             <div className="flex gap-1 rounded-xl border border-white/10 p-1">
@@ -256,7 +256,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                   key={s}
                   onClick={() => setStatus(s)}
                   className={`rounded-lg px-3 py-1.5 text-xs capitalize transition-colors ${
-                    status === s ? "bg-white/10 text-mist-200" : "text-mist-400 hover:text-mist-200"
+                    status === s ? "bg-white/10 text-text" : "text-text-dim hover:text-text"
                   }`}
                 >
                   {s}
@@ -267,7 +267,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortBy)}
-              className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs text-mist-200 outline-none focus:border-aurora/60"
+              className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs text-text outline-none focus:border-text/60"
             >
               <option value="urutan">Urutan tampil</option>
               <option value="terbaru">Terbaru dibuat</option>
@@ -277,16 +277,16 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
 
           {shown.length === 0 ? (
             <div className="glass rounded-3xl px-8 py-16 text-center">
-              <p className="text-sm text-mist-200">
+              <p className="text-sm text-text">
                 {projects.length === 0
                   ? "Belum ada proyek sama sekali."
                   : "Tidak ada proyek yang cocok dengan filter."}
               </p>
-              <p className="mt-2 text-xs text-mist-400">
+              <p className="mt-2 text-xs text-text-dim">
                 {projects.length === 0 ? (
                   <>
                     Tambahkan lewat tombol “+ Proyek Baru”, atau isi data dummy dengan{" "}
-                    <code className="text-aurora/80">docker compose exec app node prisma/seed.mjs</code>
+                    <code className="text-text/80">docker compose exec app node prisma/seed.mjs</code>
                   </>
                 ) : (
                   "Coba ubah kata kunci atau filter status."
@@ -298,22 +298,22 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
               {shown.map((p, i) => (
                 <article
                   key={p.id}
-                  className={`glass reveal flex flex-wrap items-center gap-4 rounded-2xl p-4 transition-opacity ${
+                  className={`glass fade-up flex flex-wrap items-center gap-4 rounded-2xl p-4 transition-opacity ${
                     busyId === p.id ? "opacity-50" : ""
                   }`}
                   style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
                 >
-                  <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-ink-800">
+                  <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-surface">
                     {p.images[0] ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={p.images[0].url} alt="" className="h-full w-full object-cover" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-[10px] text-mist-400/50">
+                      <div className="flex h-full w-full items-center justify-center text-[10px] text-text-dim/50">
                         no image
                       </div>
                     )}
                     {p.images.length > 1 && (
-                      <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 text-[9px] text-mist-200 backdrop-blur-sm">
+                      <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 text-[9px] text-text backdrop-blur-sm">
                         +{p.images.length - 1}
                       </span>
                     )}
@@ -321,34 +321,34 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
 
                   <div className="min-w-48 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="truncate text-sm font-semibold text-mist-200">{p.title}</h3>
+                      <h3 className="truncate text-sm font-semibold text-text">{p.title}</h3>
                       {p.featured && (
-                        <span className="rounded-full bg-violet/20 px-2 py-0.5 text-[10px] text-violet">
+                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
                           unggulan
                         </span>
                       )}
                       {p.isWip && (
-                        <span className="rounded-full bg-ember/20 px-2 py-0.5 text-[10px] text-ember">
+                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
                           WIP
                         </span>
                       )}
                       {p.isHidden && (
-                        <span className="rounded-full bg-ember/20 px-2 py-0.5 text-[10px] text-ember">
+                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
                           disembunyikan
                         </span>
                       )}
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] ${
                           p.published && !p.isHidden
-                            ? "bg-aurora/15 text-aurora"
-                            : "bg-ember/15 text-ember"
+                            ? "bg-text/15 text-text"
+                            : "bg-text/15 text-text"
                         }`}
                       >
                         {!p.published ? "draf" : p.isHidden ? "internal" : "publik"}
                       </span>
                     </div>
-                    <p className="mt-1 line-clamp-1 text-xs text-mist-400">{p.description}</p>
-                    <p className="mt-1 text-[11px] text-mist-400/60">
+                    <p className="mt-1 line-clamp-1 text-xs text-text-dim">{p.description}</p>
+                    <p className="mt-1 text-[11px] text-text-dim/60">
                       /{p.slug} · urutan {p.order} · {p.images.length} gambar
                     </p>
                   </div>
@@ -358,7 +358,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                       onClick={() => toggle(p, { published: !p.published })}
                       disabled={busyId === p.id}
                       title={p.published ? "Sembunyikan dari publik" : "Tampilkan di publik"}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-aurora/50 hover:text-aurora disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.published ? "Jadikan draf" : "Terbitkan"}
                     </button>
@@ -370,7 +370,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                           ? "Tampilkan kembali ke publik"
                           : "Sembunyikan (proyek internal / NDA)"
                       }
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-ember/50 hover:text-ember disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.isHidden ? "Tampilkan" : "Sembunyikan"}
                     </button>
@@ -378,28 +378,28 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                       onClick={() => toggle(p, { featured: !p.featured })}
                       disabled={busyId === p.id}
                       title="Tandai / lepas unggulan"
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-violet/50 hover:text-violet disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.featured ? "★ Unggulan" : "☆ Unggulan"}
                     </button>
                     <button
                       onClick={() => setGallery(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-200 transition-all hover:border-aurora/50 hover:text-aurora disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Kelola Gambar
                     </button>
                     <button
                       onClick={() => startEdit(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-200 transition-all hover:border-aurora/50 hover:text-aurora disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => remove(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-mist-400 transition-all hover:border-ember/50 hover:text-ember disabled:opacity-40"
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Hapus
                     </button>

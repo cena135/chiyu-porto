@@ -19,17 +19,17 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
           type="button"
           onClick={() => setOpen(0)}
           aria-label={`Perbesar ${title} — gambar 1`}
-          className="glass card-hover group block w-full overflow-hidden rounded-3xl"
+          className="glass radius-modern group block w-full overflow-hidden transition-colors hover:border-white/15"
         >
-          <div className="card-media relative aspect-[16/9] overflow-hidden bg-ink-800">
+          <div className="card-media relative aspect-[16/9] overflow-hidden bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={cover.url}
               alt={cover.alt || title}
               className="h-full w-full object-cover"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/60 to-transparent" />
-            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/50 px-4 py-1.5 text-[11px] text-mist-200 opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/60 to-transparent" />
+            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/50 px-4 py-1.5 text-[11px] text-text opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
               Klik untuk perbesar
             </span>
           </div>
@@ -43,9 +43,9 @@ export function ProjectGallery({ images, title }: { images: ProjectImage[]; titl
                 type="button"
                 onClick={() => setOpen(n + 1)}
                 aria-label={`Perbesar ${title} — gambar ${n + 2}`}
-                className="glass card-hover group overflow-hidden rounded-2xl"
+                className="glass radius-modern group overflow-hidden transition-colors hover:border-white/15"
               >
-                <div className="card-media relative aspect-[4/3] overflow-hidden bg-ink-800">
+                <div className="card-media relative aspect-[4/3] overflow-hidden bg-surface">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={img.url}
