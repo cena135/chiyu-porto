@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import type { ProjectWithImages } from "@/lib/projects";
 
 /**
- * V1 · Vibrant Bento Grid.
+ * Vibrant Bento Grid — tata letak utama situs.
  *
  * Tata letak asimetris: satu kotak besar di kiri, dua kotak sedang di kanan,
  * lalu deretan kotak proyek. Di layar sempit SEMUANYA jatuh jadi satu kolom —
@@ -30,21 +30,11 @@ const masuk = {
 /** Satu sumber untuk transisi hover semua kotak, supaya iramanya seragam. */
 const pegas = { type: "spring" as const, stiffness: 320, damping: 22 };
 
-export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
+export function Bento({ projects }: { projects: ProjectWithImages[] }) {
   return (
-    <div className="py-16 sm:py-20">
-      <motion.span
-        custom={0}
-        initial="hidden"
-        animate="show"
-        variants={masuk}
-        className="eyebrow block"
-      >
-        Versi 01 · Vibrant Bento Grid
-      </motion.span>
-
+    <div className="pb-10 pt-4">
       {/* 1 kolom di ponsel, 3 kolom sejak layar sedang */}
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2">
         {/* ---------- Kotak besar: judul + CTA ---------- */}
         <motion.div
           custom={1}
@@ -66,7 +56,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
 
           <div className="relative">
             <motion.h1
-              className="font-bento text-[clamp(2.25rem,5.5vw,4.5rem)] font-bold"
+              className="display text-[clamp(2.25rem,5.5vw,4.5rem)] font-bold"
               variants={{ hover: { color: "#ffffff" } }}
               transition={pegas}
             >
@@ -94,7 +84,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
             </motion.p>
 
             <motion.a
-              href="#karya-demo"
+              href="#karya"
               className="mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white"
               style={{ background: BLUE }}
               variants={{ hover: { scale: 1.08, background: "#ffffff", color: BLUE } }}
@@ -127,7 +117,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
           />
           <div className="relative">
             <motion.p
-              className="font-bento text-6xl font-bold"
+              className="display text-6xl font-bold"
               style={{ color: PURPLE }}
               variants={{ hover: { color: "#ffffff", scale: 1.1, originX: 0 } }}
               transition={pegas}
@@ -146,7 +136,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
 
         {/* ---------- Kotak sedang 2: kontak ---------- */}
         <motion.a
-          href="#karya-demo"
+          href="#contact"
           custom={3}
           initial="hidden"
           animate="show"
@@ -163,7 +153,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
             transition={{ duration: 0.35 }}
           />
           <motion.p
-            className="font-bento relative text-2xl font-bold"
+            className="display relative text-2xl font-bold"
             variants={{ hover: { color: "#ffffff" } }}
             transition={pegas}
           >
@@ -184,7 +174,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
       </div>
 
       {/* ---------- Deret kotak proyek ---------- */}
-      <div id="karya-demo" className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div id="karya" className="mt-4 scroll-mt-24 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((p, i) => (
           <motion.div
             key={p.id}
@@ -215,7 +205,7 @@ export function BentoV1({ projects }: { projects: ProjectWithImages[] }) {
               </motion.span>
 
               <motion.h3
-                className="font-bento mt-3 text-xl font-bold"
+                className="display mt-3 text-xl font-bold"
                 variants={{ hover: { color: "#ffffff", x: 4 } }}
                 transition={pegas}
               >

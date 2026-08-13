@@ -12,7 +12,7 @@ type Slot =
   | { kind: "new"; key: string; url: string; file: File };
 
 const field =
-  "w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-text placeholder:text-text-dim/50 outline-none transition-all focus:border-text/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-text/15";
+  "w-full rounded-xl border border-line bg-black/[0.03] px-4 py-2.5 text-sm text-text placeholder:text-text-dim/50 outline-none transition-all focus:border-text/60 focus:bg-black/[0.05] focus:ring-2 focus:ring-text/15";
 const label = "block text-xs font-medium tracking-wide text-text-dim mb-1.5";
 
 export function ProjectForm({
@@ -147,7 +147,7 @@ export function ProjectForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="glass fade-up rounded-3xl p-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="bento fade-up rounded-3xl p-6">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="font-display text-base font-semibold">
           {editing ? `Ubah: ${editing.title}` : "Proyek Baru"}
@@ -324,7 +324,7 @@ export function ProjectForm({
               multiple
               accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/svg+xml"
               onChange={(e) => addFiles(e.target.files)}
-              className="w-full cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-xs text-text-dim transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-text/20 file:px-3 file:py-1.5 file:text-xs file:text-text hover:border-text/40"
+              className="w-full cursor-pointer rounded-xl border border-dashed border-line-strong bg-black/[0.02] px-4 py-3 text-xs text-text-dim transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-xs file:text-white hover:border-brand/50"
             />
             <p className="mt-1.5 text-[11px] text-text-dim/70">
               Pilih beberapa file sekaligus · maks 8 MB/file · gambar{" "}
@@ -337,19 +337,19 @@ export function ProjectForm({
                   <div
                     key={s.kind === "existing" ? s.id : s.key}
                     className={`group relative overflow-hidden rounded-xl border ${
-                      idx === 0 ? "border-text/60" : "border-white/10"
+                      idx === 0 ? "border-text/60" : "border-line"
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={s.url} alt="" className="h-20 w-full object-cover" />
 
                     {idx === 0 && (
-                      <span className="absolute left-1 top-1 rounded bg-text/90 px-1.5 py-0.5 text-[9px] font-semibold text-black">
+                      <span className="absolute left-1 top-1 rounded bg-brand px-1.5 py-0.5 text-[9px] font-semibold text-white">
                         COVER
                       </span>
                     )}
                     {s.kind === "new" && (
-                      <span className="absolute right-1 top-1 rounded bg-text/80 px-1.5 py-0.5 text-[9px] text-text">
+                      <span className="absolute right-1 top-1 rounded bg-brand px-1.5 py-0.5 text-[9px] text-white">
                         BARU
                       </span>
                     )}
@@ -398,7 +398,7 @@ export function ProjectForm({
           </div>
 
           {/* ---------- Status tampil ---------- */}
-          <fieldset className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+          <fieldset className="rounded-xl border border-line bg-black/[0.02] p-4">
             <legend className="px-2 text-xs font-medium text-text-dim">Status tampil</legend>
 
             <label className="flex cursor-pointer items-start gap-3 py-2">
@@ -468,7 +468,7 @@ export function ProjectForm({
               </span>
             </label>
 
-            <div className="mt-3 border-t border-white/8 pt-3">
+            <div className="mt-3 border-t border-line pt-3">
               <label className={label} htmlFor="order">
                 Nomor urut{" "}
                 <span className="text-text-dim/60">(kecil = lebih dulu tampil)</span>
@@ -488,7 +488,7 @@ export function ProjectForm({
       </div>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-text/30 bg-text/10 px-4 py-2.5 text-xs text-text">
+        <p className="mt-4 rounded-xl border border-brand/30 bg-brand/10 px-4 py-2.5 text-xs text-brand">
           {error}
         </p>
       )}
@@ -497,14 +497,14 @@ export function ProjectForm({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-text px-8 py-3 text-sm font-semibold text-black transition-colors hover:bg-white/90 disabled:opacity-60"
+          className="rounded-xl bg-brand px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-strong disabled:opacity-60"
         >
           {saving ? "Menyimpan..." : editing ? "Simpan Perubahan" : "Tambah Proyek"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-xl border border-white/10 px-6 py-3 text-sm text-text-dim transition-colors hover:border-white/25 hover:text-text"
+          className="rounded-xl border border-line px-6 py-3 text-sm text-text-dim transition-colors hover:border-line-strong hover:text-text"
         >
           Batal
         </button>

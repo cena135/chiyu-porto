@@ -64,7 +64,7 @@ export function Lightbox({
         <button
           onClick={onClose}
           aria-label="Tutup galeri"
-          className="glass rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text"
+          className="bento rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text"
         >
           Tutup ✕
         </button>
@@ -78,7 +78,7 @@ export function Lightbox({
           <button
             onClick={prev}
             aria-label="Gambar sebelumnya"
-            className="glass absolute left-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
+            className="bento absolute left-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ‹
           </button>
@@ -89,14 +89,14 @@ export function Lightbox({
           key={current.id}
           src={current.url}
           alt={current.alt || `${title} — gambar ${i + 1}`}
-          className="media-swap max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/10 object-contain shadow-2xl"
+          className="media-swap max-h-[70vh] w-auto max-w-full rounded-2xl border border-line object-contain shadow-2xl"
         />
 
         {images.length > 1 && (
           <button
             onClick={next}
             aria-label="Gambar berikutnya"
-            className="glass absolute right-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
+            className="bento absolute right-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ›
           </button>
@@ -116,7 +116,7 @@ export function Lightbox({
               className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition-all ${
                 n === i
                   ? "border-text opacity-100"
-                  : "border-white/10 opacity-50 hover:opacity-90"
+                  : "border-line opacity-50 hover:opacity-90"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -14,7 +14,7 @@ export default async function AdminPage() {
   if (!gate.ok) {
     return (
       <main className="flex min-h-dvh items-center justify-center px-6">
-        <div className="glass max-w-md rounded-3xl p-10 text-center">
+        <div className="bento max-w-md rounded-3xl p-10 text-center">
           <h1 className="font-display text-xl font-semibold">Akses ditolak</h1>
           <p className="mt-3 text-sm text-text-dim">{gate.message}</p>
           <Link href="/" className="mt-6 inline-block text-sm text-text hover:underline">
@@ -32,7 +32,7 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 pb-24 pt-12">
-      <header className="fade-up glass flex items-center justify-between gap-4 rounded-2xl px-6 py-4">
+      <header className="fade-up bento flex items-center justify-between gap-4 rounded-2xl px-6 py-4">
         <div>
           <h1 className="font-display text-lg font-semibold tracking-tight">Dashboard Proyek</h1>
           <p className="text-xs text-text-dim">{projects.length} proyek tersimpan</p>

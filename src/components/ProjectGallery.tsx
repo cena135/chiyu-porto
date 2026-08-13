@@ -25,7 +25,7 @@ export function ProjectGallery({
           type="button"
           onClick={() => setOpen(0)}
           aria-label={`Perbesar ${title} — gambar 1`}
-          className="glass radius-modern group block w-full overflow-hidden transition-colors hover:border-white/15"
+          className="bento radius-modern group block w-full overflow-hidden transition-colors hover:border-line-strong"
         >
           <div className="card-media relative aspect-[16/9] overflow-hidden bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -35,7 +35,7 @@ export function ProjectGallery({
               className="h-full w-full object-cover"
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/60 to-transparent" />
-            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-black/50 px-4 py-1.5 text-[11px] text-text opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
+            <span className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-line-strong bg-black/50 px-4 py-1.5 text-[11px] text-text opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100">
               Klik untuk perbesar
             </span>
           </div>
@@ -49,7 +49,7 @@ export function ProjectGallery({
                 type="button"
                 onClick={() => setOpen(n + 1)}
                 aria-label={`Perbesar ${title} — gambar ${n + 2}`}
-                className="glass radius-modern group overflow-hidden transition-colors hover:border-white/15"
+                className="bento radius-modern group overflow-hidden transition-colors hover:border-line-strong"
               >
                 <div className="card-media relative aspect-[4/3] overflow-hidden bg-surface">
                   {/* eslint-disable-next-line @next/next/no-img-element */}

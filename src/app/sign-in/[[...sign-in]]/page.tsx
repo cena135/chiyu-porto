@@ -14,7 +14,7 @@ export default function SignInPage() {
           appearance={{
             elements: {
               rootBox: "shadow-none",
-              card: "bg-white/5 backdrop-blur-xl border border-white/10",
+              card: "bg-black/[0.04] backdrop-blur-xl border border-line",
             },
           }}
         />

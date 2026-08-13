@@ -100,7 +100,7 @@ export function GalleryManager({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="glass modal-panel max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl p-6"
+        className="bento modal-panel max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-3xl p-6"
       >
         <div className="mb-5 flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -115,7 +115,7 @@ export function GalleryManager({
           <button
             onClick={onClose}
             disabled={busy}
-            className="glass shrink-0 rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text disabled:opacity-50"
+            className="bento shrink-0 rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text disabled:opacity-50"
           >
             Tutup ✕
           </button>
@@ -128,7 +128,7 @@ export function GalleryManager({
           disabled={busy || full}
           accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/svg+xml"
           onChange={(e) => addFiles(e.target.files)}
-          className="w-full cursor-pointer rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 py-3 text-xs text-text-dim transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-text/20 file:px-3 file:py-1.5 file:text-xs file:text-text hover:border-text/40 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full cursor-pointer rounded-xl border border-dashed border-line-strong bg-black/[0.02] px-4 py-3 text-xs text-text-dim transition-colors file:mr-3 file:rounded-lg file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-xs file:text-white hover:border-brand/50 disabled:cursor-not-allowed disabled:opacity-40"
         />
         {full && (
           <p className="mt-1.5 text-[11px] text-text">
@@ -137,13 +137,13 @@ export function GalleryManager({
         )}
 
         {error && (
-          <p className="mt-3 rounded-xl border border-text/30 bg-text/10 px-4 py-2.5 text-xs text-text">
+          <p className="mt-3 rounded-xl border border-brand/30 bg-brand/10 px-4 py-2.5 text-xs text-brand">
             {error}
           </p>
         )}
 
         {images.length === 0 ? (
-          <p className="mt-6 rounded-2xl border border-white/8 px-6 py-12 text-center text-sm text-text-dim">
+          <p className="mt-6 rounded-2xl border border-line px-6 py-12 text-center text-sm text-text-dim">
             Belum ada screenshot. Tambahkan lewat kotak di atas.
           </p>
         ) : (
@@ -152,14 +152,14 @@ export function GalleryManager({
               <div
                 key={img.id}
                 className={`group relative overflow-hidden rounded-xl border transition-opacity ${
-                  idx === 0 ? "border-text/60" : "border-white/10"
+                  idx === 0 ? "border-text/60" : "border-line"
                 } ${busy ? "opacity-60" : ""}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={img.url} alt={img.alt ?? ""} className="h-28 w-full object-cover" />
 
                 {idx === 0 && (
-                  <span className="absolute left-1.5 top-1.5 rounded bg-text/90 px-2 py-0.5 text-[9px] font-semibold text-black">
+                  <span className="absolute left-1.5 top-1.5 rounded bg-brand px-2 py-0.5 text-[9px] font-semibold text-white">
                     COVER
                   </span>
                 )}

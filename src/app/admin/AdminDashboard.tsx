@@ -157,7 +157,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
   const tabBtn = (t: Tab) =>
     `rounded-xl px-5 py-2.5 text-sm font-medium transition-all ${
       tab === t
-        ? "bg-white/10 text-text shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+        ? "bg-black/[0.06] text-text shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
         : "text-text-dim hover:text-text"
     }`;
 
@@ -172,7 +172,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
           { label: "Disembunyikan", value: stats.tersembunyi, tone: "text-text" },
           { label: "Unggulan", value: stats.unggulan, tone: "text-text" },
         ].map((s) => (
-          <div key={s.label} className="glass fade-up rounded-2xl px-4 py-3">
+          <div key={s.label} className="bento fade-up rounded-2xl px-4 py-3">
             <p className={`font-display text-2xl font-semibold ${s.tone}`}>{s.value}</p>
             <p className="mt-0.5 text-[11px] text-text-dim">{s.label}</p>
           </div>
@@ -180,18 +180,18 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
       </div>
 
       {stats.tanpaGambar > 0 && (
-        <p className="rounded-xl border border-text/25 bg-text/8 px-4 py-2.5 text-xs text-text">
+        <p className="rounded-xl border border-brand/25 bg-brand/8 px-4 py-2.5 text-xs text-text">
           {stats.tanpaGambar} proyek belum punya screenshot — kartunya tampil polos di halaman
           depan.
         </p>
       )}
 
       {/* ---------- Tab ---------- */}
-      <div className="glass flex items-center justify-between gap-3 rounded-2xl p-2">
+      <div className="bento flex items-center justify-between gap-3 rounded-2xl p-2">
         <div className="flex gap-1">
           <button onClick={() => setTab("list")} className={tabBtn("list")}>
             Daftar Proyek
-            <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-[10px]">
+            <span className="ml-2 rounded-full bg-black/[0.06] px-2 py-0.5 text-[10px]">
               {projects.length}
             </span>
           </button>
@@ -203,7 +203,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
         {tab === "list" && (
           <button
             onClick={startCreate}
-            className="rounded-xl bg-text px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-white/90"
+            className="rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
           >
             + Proyek Baru
           </button>
@@ -214,8 +214,8 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
         <p
           className={`pop-in rounded-xl border px-4 py-2.5 text-xs ${
             toast.kind === "ok"
-              ? "border-text/30 bg-text/10 text-text"
-              : "border-text/30 bg-text/10 text-text"
+              ? "border-brand/30 bg-brand/10 text-brand"
+              : "border-brand/30 bg-brand/10 text-brand"
           }`}
         >
           {toast.msg}
@@ -242,21 +242,21 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
       ) : (
         <>
           {/* Pencarian + filter */}
-          <div className="glass fade-up flex flex-wrap items-center gap-3 rounded-2xl p-4">
+          <div className="bento fade-up flex flex-wrap items-center gap-3 rounded-2xl p-4">
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Cari judul, deskripsi, atau tech stack..."
-              className="min-w-52 flex-1 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-text placeholder:text-text-dim/50 outline-none transition-all focus:border-text/60 focus:ring-2 focus:ring-text/15"
+              className="min-w-52 flex-1 rounded-xl border border-line bg-black/[0.03] px-4 py-2.5 text-sm text-text placeholder:text-text-dim/50 outline-none transition-all focus:border-text/60 focus:ring-2 focus:ring-text/15"
             />
 
-            <div className="flex gap-1 rounded-xl border border-white/10 p-1">
+            <div className="flex gap-1 rounded-xl border border-line p-1">
               {(["semua", "publik", "draf", "tersembunyi"] as StatusFilter[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => setStatus(s)}
                   className={`rounded-lg px-3 py-1.5 text-xs capitalize transition-colors ${
-                    status === s ? "bg-white/10 text-text" : "text-text-dim hover:text-text"
+                    status === s ? "bg-black/[0.06] text-text" : "text-text-dim hover:text-text"
                   }`}
                 >
                   {s}
@@ -267,7 +267,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortBy)}
-              className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs text-text outline-none focus:border-text/60"
+              className="rounded-xl border border-line bg-black/[0.03] px-3 py-2.5 text-xs text-text outline-none focus:border-text/60"
             >
               <option value="urutan">Urutan tampil</option>
               <option value="terbaru">Terbaru dibuat</option>
@@ -276,7 +276,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
           </div>
 
           {shown.length === 0 ? (
-            <div className="glass rounded-3xl px-8 py-16 text-center">
+            <div className="bento rounded-3xl px-8 py-16 text-center">
               <p className="text-sm text-text">
                 {projects.length === 0
                   ? "Belum ada proyek sama sekali."
@@ -298,7 +298,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
               {shown.map((p, i) => (
                 <article
                   key={p.id}
-                  className={`glass fade-up flex flex-wrap items-center gap-4 rounded-2xl p-4 transition-opacity ${
+                  className={`bento fade-up flex flex-wrap items-center gap-4 rounded-2xl p-4 transition-opacity ${
                     busyId === p.id ? "opacity-50" : ""
                   }`}
                   style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
@@ -323,25 +323,25 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="truncate text-sm font-semibold text-text">{p.title}</h3>
                       {p.featured && (
-                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
                           unggulan
                         </span>
                       )}
                       {p.isWip && (
-                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
                           WIP
                         </span>
                       )}
                       {p.isHidden && (
-                        <span className="rounded-full bg-text/20 px-2 py-0.5 text-[10px] text-text">
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
                           disembunyikan
                         </span>
                       )}
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] ${
                           p.published && !p.isHidden
-                            ? "bg-text/15 text-text"
-                            : "bg-text/15 text-text"
+                            ? "bg-brand/10 text-brand"
+                            : "bg-brand/10 text-brand"
                         }`}
                       >
                         {!p.published ? "draf" : p.isHidden ? "internal" : "publik"}
@@ -358,7 +358,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                       onClick={() => toggle(p, { published: !p.published })}
                       disabled={busyId === p.id}
                       title={p.published ? "Sembunyikan dari publik" : "Tampilkan di publik"}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.published ? "Jadikan draf" : "Terbitkan"}
                     </button>
@@ -370,7 +370,7 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                           ? "Tampilkan kembali ke publik"
                           : "Sembunyikan (proyek internal / NDA)"
                       }
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.isHidden ? "Tampilkan" : "Sembunyikan"}
                     </button>
@@ -378,28 +378,28 @@ export function AdminDashboard({ initialProjects }: { initialProjects: ProjectWi
                       onClick={() => toggle(p, { featured: !p.featured })}
                       disabled={busyId === p.id}
                       title="Tandai / lepas unggulan"
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       {p.featured ? "★ Unggulan" : "☆ Unggulan"}
                     </button>
                     <button
                       onClick={() => setGallery(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Kelola Gambar
                     </button>
                     <button
                       onClick={() => startEdit(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => remove(p)}
                       disabled={busyId === p.id}
-                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
+                      className="rounded-lg border border-line px-3 py-1.5 text-xs text-text-dim transition-all hover:border-text/50 hover:text-text disabled:opacity-40"
                     >
                       Hapus
                     </button>

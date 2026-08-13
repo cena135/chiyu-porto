@@ -61,7 +61,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <nav className="fade-up flex items-center justify-between gap-4">
         <Link
           href="/#karya"
-          className="glass group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-text-dim transition-all hover:border-white/25 hover:text-text"
+          className="bento group inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium text-text-dim transition-all hover:border-line-strong hover:text-text"
         >
           <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
           Kembali ke daftar proyek
@@ -78,12 +78,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       <header className="fade-up py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
         <div className="flex flex-wrap items-center gap-4">
           {project.isWip && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-ember/40 bg-ember/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-ember">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ember" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-accent">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
               Work in Progress
             </span>
           )}
-          {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
+          {project.featured && <span className="eyebrow text-brand">Unggulan</span>}
           <span className="eyebrow">{dibuat}</span>
           {project.images.length > 0 && (
             <span className="eyebrow">{project.images.length} screenshot</span>
@@ -122,7 +122,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 rounded-full bg-text px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-white/90"
+                className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
               >
                 Kunjungi Website
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
@@ -135,7 +135,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass rounded-full px-6 py-3 text-sm font-medium text-text transition-colors hover:border-white/25"
+                className="bento rounded-full px-6 py-3 text-sm font-medium text-text transition-colors hover:border-line-strong"
               >
                 Lihat Source Code
               </a>
@@ -152,7 +152,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       {/* ---------- Catatan panjang ---------- */}
       {project.content && (
         <section
-          className="radius-modern fade-up mt-10 border border-white/8 bg-surface/30 p-8 backdrop-blur-xl sm:p-11"
+          className="radius-modern fade-up mt-10 border border-line bg-surface/30 p-8 backdrop-blur-xl sm:p-11"
           style={{ animationDelay: "220ms" }}
         >
           <span className="eyebrow">Catatan</span>
@@ -170,10 +170,10 @@ export default async function ProjectDetailPage({ params }: Props) {
       )}
 
       {/* ---------- Kaki ---------- */}
-      <footer className="mt-16 border-t border-white/8 pt-8">
+      <footer className="mt-16 border-t border-line pt-8">
         <Link
           href="/#karya"
-          className="glass group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-medium text-text-dim transition-all hover:border-white/25 hover:text-text"
+          className="bento group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-medium text-text-dim transition-all hover:border-line-strong hover:text-text"
         >
           <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
           Kembali ke daftar proyek

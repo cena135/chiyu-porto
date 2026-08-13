@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Chakra_Petch, Inter, JetBrains_Mono, Outfit } from "next/font/google";
+import { Chakra_Petch, Inter, Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { CursorProvider } from "@/components/ui/cursor-store";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,16 +14,8 @@ const outfit = Outfit({
   display: "swap",
 });
 
-// Dipakai tema demo V3 (Pro Hacker). Dimuat di layout, bukan di halaman demo,
-// supaya next/font tetap self-hosting dan preload.
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
-// Dipakai tema demo V1 (Vibrant Bento). Chakra Petch wajib menyebutkan weight
-// karena bukan variable font — tanpa itu next/font menolak memuatnya.
+// Font judul tema Bento. Chakra Petch wajib menyebutkan weight karena bukan
+// variable font — tanpa itu next/font menolak memuatnya.
 const chakra = Chakra_Petch({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -54,23 +44,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider appearance={{ variables: { colorPrimary: "#ffffff" } }}>
+    <ClerkProvider appearance={{ variables: { colorPrimary: "#2563eb" } }}>
       <html
         lang="id"
-        className={`${inter.variable} ${outfit.variable} ${mono.variable} ${chakra.variable}`}
+        className={`${inter.variable} ${outfit.variable} ${chakra.variable}`}
       >
-        <body>
-          {/* Aurora ambient global — dipasang di layout, bukan page, supaya
-              halaman detail proyek dan panel admin ikut mendapat cahayanya.
-              Dua noda cahayanya adalah ::before/::after milik div ini. */}
-          <div className="aurora-field" aria-hidden />
-          {/* Provider hanya menyimpan VARIAN kursor. Posisinya ditangani
-              motion value di dalam CustomCursor, tidak lewat React state. */}
-          <CursorProvider>
-            <CustomCursor />
-            {children}
-          </CursorProvider>
-        </body>
+        <body>{children}</body>
       </html>
     </ClerkProvider>
   );

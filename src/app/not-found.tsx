@@ -25,13 +25,13 @@ export default function NotFound() {
       <div className="fade-up mt-8 flex flex-wrap justify-center gap-3" style={{ animationDelay: "200ms" }}>
         <Link
           href="/#karya"
-          className="rounded-full bg-text px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-white/90"
+          className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-strong"
         >
           Lihat Daftar Proyek
         </Link>
         <Link
           href="/"
-          className="glass rounded-full px-6 py-3 text-sm font-medium text-text transition-colors hover:border-white/25"
+          className="bento rounded-full px-6 py-3 text-sm font-medium text-text transition-colors hover:border-line-strong"
         >
           Ke Beranda
         </Link>
