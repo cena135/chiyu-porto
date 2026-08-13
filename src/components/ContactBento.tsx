@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 /**
  * Tiga kanal kontak sebagai kotak bento.
@@ -43,6 +44,7 @@ const KONTAK = [
   {
     label: "Email",
     tampil: "alexanderjoedo@gmail.com",
+    petunjuk: "Buka jendela tulis Gmail",
     // Buka jendela tulis Gmail di web, bukan mailto: — banyak orang tidak punya
     // aplikasi email terpasang, dan mailto pada mereka tidak melakukan apa-apa.
     href: "https://mail.google.com/mail/?view=cm&fs=1&to=alexanderjoedo@gmail.com",
@@ -52,6 +54,7 @@ const KONTAK = [
   {
     label: "Instagram",
     tampil: "@alexander_joedo",
+    petunjuk: "Buka profil Instagram",
     href: "https://instagram.com/alexander_joedo",
     icon: IconInstagram,
     warna: PURPLE,
@@ -59,6 +62,7 @@ const KONTAK = [
   {
     label: "WhatsApp",
     tampil: "081252729777",
+    petunjuk: "Mulai obrolan WhatsApp",
     // Nomor dipakai dalam format internasional (62...) karena wa.me menolak awalan 0.
     href: "https://wa.me/6281252729777?text=Hai%20alex%2C%20aku%20tertarik%20untuk%20diskusi%20projek",
     icon: IconWhatsApp,
@@ -82,12 +86,13 @@ export function ContactBento() {
   return (
     <section id="contact" className="mt-4 scroll-mt-24">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {KONTAK.map(({ label, tampil, href, icon, warna }, i) => (
+        {KONTAK.map(({ label, tampil, href, icon, warna, petunjuk }, i) => (
           <motion.a
             key={label}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
+            title={petunjuk}
             custom={i}
             initial="hidden"
             whileInView="show"
@@ -106,14 +111,20 @@ export function ContactBento() {
             />
 
             <div className="relative flex items-center gap-4">
-              <motion.span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
-                style={{ background: warna }}
-                variants={{ hover: { background: "#ffffff", color: warna, scale: 1.12, rotate: -8 } }}
-                transition={pegas}
-              >
-                {icon}
-              </motion.span>
+              {/* Aturan Emas UI no. 4: ikon tanpa teks wajib punya penjelas
+                  saat disorot. `title` tetap dipasang di tautannya sebagai
+                  cadangan kalau JavaScript mati. */}
+              <Tooltip label={petunjuk}>
+                <motion.span
+                  aria-hidden
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
+                  style={{ background: warna }}
+                  variants={{ hover: { background: "#ffffff", color: warna, scale: 1.12, rotate: -8 } }}
+                  transition={pegas}
+                >
+                  {icon}
+                </motion.span>
+              </Tooltip>
 
               <div className="min-w-0">
                 <motion.span

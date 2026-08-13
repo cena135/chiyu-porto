@@ -64,6 +64,7 @@ export function Lightbox({
         <button
           onClick={onClose}
           aria-label="Tutup galeri"
+          title="Tutup galeri"
           className="bento rounded-full px-4 py-2 text-xs text-text transition-colors hover:text-text"
         >
           Tutup ✕
@@ -78,6 +79,7 @@ export function Lightbox({
           <button
             onClick={prev}
             aria-label="Gambar sebelumnya"
+          title="Gambar sebelumnya"
             className="bento absolute left-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ‹
@@ -96,6 +98,7 @@ export function Lightbox({
           <button
             onClick={next}
             aria-label="Gambar berikutnya"
+          title="Gambar berikutnya"
             className="bento absolute right-2 z-10 h-11 w-11 rounded-full text-text transition-all hover:scale-110 hover:text-text"
           >
             ›
@@ -113,6 +116,7 @@ export function Lightbox({
               key={img.id}
               onClick={() => setI(n)}
               aria-label={`Ke gambar ${n + 1}`}
+              title={`Ke gambar ${n + 1}`}
               className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition-all ${
                 n === i
                   ? "border-text opacity-100"

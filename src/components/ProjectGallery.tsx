@@ -25,6 +25,7 @@ export function ProjectGallery({
           type="button"
           onClick={() => setOpen(0)}
           aria-label={`Perbesar ${title} — gambar 1`}
+          title="Klik untuk memperbesar"
           className="bento radius-modern group block w-full overflow-hidden transition-colors hover:border-line-strong"
         >
           <div className="card-media relative aspect-[16/9] overflow-hidden bg-surface">
@@ -49,6 +50,7 @@ export function ProjectGallery({
                 type="button"
                 onClick={() => setOpen(n + 1)}
                 aria-label={`Perbesar ${title} — gambar ${n + 2}`}
+                title="Klik untuk memperbesar"
                 className="bento radius-modern group overflow-hidden transition-colors hover:border-line-strong"
               >
                 <div className="card-media relative aspect-[4/3] overflow-hidden bg-surface">

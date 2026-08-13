@@ -34,7 +34,6 @@ async function getProjects() {
 
 export default async function HomePage() {
   const projects = await getProjects();
-  const stacks = [...new Set(projects.flatMap((p) => p.techStack))];
   const tahun = new Date().getFullYear();
 
   return (
@@ -51,41 +50,11 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      {projects.length === 0 ? (
-        <div className="bento fade-up rounded-3xl px-8 py-24 text-center">
-          <p className="display text-2xl">Belum ada apa-apa di sini.</p>
-          <p className="mt-3 text-sm text-text-dim">
-            Masuk ke{" "}
-            <Link href="/admin" className="font-semibold text-brand underline-offset-4 hover:underline">
-              panel admin
-            </Link>{" "}
-            untuk menambahkan proyek pertama.
-          </p>
-        </div>
-      ) : (
-        <Bento projects={projects} />
-      )}
+      <Bento projects={projects} />
 
       <ContactBento />
 
-      {/* ---------- Ticker tech stack ---------- */}
-      {stacks.length > 0 && (
-        <div className="mt-10 border-y border-line py-5">
-          <div className="ticker">
-            <div className="ticker-track">
-              {/* Digandakan supaya sambungan gulirnya tidak terlihat */}
-              {[...stacks, ...stacks].map((s, i) => (
-                <span key={`${s}-${i}`} className="eyebrow flex items-center gap-2.5">
-                  <span className="text-brand">✦</span>
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-8">
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-8">
         <span className="eyebrow">© {tahun} Alexander Imanuel Joedo</span>
         <span className="text-xs text-text-dim">
           Di-hosting sendiri · Next.js · PostgreSQL · Docker

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Chakra_Petch, Inter, Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SmoothScrolling } from "@/components/SmoothScrolling";
 import "./globals.css";
 
 const inter = Inter({
@@ -49,7 +50,9 @@ export default function RootLayout({
         lang="id"
         className={`${inter.variable} ${outfit.variable} ${chakra.variable}`}
       >
-        <body>{children}</body>
+        <body>
+          <SmoothScrolling>{children}</SmoothScrolling>
+        </body>
       </html>
     </ClerkProvider>
   );

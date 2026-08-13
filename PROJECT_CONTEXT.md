@@ -31,8 +31,8 @@ d:\My Projects\Porto\  (lokal)  ==  /home/alex/chiyu-porto/  (server)
 │
 ├── src/app/
 │   ├── layout.tsx                            <- ClerkProvider + font Inter/Outfit + aurora bg
-│   ├── globals.css                           <- SELURUH desain: palet oklch, .glass,
-│   │                                            .card-hover, .btn-glow, .reveal, aurora-field
+│   ├── globals.css                           <- SELURUH desain: palet bento terang, .bento,
+│   │                                            .ticker, override animasi bawaan Tailwind
 │   ├── page.tsx                              <- FRONTEND PUBLIK. Grid proyek auto-grow.
 │   │                                            revalidate = 60 detik.
 │   ├── p/[slug]/page.tsx                     <- HALAMAN DETAIL PROYEK (SSG + ISR 60s)
@@ -228,28 +228,22 @@ padahal CSS-nya terlihat benar. Selalu pakai **`overflow-x: clip`**, bukan `hidd
 Selain itu tautan anchor memakai `src/components/SmoothScrollLink.tsx` (memaksa gulir lewat
 `window.scrollTo`), jadi tidak bergantung pada CSS sama sekali.
 
-**BAHASA VISUAL — IKUTI INI, JANGAN KEMBALI KE KARTU SERAGAM:**
-Arah desain: editorial/agency, bukan grid kartu simetris (itu ciri UI generik).
-- `.display` judul raksasa `clamp()` sampai 7rem, tracking -0.045em, leading 0.92
-- `.eyebrow` label huruf besar berjarak sebagai penyeimbang
-- `.outlined` & `.ghost-index` teks bergaris tepi (nomor indeks kartu)
-- `.hairline` garis yang memudar di ujung — hindari border kotak penuh
-- `.radius-organic` / `-alt` sudut TIDAK seragam, berselang-seling antar kartu
-- `.work-grid` 12 kolom, lebar 7/5 berselang-seling, baris digeser pakai
-  **margin** (transform akan ditimpa `.slide-in`)
-- Grain film + vignette asimetris di `body::after` / `body::before`
-- Panel admin sengaja TIDAK ikut dirombak — itu alat internal, keterbacaan
-  lebih penting daripada gaya.
+**BAHASA VISUAL — VIBRANT BENTO GRID (UPDATE AGUSTUS 2026):**
+Setelah A/B Testing, desain portofolio beralih mutlak ke **Vibrant Bento Grid** (tema terang). Jangan kembalikan ke tema gelap / Liquid Glass / Aurora.
+- **Font Utama**: `Chakra Petch` untuk judul-judul grid (`--font-display`).
+- **Palet**: `--color-base` terang, `--color-brand` (Biru) & `--color-accent` (Ungu).
+- **.bento**: Kelas utilitas global untuk kotak. Memiliki latar putih, border tipis gelap-transparan (`--color-line`), dan bayangan jatuh dua lapis yang besar.
+- **Tata Letak**: Asimetris. Misalnya 1 kotak besar (2x2) di kiri, dipadu kotak-kotak sedang/kecil. Tampilan *mobile* luruh menjadi 1 kolom (`grid-cols-1`).
+- **Interaksi & Animasi**: Kotak `.bento` yang interaktif wajib memiliki reaksi `whileHover` yang jelas (Framer Motion atau CSS). Jangan biarkan kotak mati kutu.
+- Panel admin sengaja TIDAK ikut dirombak berlebihan — itu alat internal, keterbacaan lebih penting.
 
 **SISTEM GERAK — PAKAI TOKEN, JANGAN TULIS ANGKA MENTAH:**
-Semua di `src/app/globals.css` blok `@theme`:
-- Durasi: `--dur-fast 180ms` · `--dur-base 300ms` · `--dur-slow 460ms` · `--dur-entrance 700ms`
+Sebagian besar interaksi memakai Framer Motion, tapi untuk elemen native/admin tetap pakai `src/app/globals.css` blok `@theme`:
+- Durasi: `--dur-fast 180ms` · `--dur-base 300ms` · `--dur-slow 460ms`
 - Easing: `--ease-out-quart` (UI umum) · `--ease-out-expo` (animasi masuk) · `--ease-spring` (modal)
-- `--default-transition-duration` & `--default-transition-timing-function` di-override, jadi
-  SEMUA utilitas `transition-*` Tailwind ikut (default aslinya cuma 150ms dan terasa patah).
-  Artinya: **tidak perlu menulis `duration-*` di tiap elemen.**
-- Kelas siap pakai: `.reveal` `.slide-in` `.fade-up` `.pop-in` `.modal-backdrop` `.modal-panel`
-  `.media-swap`
+- `--default-transition-duration` & `--default-transition-timing-function` di-override, jadi SEMUA utilitas `transition-*` Tailwind otomatis mewarisi `300ms cubic-bezier(0.25, 1, 0.5, 1)`.
+  Artinya: **jangan menulis `duration-*` mentah di tiap elemen.**
+- Kelas siap pakai: `.fade-up` `.pop-in` `.modal-backdrop` `.modal-panel` `.media-swap`
 
 **JEBAKAN TAMBAHAN (jangan diulang):**
 9. **Kartu memakai pola stretched link**, bukan `<a>` yang membungkus seluruh kartu — anchor

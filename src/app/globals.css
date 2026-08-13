@@ -44,6 +44,10 @@
 }
 
 html {
+  /* Tetap ada sebagai CADANGAN: dipakai saat Lenis tidak aktif (pengguna
+     memilih "kurangi animasi"). Saat Lenis hidup, aturan .lenis-smooth di
+     bawah mematikannya — dua penggulir mulus yang berjalan bersamaan saling
+     berebut dan hasilnya justru tersendat. */
   scroll-behavior: smooth;
   /* `clip`, BUKAN `hidden`. `overflow: hidden` di body membuat body menjadi
      elemen penggulir sehingga scroll-behavior di html tidak pernah berlaku —
@@ -60,6 +64,46 @@ body {
   min-height: 100dvh;
   overflow-x: clip;
   scroll-behavior: smooth;
+}
+
+/* ---------- Lenis ----------
+   Wajib ada, kalau tidak halaman kehilangan tinggi gulirnya. Ditulis di sini
+   dan bukan lewat `import "lenis/dist/lenis.css"` supaya tetap satu berkas
+   gaya dan ikut diproses Tailwind. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ---------- Marquee ----------
+   Menggeser satu jalur yang isinya DIGANDAKAN, lalu digeser tepat -50%.
+   Karena separuh keduanya identik, titik ulangnya jatuh persis di posisi awal
+   dan sambungannya tidak terlihat. Hanya transform yang dianimasikan, jadi
+   composited dan murah di T480. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-dur, 22s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 /* ---------- Tipografi ---------- */
