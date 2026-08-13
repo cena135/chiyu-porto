@@ -4,6 +4,44 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { ProjectWithImages } from "@/lib/projects";
 
+/**
+ * Identitas warna per proyek untuk baris tanpa screenshot.
+ *
+ * Dipilih lewat `index % PALETTES.length`, bukan hash judul: cara ini MENJAMIN
+ * dua baris bersebelahan tidak pernah kembar warnanya.
+ *
+ * Alpha tiap warna rendah dan masih ditumpuk peredam gelap — warnanya terbaca
+ * sebagai cahaya yang dipantulkan kaca, bukan sebagai bidang cat.
+ */
+const PALETTES: [string, string, string][] = [
+  ["#6366f166", "#a855f74d", "#22d3ee4d"], // indigo · violet · cyan
+  ["#fb718566", "#f59e0b4d", "#f472b64d"], // rose · amber · pink
+  ["#34d39966", "#14b8a64d", "#38bdf84d"], // emerald · teal · sky
+  ["#a78bfa66", "#f472b64d", "#fbbf244d"], // violet · pink · amber
+  ["#22d3ee66", "#3b82f64d", "#8b5cf64d"], // cyan · blue · violet
+  ["#e879f966", "#8b5cf64d", "#6366f14d"], // fuchsia · violet · indigo
+  ["#a3e63566", "#34d3994d", "#22d3ee4d"], // lime · emerald · cyan
+  ["#38bdf866", "#6366f14d", "#fb71854d"], // sky · indigo · rose
+];
+
+/** Panel ramping: titik cahaya disebar MENDATAR, mengikuti bentuk baris. */
+function meshPanel([a, b, c]: [string, string, string]) {
+  return [
+    `radial-gradient(90% 160% at 10% 20%, ${a} 0%, transparent 60%)`,
+    `radial-gradient(80% 150% at 55% 90%, ${b} 0%, transparent 58%)`,
+    `radial-gradient(90% 160% at 95% 15%, ${c} 0%, transparent 60%)`,
+  ].join(", ");
+}
+
+/** Sapuan warna selebar baris, muncul hanya saat disorot. */
+function meshRow([a, b, c]: [string, string, string]) {
+  return [
+    `radial-gradient(40% 180% at 8% 50%, ${a} 0%, transparent 70%)`,
+    `radial-gradient(35% 160% at 45% 50%, ${b} 0%, transparent 70%)`,
+    `radial-gradient(40% 180% at 85% 50%, ${c} 0%, transparent 70%)`,
+  ].join(", ");
+}
+
 const IconLock = (
   <svg
     viewBox="0 0 24 24"
@@ -28,6 +66,7 @@ export function ProjectCard({
 }) {
   const cover = project.images[0];
   const nomor = String(index + 1).padStart(2, "0");
+  const palette = PALETTES[index % PALETTES.length];
 
   return (
     <motion.article
@@ -41,6 +80,17 @@ export function ProjectCard({
       transition={{ type: "spring", stiffness: 80, damping: 18 }}
       className="group relative border-t border-white/8 last:border-b"
     >
+      {/* Sapuan aurora sepanjang baris — 0 saat diam, muncul halus saat disorot */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{ backgroundImage: meshRow(palette) }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-base/55 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+      />
+
       <Link
         href={`/p/${project.slug}`}
         aria-label={`Lihat detail proyek ${project.title}`}
@@ -62,26 +112,34 @@ export function ProjectCard({
             />
           ) : (
             /* Tanpa screenshot — lazim untuk proyek internal/NDA.
-               Monokrom: mesh gradient warna-warni yang lama akan bertabrakan
-               dengan palet hitam-putih ini. */
-            <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(120%_120%_at_30%_20%,rgb(255_255_255/0.10),transparent_60%)] text-text-dim">
-              {IconLock}
-            </span>
+               Tiap baris dapat mesh gradient sendiri supaya deretannya tidak
+               terbaca monoton, tetap diredam agar bernuansa gelap. */
+            <>
+              <div
+                aria-hidden
+                className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
+                style={{ backgroundImage: meshPanel(palette) }}
+              />
+              <div aria-hidden className="absolute inset-0 bg-base/35" />
+              <span className="absolute inset-0 flex items-center justify-center text-white/70">
+                {IconLock}
+              </span>
+            </>
           )}
         </div>
 
         {/* Teks — bergeser sedikit saat baris disorot */}
         <div className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-text-dim transition-colors group-hover:text-text">
+            <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-text-dim transition-colors group-hover:text-aurora">
               {project.title}
             </h3>
             {project.isWip && (
-              <span className="rounded-full border border-white/20 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.16em] text-text">
+              <span className="rounded-full border border-ember/40 bg-ember/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.16em] text-ember">
                 WIP
               </span>
             )}
-            {project.featured && <span className="eyebrow eyebrow-bright">Unggulan</span>}
+            {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
             {!cover && <span className="eyebrow">Internal</span>}
           </div>
 
@@ -123,7 +181,7 @@ export function ProjectCard({
 
           <span
             aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-text-dim transition-all group-hover:border-white/40 group-hover:bg-white/5 group-hover:text-text"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-text-dim transition-all group-hover:border-aurora/50 group-hover:bg-aurora/10 group-hover:text-aurora"
           >
             <span className="-translate-x-1 opacity-70 transition-all group-hover:translate-x-0 group-hover:opacity-100">
               →

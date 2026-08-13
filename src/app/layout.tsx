@@ -26,6 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider appearance={{ variables: { colorPrimary: "#ffffff" } }}>
       <html lang="id" className={`${inter.variable} ${outfit.variable}`}>
         <body>
+          {/* Aurora ambient global — dipasang di layout, bukan page, supaya
+              halaman detail proyek dan panel admin ikut mendapat cahayanya.
+              Dua noda cahayanya adalah ::before/::after milik div ini. */}
+          <div className="aurora-field" aria-hidden />
           {children}
         </body>
       </html>

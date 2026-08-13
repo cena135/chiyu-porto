@@ -78,12 +78,12 @@ export default async function ProjectDetailPage({ params }: Props) {
       <header className="fade-up py-14 sm:py-20" style={{ animationDelay: "80ms" }}>
         <div className="flex flex-wrap items-center gap-4">
           {project.isWip && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-text/30 bg-text/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-text">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-text" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-ember/40 bg-ember/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-ember">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ember" />
               Work in Progress
             </span>
           )}
-          {project.featured && <span className="eyebrow text-text">Unggulan</span>}
+          {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
           <span className="eyebrow">{dibuat}</span>
           {project.images.length > 0 && (
             <span className="eyebrow">{project.images.length} screenshot</span>
@@ -91,7 +91,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
 
         <h1 className="display mt-6 text-[clamp(2.5rem,7vw,5.5rem)]">
-          <span className="text-text">{project.title}</span>
+          <span className="text-gradient">{project.title}</span>
         </h1>
 
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12">

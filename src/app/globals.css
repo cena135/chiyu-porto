@@ -13,6 +13,14 @@
   --color-text: #ffffff;
   --color-text-dim: #888888;
 
+  /* ---------- Aksen Aurora ----------
+     Dasarnya tetap hitam pekat; warna dipakai sebagai CAHAYA, bukan sebagai
+     bidang. Itu yang membedakan "mewah" dari "norak": aurora melayang di latar
+     dan dipantulkan kaca, bukan mengecat kotak-kotak UI. */
+  --color-aurora: oklch(0.78 0.15 195);
+  --color-violet: oklch(0.7 0.19 300);
+  --color-ember: oklch(0.79 0.16 55);
+
   /* ---------- Sistem gerak ----------
      Mengubah SELURUH utilitas transition-* Tailwind sekaligus. Default bawaan
      150ms terasa patah dibanding gerak Framer Motion di sekitarnya. */
@@ -51,6 +59,55 @@ body {
   scroll-behavior: smooth;
 }
 
+/* ---------- Aurora ambient ----------
+   Dua noda cahaya dengan ukuran, warna, dan posisi yang sengaja TIDAK simetris —
+   gradasi yang seimbang sempurna justru terbaca sebagai template.
+   z-index -20: di belakang seluruh konten DAN di belakang DotPattern (-10). */
+.aurora-field {
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora-field::before,
+.aurora-field::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+.aurora-field::before {
+  width: 62vmax;
+  height: 48vmax;
+  opacity: 0.3;
+  background: radial-gradient(circle, var(--color-violet), transparent 62%);
+  top: -22vmax;
+  left: -16vmax;
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+.aurora-field::after {
+  width: 38vmax;
+  height: 38vmax;
+  opacity: 0.22;
+  background: radial-gradient(circle, var(--color-ember), transparent 60%);
+  top: 42vmax;
+  right: -14vmax;
+  animation: drift-b 34s ease-in-out infinite alternate;
+}
+
+/* Hanya transform + opacity: composited, jadi murah walau berjalan terus. */
+@keyframes drift-a {
+  to {
+    transform: translate3d(12vw, 8vh, 0) scale(1.15);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate3d(-10vw, -6vh, 0) scale(1.1);
+  }
+}
+
 /* ---------- Tipografi ---------- */
 .display {
   font-family: var(--font-display);
@@ -86,12 +143,34 @@ body {
   border-radius: 1.5rem;
 }
 
-/* ---------- Kaca presisi ---------- */
+/* ---------- Liquid Glass ----------
+   Latar nyaris transparan supaya aurora di belakangnya benar-benar tembus;
+   yang membentuk "kaca" adalah blur + saturate, bukan warna latarnya.
+   Border atas lebih terang daripada border kiri — meniru cahaya yang jatuh
+   dari atas, itu yang membuat permukaannya terbaca sebagai tetesan air. */
 .glass {
-  background: rgb(20 20 20 / 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgb(255 255 255 / 0.05);
+  background: rgb(255 255 255 / 0.03);
+  /* JANGAN tambahkan -webkit-backdrop-filter manual di sini.
+     Kalau ditulis manual, Lightning CSS menganggap prefiksnya sudah diurus
+     lalu MEMBUANG versi tanpa prefiks — dan efek kacanya mati di Firefox.
+     Dibiarkan begini, kompilator menambahkan prefiks sesuai target browser. */
+  backdrop-filter: blur(40px) saturate(200%);
+  border-top: 1px solid rgb(255 255 255 / 0.15);
+  border-left: 1px solid rgb(255 255 255 / 0.05);
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.8);
+}
+
+/* Judul bergradasi aurora — dipakai hemat, hanya pada satu titik fokus. */
+.text-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-text),
+    var(--color-aurora),
+    var(--color-violet)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* ---------- Indeks karya: satu kolom penuh ---------- */

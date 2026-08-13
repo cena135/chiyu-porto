@@ -73,7 +73,12 @@ export function Hero() {
               initial="hidden"
               animate="show"
               variants={fadeUp}
-              className={`block ${i === 0 ? "text-text-dim" : "text-text"}`}
+              // Baris terakhir memakai gradasi aurora sebagai satu-satunya
+              // titik fokus warna. Kalau ketiganya diberi gradasi, tidak ada
+              // lagi yang menonjol.
+              className={
+                i === 0 ? "block text-text-dim" : i === 2 ? "block text-gradient" : "block text-text"
+              }
             >
               {baris}
             </motion.span>
@@ -125,7 +130,7 @@ export function Hero() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-text px-6 py-3 text-sm font-semibold text-black"
+            className="rounded-full bg-gradient-to-r from-aurora to-violet px-6 py-3 text-sm font-semibold text-black shadow-[0_10px_40px_-12px_var(--color-aurora)]"
           >
             Lihat Karya
           </motion.a>
@@ -135,7 +140,7 @@ export function Hero() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full border border-white/15 px-6 py-3 text-sm font-medium text-text"
+            className="glass rounded-full px-6 py-3 text-sm font-medium text-text"
           >
             Contact me
           </motion.a>
