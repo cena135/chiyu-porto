@@ -181,6 +181,23 @@ body {
   }
 }
 
+/* ---------- Spotlight (Aceternity) ----------
+   Sekali jalan lalu berhenti: `forwards` menahan keadaan akhir, jadi tidak ada
+   animasi yang terus berputar dan membebani compositor saat halaman digulir. */
+.animate-spotlight {
+  animation: spotlight 2s var(--ease-out-quart) 0.6s 1 forwards;
+}
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+}
+
 /* ---------- Fokus keyboard ---------- */
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid rgb(255 255 255 / 0.7);

@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { Spotlight } from "@/components/ui/Spotlight";
+import { DotPattern } from "@/components/ui/DotPattern";
 import avatar from "../../public/avatar.jpg";
 
 /**
@@ -35,8 +37,21 @@ const fadeUp = {
 
 export function Hero() {
   return (
-    <section className="grid grid-cols-1 gap-10 pb-24 pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-36 lg:pt-28">
-      <div className="lg:col-span-8">
+    <section className="relative grid grid-cols-1 gap-10 pb-24 pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-36 lg:pt-28">
+      {/* ---------- Lapisan latar ----------
+          Keduanya `absolute` dan berada di belakang konten. Sengaja dibuat
+          full-bleed dengan -inset-x supaya teksturnya menembus padding <main>
+          dan tidak berhenti mendadak di tepi kolom. */}
+      <div aria-hidden className="pointer-events-none absolute -inset-x-6 inset-y-0 -z-10 sm:-inset-x-10">
+        <DotPattern />
+      </div>
+
+      {/* Spotlight membasuh dari pojok kiri atas ke arah judul */}
+      <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" />
+
+      {/* z-10: Spotlight memakai z-[1], tanpa ini cahayanya menimpa teks dan
+          kontras judul putih ikut turun. */}
+      <div className="relative z-10 lg:col-span-8">
         <motion.div
           initial="hidden"
           animate="show"
@@ -72,7 +87,7 @@ export function Hero() {
         initial="hidden"
         animate="show"
         variants={fadeUp}
-        className="flex flex-col justify-end gap-6 lg:col-span-4 lg:pb-4"
+        className="relative z-10 flex flex-col justify-end gap-6 lg:col-span-4 lg:pb-4"
       >
         <div className="flex max-w-md items-start gap-5">
           <span className="shrink-0 overflow-hidden rounded-full border border-white/10">
