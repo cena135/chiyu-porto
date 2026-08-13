@@ -12,11 +12,14 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.mjs",
-    "db:seed:reset": "node prisma/seed.mjs --reset"
+    "db:seed:reset": "node prisma/seed.mjs --reset",
+    "prebuild": "node scripts/generate-hero-frames.mjs",
+    "frames": "node scripts/generate-hero-frames.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",
     "@prisma/client": "^6.4.1",
+    "gsap": "^3.15.0",
     "next": "^15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

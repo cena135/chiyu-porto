@@ -9,3 +9,7 @@ uploads/*
 *.log
 .DS_Store
 next-env.d.ts
+
+# Frame hero dummy — dibangkitkan ulang saat build (npm run frames).
+# Kalau nanti diganti aset asli (jpg/webp), hapus baris ini dan commit berkasnya.
+public/hero-frames/*.svg

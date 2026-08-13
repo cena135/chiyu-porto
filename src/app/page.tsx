@@ -6,6 +6,7 @@ import avatar from "../../public/avatar.jpg";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ProjectCard } from "@/components/ProjectCard";
+import { HeroSequence } from "@/components/HeroSequence";
 
 /**
  * Selalu render ulang per permintaan — JANGAN kembalikan ke `revalidate`.
@@ -195,6 +196,14 @@ export default async function HomePage() {
           </div>
         </aside>
       </section>
+
+      {/* ---------- Sequence 3D terikat scroll ----------
+          Diletakkan tepat setelah judul hero: pengunjung membaca kalimatnya,
+          lalu guliran pertamanya langsung memutar bola kawat. Full-bleed —
+          menembus padding <main> supaya benar-benar selebar layar. */}
+      <div className="relative left-1/2 w-screen -translate-x-1/2">
+        <HeroSequence />
+      </div>
 
       {/* ---------- Ticker tech stack ---------- */}
       {stacks.length > 0 && (
