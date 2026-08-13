@@ -31,8 +31,34 @@ const fadeUp = {
   show: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { type: "spring" as const, stiffness: 90, damping: 18, delay: i * 0.09 },
+    transition: {
+      type: "spring" as const,
+      stiffness: 90,
+      damping: 18,
+      delay: i * 0.09,
+    },
   }),
+};
+
+/** Judul dipecah per KATA, bukan per huruf.
+ *  Per huruf menghasilkan puluhan elemen bertransform sekaligus — di T480 itu
+ *  terasa tersendat, dan efek visualnya nyaris tidak berbeda. */
+const BARIS = ["I Build", "and Host", "Websites."];
+
+/** Induk hanya mengatur irama; anaknya yang bergerak. */
+const wadahJudul = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.12 } },
+};
+
+const kataMasuk = {
+  hidden: { opacity: 0, y: "0.5em", rotate: 2 },
+  show: {
+    opacity: 1,
+    y: 0,
+    rotate: 0,
+    transition: { type: "spring" as const, stiffness: 120, damping: 16 },
+  },
 };
 
 export function Hero() {
@@ -42,7 +68,10 @@ export function Hero() {
           Keduanya `absolute` dan berada di belakang konten. Sengaja dibuat
           full-bleed dengan -inset-x supaya teksturnya menembus padding <main>
           dan tidak berhenti mendadak di tepi kolom. */}
-      <div aria-hidden className="pointer-events-none absolute -inset-x-6 inset-y-0 -z-10 sm:-inset-x-10">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -inset-x-6 inset-y-0 -z-10 sm:-inset-x-10"
+      >
         <DotPattern />
       </div>
 
@@ -65,25 +94,47 @@ export function Hero() {
           <span className="eyebrow">Lagi terima proyek baru</span>
         </motion.div>
 
-        <h1 className="display text-[clamp(2.75rem,8vw,7.5rem)]">
-          {["I Build", "and Host", "Websites."].map((baris, i) => (
-            <motion.span
-              key={baris}
-              custom={i + 1}
-              initial="hidden"
-              animate="show"
-              variants={fadeUp}
-              // Baris terakhir memakai gradasi aurora sebagai satu-satunya
-              // titik fokus warna. Kalau ketiganya diberi gradasi, tidak ada
-              // lagi yang menonjol.
-              className={
-                i === 0 ? "block text-text-dim" : i === 2 ? "block text-gradient" : "block text-text"
-              }
-            >
-              {baris}
-            </motion.span>
-          ))}
-        </h1>
+        <motion.h1
+          initial="hidden"
+          animate="show"
+          variants={wadahJudul}
+          className="display text-[clamp(2.75rem,8vw,7.5rem)]"
+        >
+          {BARIS.map((baris, i) => {
+            const kata = baris.split(" ");
+            return (
+              <span key={baris} className="block">
+                {kata.map((k, j) => (
+                  <motion.span
+                    key={`${baris}-${j}`}
+                    variants={kataMasuk}
+                    /**
+                     * Gradasi ditempel di KATA, bukan di baris induknya.
+                     * `background-clip: text` pada induk akan pecah begitu
+                     * anaknya diberi transform — anak bertransform dilukis di
+                     * lapisan sendiri dan teksnya bisa jadi tembus pandang.
+                     *
+                     * inline-block wajib karena elemen inline tidak bisa
+                     * ditransform. Jarak antar kata memakai margin, bukan
+                     * spasi teks: spasi di antara inline-block tidak andal.
+                     */
+                    className={[
+                      "inline-block will-change-transform",
+                      j < kata.length - 1 ? "mr-[0.25em]" : "",
+                      i === 0
+                        ? "text-text-dim"
+                        : i === 2
+                          ? "text-gradient"
+                          : "text-text",
+                    ].join(" ")}
+                  >
+                    {k}
+                  </motion.span>
+                ))}
+              </span>
+            );
+          })}
+        </motion.h1>
       </div>
 
       {/* Kolom meta — sengaja turun dan tidak sejajar dengan judul */}
@@ -116,7 +167,10 @@ export function Hero() {
 
         <dl className="space-y-0">
           {META.map(([k, v]) => (
-            <div key={k} className="flex items-baseline justify-between gap-4 py-2.5">
+            <div
+              key={k}
+              className="flex items-baseline justify-between gap-4 py-2.5"
+            >
               <dt className="eyebrow shrink-0">{k}</dt>
               <dd className="min-w-0 flex-1 border-b border-dotted border-white/10" />
               <dd className="shrink-0 text-right text-xs text-text">{v}</dd>

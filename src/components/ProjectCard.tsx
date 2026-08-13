@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { ProjectWithImages } from "@/lib/projects";
 
 /**
@@ -57,6 +57,12 @@ const IconLock = (
   </svg>
 );
 
+/** Rotasi maksimum. Sengaja lebih kecil dari 10 derajat: baris ini selebar
+ *  layar, dan pada bidang selebar itu 10 derajat terbaca sebagai miring rusak,
+ *  bukan sebagai kedalaman. */
+const TILT_X = 6;
+const TILT_Y = 4;
+
 export function ProjectCard({
   project,
   index = 0,
@@ -68,127 +74,165 @@ export function ProjectCard({
   const nomor = String(index + 1).padStart(2, "0");
   const palette = PALETTES[index % PALETTES.length];
 
+  /* ---------- Tilt 3D mengikuti kursor ----------
+     Posisi kursor dinormalkan ke -0.5..0.5, lalu dipetakan ke derajat rotasi.
+     useSpring meredam nilainya supaya kartu tidak mematuk mengikuti tiap piksel
+     gerakan mouse — peredam inilah yang membuatnya terasa berbobot. */
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+
+  const sx = useSpring(px, { stiffness: 150, damping: 18, mass: 0.4 });
+  const sy = useSpring(py, { stiffness: 150, damping: 18, mass: 0.4 });
+
+  const rotateX = useTransform(sy, [-0.5, 0.5], [TILT_X, -TILT_X]);
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-TILT_Y, TILT_Y]);
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width - 0.5);
+    py.set((e.clientY - r.top) / r.height - 0.5);
+  }
+
+  function handleLeave() {
+    px.set(0);
+    py.set(0);
+  }
+
   return (
     <motion.article
       data-motion-card
-      // whileInView menggantikan IntersectionObserver buatan sendiri.
-      // `once` supaya baris tidak dianimasikan ulang tiap kali di-scroll balik —
-      // pengulangan itu yang membuat halaman panjang terasa gelisah.
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ type: "spring", stiffness: 80, damping: 18 }}
+      /* Masuk meluncur DARI KANAN dengan pantulan pegas. Dipisah dari elemen
+         tilt: menaruh animate (x/scale) dan motion value (rotateX/rotateY) di
+         satu elemen membuat keduanya berebut properti transform yang sama. */
+      initial={{ opacity: 0, x: 100, scale: 0.95 }}
+      whileInView={{ opacity: 1, x: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ type: "spring", stiffness: 100, damping: 15 }}
       className="group relative border-t border-white/8 last:border-b"
+      style={{ perspective: 1000 }}
     >
-      {/* Sapuan aurora sepanjang baris — 0 saat diam, muncul halus saat disorot */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ backgroundImage: meshRow(palette) }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-base/55 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-      />
+      <motion.div
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        /* Amblas saat ditekan. Tidak mengganggu Link: whileTap hanya mengubah
+           transform, sedangkan tautannya tetap menerima pointer event. */
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        className="relative"
+      >
+        {/* Sapuan aurora sepanjang baris — 0 saat diam, muncul halus saat disorot */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ backgroundImage: meshRow(palette) }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-base/55 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        />
 
-      <Link
-        href={`/p/${project.slug}`}
-        aria-label={`Lihat detail proyek ${project.title}`}
-        className="absolute inset-0 z-0"
-      />
+        <Link
+          href={`/p/${project.slug}`}
+          aria-label={`Lihat detail proyek ${project.title}`}
+          className="absolute inset-0 z-0"
+        />
 
-      <div className="pointer-events-none relative flex flex-col gap-5 px-1 py-7 sm:flex-row sm:items-center sm:gap-7 sm:py-8">
-        <span className="eyebrow shrink-0 sm:w-10">{nomor}</span>
+        <div className="pointer-events-none relative flex flex-col gap-5 px-1 py-7 sm:flex-row sm:items-center sm:gap-7 sm:py-8">
+          <span className="eyebrow shrink-0 sm:w-10">{nomor}</span>
 
-        {/* Panel gambar — ramping, mengikuti bentuk baris */}
-        <div className="card-media radius-modern relative h-24 w-full shrink-0 overflow-hidden border border-white/8 bg-surface sm:h-20 sm:w-36 lg:h-24 lg:w-48">
-          {cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={cover.url}
-              alt={cover.alt || project.title}
-              loading={index < 3 ? "eager" : "lazy"}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          ) : (
-            /* Tanpa screenshot — lazim untuk proyek internal/NDA.
+          {/* Panel gambar — ramping, mengikuti bentuk baris */}
+          <div className="card-media radius-modern relative h-24 w-full shrink-0 overflow-hidden border border-white/8 bg-surface sm:h-20 sm:w-36 lg:h-24 lg:w-48">
+            {cover ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={cover.url}
+                alt={cover.alt || project.title}
+                loading={index < 3 ? "eager" : "lazy"}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              /* Tanpa screenshot — lazim untuk proyek internal/NDA.
                Tiap baris dapat mesh gradient sendiri supaya deretannya tidak
                terbaca monoton, tetap diredam agar bernuansa gelap. */
-            <>
-              <div
-                aria-hidden
-                className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
-                style={{ backgroundImage: meshPanel(palette) }}
-              />
-              <div aria-hidden className="absolute inset-0 bg-base/35" />
-              <span className="absolute inset-0 flex items-center justify-center text-white/70">
-                {IconLock}
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Teks — bergeser sedikit saat baris disorot */}
-        <div className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-text-dim transition-colors group-hover:text-aurora">
-              {project.title}
-            </h3>
-            {project.isWip && (
-              <span className="rounded-full border border-ember/40 bg-ember/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.16em] text-ember">
-                WIP
-              </span>
+              <>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-125"
+                  style={{ backgroundImage: meshPanel(palette) }}
+                />
+                <div aria-hidden className="absolute inset-0 bg-base/35" />
+                <span className="absolute inset-0 flex items-center justify-center text-white/70">
+                  {IconLock}
+                </span>
+              </>
             )}
-            {project.featured && <span className="eyebrow text-aurora">Unggulan</span>}
-            {!cover && <span className="eyebrow">Internal</span>}
           </div>
 
-          <p className="mt-2 line-clamp-2 max-w-2xl text-[13px] leading-relaxed text-text-dim sm:line-clamp-1">
-            {project.description}
-          </p>
-        </div>
+          {/* Teks — bergeser sedikit saat baris disorot */}
+          <div className="min-w-0 flex-1 transition-transform duration-500 group-hover:translate-x-2">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="display text-[clamp(1.35rem,3vw,2.4rem)] text-text-dim transition-colors group-hover:text-aurora">
+                {project.title}
+              </h3>
+              {project.isWip && (
+                <span className="rounded-full border border-ember/40 bg-ember/10 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.16em] text-ember">
+                  WIP
+                </span>
+              )}
+              {project.featured && (
+                <span className="eyebrow text-aurora">Unggulan</span>
+              )}
+              {!cover && <span className="eyebrow">Internal</span>}
+            </div>
 
-        {/* Tech stack — sembunyi di layar sempit supaya baris tetap padat */}
-        {project.techStack.length > 0 && (
-          <p className="eyebrow hidden max-w-[13rem] shrink-0 truncate text-right lg:block">
-            {project.techStack.slice(0, 3).join(" · ")}
-          </p>
-        )}
+            <p className="mt-2 line-clamp-2 max-w-2xl text-[13px] leading-relaxed text-text-dim sm:line-clamp-1">
+              {project.description}
+            </p>
+          </div>
 
-        <div className="flex shrink-0 items-center gap-4">
-          <span className="flex items-center gap-3 text-[11px]">
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pointer-events-auto relative z-10 text-text-dim transition-colors hover:text-text"
-              >
-                Live ↗
-              </a>
-            )}
-            {project.repoUrl && (
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pointer-events-auto relative z-10 text-text-dim transition-colors hover:text-text"
-              >
-                Source
-              </a>
-            )}
-          </span>
+          {/* Tech stack — sembunyi di layar sempit supaya baris tetap padat */}
+          {project.techStack.length > 0 && (
+            <p className="eyebrow hidden max-w-[13rem] shrink-0 truncate text-right lg:block">
+              {project.techStack.slice(0, 3).join(" · ")}
+            </p>
+          )}
 
-          <span
-            aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-text-dim transition-all group-hover:border-aurora/50 group-hover:bg-aurora/10 group-hover:text-aurora"
-          >
-            <span className="-translate-x-1 opacity-70 transition-all group-hover:translate-x-0 group-hover:opacity-100">
-              →
+          <div className="flex shrink-0 items-center gap-4">
+            <span className="flex items-center gap-3 text-[11px]">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pointer-events-auto relative z-10 text-text-dim transition-colors hover:text-text"
+                >
+                  Live ↗
+                </a>
+              )}
+              {project.repoUrl && (
+                <a
+                  href={project.repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pointer-events-auto relative z-10 text-text-dim transition-colors hover:text-text"
+                >
+                  Source
+                </a>
+              )}
             </span>
-          </span>
+
+            <span
+              aria-hidden
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-text-dim transition-all group-hover:border-aurora/50 group-hover:bg-aurora/10 group-hover:text-aurora"
+            >
+              <span className="-translate-x-1 opacity-70 transition-all group-hover:translate-x-0 group-hover:opacity-100">
+                →
+              </span>
+            </span>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </motion.article>
   );
 }
