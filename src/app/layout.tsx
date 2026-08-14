@@ -65,8 +65,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <ClerkProvider appearance={{ variables: { colorPrimary: "#2563eb" } }}>
@@ -76,6 +78,7 @@ export default function RootLayout({
       >
         <body>
           <SmoothScrolling>{children}</SmoothScrolling>
+          {modal}
         </body>
       </html>
     </ClerkProvider>

@@ -241,7 +241,7 @@ export function Bento({
             variants={{ hover: { color: "#ffffff" } }}
             transition={pegas}
           >
-            Hubungi saya
+            Contact me
             <motion.span variants={{ hover: { x: 8, rotate: -45 } }} transition={pegas}>
               →
             </motion.span>

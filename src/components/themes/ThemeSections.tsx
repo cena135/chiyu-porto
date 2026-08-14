@@ -114,14 +114,14 @@ export function ProfilBlok({
 export function KontakBlok({
   kontak,
   kelas = {},
-  judul = "Kontak",
+  judul = "Contact me",
 }: {
   kontak: KontakItem[];
   kelas?: { wadah?: string; item?: string; ikon?: string; label?: string; nilai?: string };
   judul?: string;
 }) {
   return (
-    <section id="contact" className="scroll-mt-28 flex min-h-[80vh] flex-col justify-center py-20">
+    <section id="contact" className="flex min-h-screen flex-col justify-center py-20">
       <span className="eyebrow">{judul}</span>
       <div className={kelas.wadah ?? "mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"}>
         {kontak.map((k, i) => (
@@ -195,7 +195,7 @@ export function HeroKananBlok({
           Punya ide?
         </p>
         <span className={kelas.ctaTombol ?? "mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors group-hover:text-white"}>
-          Hubungi saya
+          Contact me
           <motion.span 
             className={kelas.ctaIkon ?? ""}
             variants={{ hover: { x: 8, rotate: -45 } }} 
