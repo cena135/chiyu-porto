@@ -90,7 +90,7 @@ function NeoCard({ project, index }: { project: ThemeProject; index: number }) {
 
 export function NeoTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-neo mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+    <div className="theme-neo mx-auto w-full max-w-[86rem] px-6 pt-20 sm:px-10">
       <header className="border-4 border-black bg-white p-8 shadow-[8px_8px_0_0_#000] sm:p-12">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
           <div className="flex-1">

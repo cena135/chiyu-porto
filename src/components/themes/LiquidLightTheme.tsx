@@ -113,7 +113,7 @@ function LiquidCard({ project, index }: { project: ThemeProject; index: number }
 
 export function LiquidLightTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-glasslight mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+    <div className="theme-glasslight mx-auto w-full max-w-[86rem] px-6 pt-20 sm:px-10">
       <header className="liquid-card relative overflow-hidden rounded-[2rem] p-8 sm:p-14">
         <div
           aria-hidden

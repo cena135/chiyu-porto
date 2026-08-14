@@ -91,7 +91,7 @@ function MinimalCard({ project, index }: { project: ThemeProject; index: number 
 
 export function MinimalTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-minimal mx-auto w-full max-w-[72rem] px-6 pb-48 pt-32 sm:px-10">
+    <div className="theme-minimal mx-auto w-full max-w-[72rem] px-6 pt-32 sm:px-10">
       <header className="py-12 sm:py-20">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
           <div className="flex-1">

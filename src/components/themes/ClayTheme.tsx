@@ -93,7 +93,7 @@ function ClayCard({ project, index }: { project: ThemeProject; index: number }) 
 
 export function ClayTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-clay mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+    <div className="theme-clay mx-auto w-full max-w-[86rem] px-6 pt-20 sm:px-10">
       <header className="clay-card rounded-[2.5rem] p-8 sm:p-14">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
           <div className="flex-1">

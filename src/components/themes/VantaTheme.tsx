@@ -82,7 +82,7 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
         }
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[86rem] px-6 pb-32 pt-24 sm:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-[86rem] px-6 pt-24 sm:px-10">
         <header className="vanta-card rounded-[2rem] p-8 sm:p-12">
           <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
             <div className="flex-1">

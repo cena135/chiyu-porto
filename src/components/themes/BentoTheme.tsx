@@ -13,7 +13,7 @@ import type { ThemeProps } from "./types";
  */
 export function BentoTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="mx-auto w-full max-w-[86rem] px-6 pb-24 sm:px-10">
+    <div className="mx-auto w-full max-w-[86rem] px-6 sm:px-10">
       <Bento projects={projects} profil={profil} />
       <ContactBento kontak={kontak} />
     </div>

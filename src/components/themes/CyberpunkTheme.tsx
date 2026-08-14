@@ -76,7 +76,7 @@ function CyberCard({ project, index }: { project: ThemeProject; index: number })
 
 export function CyberpunkTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-cyber mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+    <div className="theme-cyber mx-auto w-full max-w-[86rem] px-6 pt-20 sm:px-10">
       <header className="cyber-card p-8 sm:p-12">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
           <div className="flex-1">

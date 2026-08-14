@@ -81,7 +81,7 @@ function EditorialRow({ project, index }: { project: ThemeProject; index: number
 
 export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
   return (
-    <div className="theme-editorial mx-auto w-full max-w-[78rem] px-6 pb-40 pt-24 sm:px-12">
+    <div className="theme-editorial mx-auto w-full max-w-[78rem] px-6 pt-24 sm:px-12">
       <header className="border-b border-black/15 pb-16">
         <div className="flex items-baseline justify-between gap-6 text-[11px] uppercase tracking-[0.22em] text-black/45">
           <span>Portofolio</span>
