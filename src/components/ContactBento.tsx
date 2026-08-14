@@ -43,7 +43,7 @@ export function ContactBento({ kontak }: { kontak: KontakItem[] }) {
        dijamin muat. */
     <section
       id="contact"
-      className="mt-16 flex min-h-screen flex-col justify-center py-12 md:mt-24"
+      className="mt-32 flex min-h-screen flex-col justify-center py-12 pb-32 md:mt-48"
     >
       {/* Judul menahan ruang besar ini supaya tidak terbaca sebagai halaman
           kosong dengan tiga kartu yang mengambang di tengahnya. */}

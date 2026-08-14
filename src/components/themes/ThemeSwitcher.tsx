@@ -4,16 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { TEMA, type ThemeId } from "./types";
 
-const THEME_HINTS: Record<ThemeId, string> = {
-  vanta: "✨ Rasakan 3D Vanta!",
-  neo: "🟩 Brutalisme tebal!",
-  clay: "☁️ Empuk seperti awan!",
-  minimal: "⚪ Bersih tanpa sisa!",
-  glasslight: "🧊 Bening & elegan!",
-  editorial: "📰 Gaya majalah klasik!",
-  cyber: "⚡ Retas sistem sekarang!",
-  bento: "🍱 Kotak-kotak rapi!",
-};
+
 
 const THEME_STYLES: Record<ThemeId, { panelBg: string, panelBorder: string, panelText: string, itemHover: string, itemActive: string, itemText: string, hintBg: string, hintText: string, btnBg: string, btnText: string, btnBorder: string }> = {
   vanta: {
@@ -138,7 +129,7 @@ export function ThemeSwitcher({
             animate={{ opacity: 1, y: 0 }}
             className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs shadow-lg ${style.hintBg} ${style.hintText}`}
           >
-            <span>{THEME_HINTS[aktif] || "✨ Coba ganti tema!"}</span>
+            <span>Other theme?</span>
             <motion.span
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}

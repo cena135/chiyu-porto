@@ -121,7 +121,7 @@ export function KontakBlok({
   judul?: string;
 }) {
   return (
-    <section id="contact" className="flex min-h-screen flex-col justify-center py-20">
+    <section id="contact" className="mt-32 flex min-h-screen flex-col justify-center py-20 pb-32 md:mt-48">
       <span className="eyebrow">{judul}</span>
       <div className={kelas.wadah ?? "mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"}>
         {kontak.map((k, i) => (
