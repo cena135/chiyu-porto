@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Chakra_Petch, Inter, Outfit } from "next/font/google";
+import {
+  Chakra_Petch,
+  Inter,
+  JetBrains_Mono,
+  Outfit,
+  Playfair_Display,
+} from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SmoothScrolling } from "@/components/SmoothScrolling";
 import "./globals.css";
@@ -21,6 +27,21 @@ const chakra = Chakra_Petch({
   subsets: ["latin"],
   weight: ["600", "700"],
   variable: "--font-chakra",
+  display: "swap",
+});
+
+// Dipakai HANYA oleh tema Editorial. Dimuat di layout, bukan di komponen tema,
+// supaya next/font tetap bisa self-hosting dan menyisipkan @font-face sekali.
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+// Dipakai HANYA oleh tema Cyberpunk.
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -48,7 +69,7 @@ export default function RootLayout({
     <ClerkProvider appearance={{ variables: { colorPrimary: "#2563eb" } }}>
       <html
         lang="id"
-        className={`${inter.variable} ${outfit.variable} ${chakra.variable}`}
+        className={`${inter.variable} ${outfit.variable} ${chakra.variable} ${playfair.variable} ${mono.variable}`}
       >
         <body>
           <SmoothScrolling>{children}</SmoothScrolling>

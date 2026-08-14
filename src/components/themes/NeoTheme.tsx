@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { DemoProject } from "../_data";
+import type { ThemeProps, ThemeProject } from "./types";
 
 /**
  * Kartu proyek versi Neo Brutalism.
@@ -17,7 +17,7 @@ const WARNA = ["#FF5A5F", "#2563EB", "#FFDD57", "#22C55E"];
 
 const pantul = { type: "spring" as const, stiffness: 700, damping: 14, mass: 0.6 };
 
-function NeoCard({ project, index }: { project: DemoProject; index: number }) {
+function NeoCard({ project, index }: { project: ThemeProject; index: number }) {
   const warna = WARNA[index % WARNA.length];
 
   return (
@@ -78,12 +78,35 @@ function NeoCard({ project, index }: { project: DemoProject; index: number }) {
   );
 }
 
-export function NeoGrid({ projects }: { projects: DemoProject[] }) {
+export function NeoTheme({ projects }: ThemeProps) {
   return (
-    <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((p, i) => (
-        <NeoCard key={p.id} project={p} index={i} />
-      ))}
+    <div className="theme-neo mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+      <header className="border-4 border-black bg-white p-8 shadow-[8px_8px_0_0_#000] sm:p-12">
+        <span className="eyebrow">Neo Brutalism</span>
+        <h1 className="display mt-4 text-[clamp(2.5rem,8vw,6rem)]">
+          I Build
+          <br />
+          and Host
+        </h1>
+        <p className="mt-6 max-w-xl text-sm font-medium leading-relaxed text-neutral-800">
+          Garis tebal, bayangan padat tanpa blur, dan warna primer yang tidak minta izin.
+          Arahkan kursor ke kartu — semuanya memantul kaku, bukan meluncur.
+        </p>
+        <a
+          href="#karya"
+          className="neo-tag mt-8 inline-block bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase"
+        >
+          Lihat Karya
+        </a>
+      </header>
+
+      <section id="karya" className="scroll-mt-28 pt-14">
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((p, i) => (
+            <NeoCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

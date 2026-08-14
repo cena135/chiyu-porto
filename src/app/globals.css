@@ -257,6 +257,8 @@ html.lenis body {
    jatuh jadi "kartu biasa yang kegelapan". */
 body:has(.theme-neo) {
   background: #ffdd57;
+  color: #000000;
+  --color-text-dim: #2b2b2b;
 }
 .theme-neo {
   --color-text: #000000;
@@ -292,6 +294,8 @@ body:has(.theme-neo) {
 body:has(.theme-clay) {
   background: linear-gradient(160deg, #ede9fe, #e0f2fe 55%, #fce7f3);
   background-attachment: fixed;
+  color: #3b2f63;
+  --color-text-dim: #6b6191;
 }
 .theme-clay {
   --color-text: #3b2f63;
@@ -325,6 +329,8 @@ body:has(.theme-clay) {
    HANYA jarak — itu sebabnya paddingnya sengaja terasa berlebihan. */
 body:has(.theme-minimal) {
   background: #ffffff;
+  color: #1d1d1f;
+  --color-text-dim: #86868b;
 }
 .theme-minimal {
   --color-text: #1d1d1f;
@@ -345,6 +351,179 @@ body:has(.theme-minimal) {
 }
 .theme-minimal .hairline {
   background: linear-gradient(90deg, rgb(0 0 0 / 0.09), transparent 92%);
+}
+
+/* ---------- Liquid Glass ----------
+   Latar nyaris transparan supaya aurora di belakangnya benar-benar tembus;
+   yang membentuk "kaca" adalah blur + saturate, bukan warna latarnya. */
+body:has(.theme-glass) {
+  background: #05060a;
+  color: #ffffff;
+  --color-text-dim: rgb(255 255 255 / 0.5);
+}
+.theme-glass {
+  color: #ffffff;
+}
+.theme-glass .glass-liquid {
+  background: rgb(255 255 255 / 0.045);
+  /* JANGAN tambahkan -webkit-backdrop-filter manual di sini. Kalau ditulis
+     manual, Lightning CSS menganggap prefiksnya sudah diurus lalu MEMBUANG
+     versi tanpa prefiks — dan efek kacanya mati di Firefox. */
+  backdrop-filter: blur(64px) saturate(280%) brightness(1.12);
+  border: 1px solid transparent;
+  /* Border gradasi: meniru garis cahaya di bibir es basah yang menyala di satu
+     sisi lalu memudar. Warna rata terbaca sebagai kotak biasa. */
+  border-image: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.5),
+      rgb(255 255 255 / 0.1) 40%,
+      rgb(255 255 255 / 0.03) 70%
+    )
+    1;
+  box-shadow:
+    0 40px 80px -26px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.22);
+}
+/* Aurora hanya hidup di dalam tema ini — di luar sini kelasnya tidak
+   didefinisikan sama sekali, jadi tidak ada yang bisa bocor. */
+.theme-glass .aurora-field {
+  position: fixed;
+  inset: 0;
+  z-index: -20;
+  pointer-events: none;
+  overflow: hidden;
+}
+.theme-glass .aurora-field::before,
+.theme-glass .aurora-field::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+.theme-glass .aurora-field::before {
+  width: 62vmax;
+  height: 48vmax;
+  opacity: 0.34;
+  background: radial-gradient(circle, oklch(0.7 0.19 300), transparent 62%);
+  top: -22vmax;
+  left: -16vmax;
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+.theme-glass .aurora-field::after {
+  width: 38vmax;
+  height: 38vmax;
+  opacity: 0.26;
+  background: radial-gradient(circle, oklch(0.79 0.16 55), transparent 60%);
+  top: 42vmax;
+  right: -14vmax;
+  animation: drift-b 34s ease-in-out infinite alternate;
+}
+/* Hanya transform: composited, jadi murah walau berjalan terus. */
+@keyframes drift-a {
+  to {
+    transform: translate3d(12vw, 8vh, 0) scale(1.15);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate3d(-10vw, -6vh, 0) scale(1.1);
+  }
+}
+
+/* ---------- Spatial UI ----------
+   Kaca yang JAUH lebih buram daripada Liquid Glass dan tanpa aurora di
+   belakangnya. Kedalamannya datang dari blur dan bayangan, bukan dari warna. */
+body:has(.theme-spatial) {
+  background:
+    radial-gradient(120% 90% at 15% 0%, #1a2246 0%, transparent 55%),
+    radial-gradient(90% 80% at 90% 20%, #2a1b4a 0%, transparent 60%), #070912;
+  background-attachment: fixed;
+  color: #ffffff;
+  --color-text-dim: rgb(255 255 255 / 0.5);
+}
+.theme-spatial {
+  color: #ffffff;
+}
+.theme-spatial .spatial-card {
+  background: rgb(255 255 255 / 0.055);
+  backdrop-filter: blur(56px) saturate(180%);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow:
+    0 32px 64px -28px rgb(0 0 0 / 0.85),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.16);
+}
+
+/* ---------- Editorial ----------
+   Hitam-putih, serif, garis setipis rambut. Font serif dikurung ketat di sini:
+   satu aturan telanjang saja dan seluruh tema lain ikut berubah wajah. */
+body:has(.theme-editorial) {
+  background: #fbfaf8;
+  color: #111111;
+  --color-text-dim: rgb(17 17 17 / 0.5);
+}
+.theme-editorial {
+  color: #111111;
+  font-family: var(--font-inter), sans-serif;
+}
+.theme-editorial .font-serif,
+.theme-editorial h1,
+.theme-editorial h3 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+}
+
+/* ---------- Cyberpunk ----------
+   Panel terminal. TANPA kaca buram — permukaan lembut melawan bahasa visual
+   terminal; penggantinya border neon dan latar hampir pekat. */
+body:has(.theme-cyber) {
+  background: #00060a;
+  color: #d7ffe9;
+  --color-text-dim: #4ade80;
+}
+.theme-cyber {
+  color: #d7ffe9;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.theme-cyber .cyber-card {
+  background: rgb(0 18 12 / 0.62);
+  border: 1px solid rgb(34 211 238 / 0.22);
+  box-shadow: 0 0 26px -10px rgb(34 211 238 / 0.4);
+  transition:
+    border-color var(--dur-base) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-quart);
+}
+.theme-cyber .cyber-card:hover {
+  border-color: rgb(34 211 238 / 0.65);
+  box-shadow: 0 0 34px -6px rgb(34 211 238 / 0.5);
+}
+/* Kursor blok ala terminal */
+.theme-cyber .caret::after {
+  content: "AE";
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Vanta 3D ----------
+   Kartunya sengaja nyaris tembus pandang: yang harus mendominasi adalah kanvas
+   WebGL di belakangnya, bukan kotaknya. Latar body dibuat gelap sebagai alas
+   kalau WebGL gagal dimuat. */
+body:has(.theme-vanta) {
+  background: #05060f;
+  color: #ffffff;
+  --color-text-dim: rgb(255 255 255 / 0.5);
+}
+.theme-vanta {
+  color: #ffffff;
+}
+.theme-vanta .vanta-card {
+  background: rgb(255 255 255 / 0.035);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow: 0 24px 50px -30px rgb(0 0 0 / 0.9);
 }
 
 /* ---------- Fokus keyboard ---------- */

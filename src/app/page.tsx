@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
-import { Bento } from "@/components/Bento";
-import { ContactBento } from "@/components/ContactBento";
+import { ThemeShowcase } from "@/components/themes/ThemeShowcase";
+import type { ThemeProject } from "@/components/themes/types";
 
 /**
  * Selalu render ulang per permintaan — JANGAN kembalikan ke `revalidate`.
@@ -14,19 +14,28 @@ import { ContactBento } from "@/components/ContactBento";
  * DIPATUHI BROWSER: pengunjung disuguhi salinan basi lebih dulu, dan proyek baru
  * baru muncul setelah hard refresh.
  *
- * force-dynamic membuat Next mengirim `no-store`, jadi selalu segar. Biayanya
- * satu query Prisma per permintaan atas 6 baris di Postgres lokal — tidak berarti
- * untuk trafik situs ini.
+ * force-dynamic membuat Next mengirim `no-store`, jadi selalu segar.
  */
 export const dynamic = "force-dynamic";
 
-async function getProjects() {
+/** Data dipetakan ke bentuk netral DI SINI, sekali, bukan di sembilan tema.
+ *  Tak satu pun komponen tema perlu tahu apa pun tentang skema Prisma. */
+async function getProjects(): Promise<ThemeProject[]> {
   try {
-    return await prisma.project.findMany({
+    const rows = await prisma.project.findMany({
       where: PUBLIC_WHERE,
       orderBy: PROJECT_ORDER,
       include: WITH_IMAGES,
     });
+    return rows.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      description: p.description,
+      techStack: p.techStack,
+      isWip: p.isWip,
+      cover: p.images[0]?.url ?? null,
+    }));
   } catch {
     return []; // DB belum siap (mis. saat build) — halaman tetap render.
   }
@@ -37,29 +46,29 @@ export default async function HomePage() {
   const tahun = new Date().getFullYear();
 
   return (
-    <main className="mx-auto w-full max-w-[86rem] px-6 pb-24 sm:px-10">
+    <>
       {/* Tanpa JS, Framer Motion tidak menjalankan whileInView — pastikan
           kotak bento tidak tersangkut tak terlihat. */}
       <noscript>
         <style>{`.bento{opacity:1 !important;transform:none !important}`}</style>
       </noscript>
 
-      <header className="fade-up flex items-center py-8">
+      <header className="fade-up mx-auto flex w-full max-w-[86rem] items-center px-6 py-8 sm:px-10">
         <Link href="/" className="display text-lg">
           Porto
         </Link>
       </header>
 
-      <Bento projects={projects} />
+      <ThemeShowcase projects={projects} />
 
-      <ContactBento />
-
-      <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-8">
-        <span className="eyebrow">© {tahun} Alexander Imanuel Joedo</span>
-        <span className="text-xs text-text-dim">
-          Di-hosting sendiri · Next.js · PostgreSQL · Docker
-        </span>
-      </div>
-    </main>
+      <footer className="mx-auto w-full max-w-[86rem] px-6 pb-10 sm:px-10">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-current/10 pt-8">
+          <span className="eyebrow">© {tahun} Alexander Imanuel Joedo</span>
+          <span className="text-xs opacity-60">
+            Di-hosting sendiri · Next.js · PostgreSQL · Docker
+          </span>
+        </div>
+      </footer>
+    </>
   );
 }

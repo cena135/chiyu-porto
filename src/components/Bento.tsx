@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import type { ProjectWithImages } from "@/lib/projects";
+import type { ThemeProject } from "@/components/themes/types";
 import { Marquee } from "@/components/ui/Marquee";
 import avatar from "../../public/avatar.jpg";
 
@@ -44,7 +44,7 @@ const masuk = {
 /** Satu sumber untuk transisi hover semua kotak, supaya iramanya seragam. */
 const pegas = { type: "spring" as const, stiffness: 320, damping: 22 };
 
-export function Bento({ projects }: { projects: ProjectWithImages[] }) {
+export function Bento({ projects }: { projects: ThemeProject[] }) {
   // Diambil dari proyek yang benar-benar ada, jadi daftarnya tidak pernah
   // berbohong. Kalau database masih kosong, barulah dipakai daftar dasar.
   const dariProyek = [...new Set(projects.flatMap((p) => p.techStack))];

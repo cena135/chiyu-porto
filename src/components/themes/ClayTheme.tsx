@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { DemoProject } from "../_data";
+import type { ThemeProps, ThemeProject } from "./types";
 
 /**
  * Kartu proyek versi Claymorphism.
@@ -22,7 +22,7 @@ const NAIK =
 const MELESAK =
   "0 6px 14px -8px rgba(91,63,160,0.35), inset 0 8px 18px rgba(91,63,160,0.28), inset 0 -3px 8px rgba(255,255,255,0.6)";
 
-function ClayCard({ project, index }: { project: DemoProject; index: number }) {
+function ClayCard({ project, index }: { project: ThemeProject; index: number }) {
   const warna = PASTEL[index % PASTEL.length];
 
   return (
@@ -81,12 +81,31 @@ function ClayCard({ project, index }: { project: DemoProject; index: number }) {
   );
 }
 
-export function ClayGrid({ projects }: { projects: DemoProject[] }) {
+export function ClayTheme({ projects }: ThemeProps) {
   return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((p, i) => (
-        <ClayCard key={p.id} project={p} index={i} />
-      ))}
+    <div className="theme-clay mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
+      <header className="clay-card rounded-[2.5rem] p-8 sm:p-14">
+        <span className="eyebrow">Claymorphism</span>
+        <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">Empuk dan menggembung.</h1>
+        <p className="mt-6 max-w-xl text-sm leading-relaxed text-[#6b6191]">
+          Tekan kartunya — ia melesak ke dalam, karena bayangan luarnya ditukar dengan
+          bayangan dalam, bukan sekadar mengecil.
+        </p>
+        <a
+          href="#karya"
+          className="clay-blob mt-8 inline-block rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
+        >
+          Lihat Karya
+        </a>
+      </header>
+
+      <section id="karya" className="scroll-mt-28 pt-14">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((p, i) => (
+            <ClayCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

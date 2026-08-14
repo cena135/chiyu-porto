@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { DemoProject } from "../_data";
+import type { ThemeProps, ThemeProject } from "./types";
 
 /**
  * Kartu proyek versi Apple Minimalism.
@@ -17,7 +17,7 @@ import type { DemoProject } from "../_data";
 
 const halus = { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const };
 
-function MinimalCard({ project, index }: { project: DemoProject; index: number }) {
+function MinimalCard({ project, index }: { project: ThemeProject; index: number }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -79,12 +79,27 @@ function MinimalCard({ project, index }: { project: DemoProject; index: number }
   );
 }
 
-export function MinimalGrid({ projects }: { projects: DemoProject[] }) {
+export function MinimalTheme({ projects }: ThemeProps) {
   return (
-    <div>
-      {projects.map((p, i) => (
-        <MinimalCard key={p.id} project={p} index={i} />
-      ))}
+    <div className="theme-minimal mx-auto w-full max-w-[72rem] px-6 pb-48 pt-32 sm:px-10">
+      <header className="pb-32">
+        <span className="eyebrow">Minimalism</span>
+        <h1 className="display mt-10 text-[clamp(3rem,9vw,7rem)]">
+          Sesedikit
+          <br />
+          mungkin.
+        </h1>
+        <p className="mt-12 max-w-lg text-lg font-light leading-relaxed text-[#86868b]">
+          Tanpa garis, tanpa bayangan, tanpa warna. Yang memisahkan satu bagian dari yang
+          lain hanyalah jarak — itu sebabnya jaraknya sengaja terasa berlebihan.
+        </p>
+      </header>
+
+      <section id="karya" className="scroll-mt-28">
+        {projects.map((p, i) => (
+          <MinimalCard key={p.id} project={p} index={i} />
+        ))}
+      </section>
     </div>
   );
 }
