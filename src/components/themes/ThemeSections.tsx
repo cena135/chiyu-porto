@@ -76,11 +76,11 @@ export function ProfilBlok({
           // butuh paket `sharp` (~40 MB di image Docker) untuk hasil yang
           // nyaris tak berbeda.
           unoptimized
-          className="h-24 w-24 object-cover sm:h-28 sm:w-28"
+          className="h-24 w-24 object-cover object-top sm:h-28 sm:w-28"
         />
       </motion.span>
 
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <p className={kelas.bio ?? "text-sm leading-relaxed opacity-70"}>{profil.bio}</p>
 
         <dl className="mt-6 max-w-md">
@@ -88,7 +88,7 @@ export function ProfilBlok({
             <div key={k} className="flex items-baseline gap-4 py-1.5">
               <dt className="eyebrow shrink-0">{k}</dt>
               <dd className={`min-w-0 flex-1 border-b border-dotted ${kelas.garis ?? "border-current/25"}`} />
-              <dd className={`shrink-0 text-right text-xs font-medium ${kelas.nilai ?? ""}`}>{v}</dd>
+              <dd className={`text-right text-xs font-medium break-words max-w-[50%] ${kelas.nilai ?? ""}`}>{v}</dd>
             </div>
           ))}
         </dl>

@@ -137,7 +137,7 @@ export function Bento({
                   // ulang butuh paket `sharp` (~40 MB di image Docker) untuk
                   // hasil yang nyaris tak berbeda.
                   unoptimized
-                  className="h-24 w-24 object-cover sm:h-28 sm:w-28"
+                  className="h-24 w-24 object-cover object-top sm:h-28 sm:w-28"
                 />
               </motion.span>
 
@@ -168,7 +168,7 @@ export function Bento({
                     transition={{ duration: 0.3 }}
                   />
                   <motion.dd
-                    className="shrink-0 text-right text-xs font-medium"
+                    className="shrink-0 text-right text-xs font-medium break-words max-w-[50%]"
                     variants={{ hover: { color: "#ffffff" } }}
                     transition={{ duration: 0.3 }}
                   >
