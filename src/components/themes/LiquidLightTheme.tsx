@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -120,27 +120,42 @@ export function LiquidLightTheme({ projects, profil, kontak }: ThemeProps) {
           className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/70 to-transparent"
         />
 
-        <div className="relative">
-          <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
-            {profil.status}
-          </span>
-          <h1 className="mt-5 text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.02] tracking-tight text-slate-900">
-            {profil.judul[0]}
-            <br />
-            {profil.judul[1]}{" "}
-            <span className="bg-gradient-to-r from-sky-500 to-violet-500 bg-clip-text text-transparent">
-              {profil.judul[2]}
+        <div className="relative flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            <span className="text-[11px] uppercase tracking-[0.22em] text-slate-500">
+              {profil.status}
             </span>
-          </h1>
+            <h1 className="mt-5 text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.02] tracking-tight text-slate-900">
+              {profil.judul[0]}
+              <br />
+              {profil.judul[1]}{" "}
+              <span className="bg-gradient-to-r from-sky-500 to-violet-500 bg-clip-text text-transparent">
+                {profil.judul[2]}
+              </span>
+            </h1>
 
-          <ProfilBlok
-            profil={profil}
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                foto: "rounded-[1.25rem] ring-1 ring-white/80",
+                bio: "text-sm leading-relaxed text-slate-600",
+                garis: "border-slate-300",
+                nilai: "text-slate-700",
+                tombol: "inline-flex items-center justify-center rounded-full bg-white/40 border border-white/40 px-6 py-2.5 text-sm font-medium text-slate-900 shadow-sm backdrop-blur-sm transition-all hover:bg-white/60"
+              }}
+            />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
             kelas={{
-              foto: "rounded-[1.25rem] ring-1 ring-white/80",
-              bio: "text-sm leading-relaxed text-slate-600",
-              garis: "border-slate-300",
-              nilai: "text-slate-700",
-            }}
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden rounded-[2rem] border border-white/20 bg-white/20 py-6 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl",
+              marqueeItem: "rounded-full border border-white/30 bg-white/40 px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm backdrop-blur-md",
+              ctaWadah: "group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/20 bg-gradient-to-br from-white/40 to-white/10 p-8 text-slate-900 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl transition-all hover:bg-white/30",
+              ctaJudul: "display text-2xl font-semibold",
+              ctaTombol: "mt-6 inline-flex w-max items-center justify-center rounded-full bg-white/60 border border-white/60 px-6 py-3.5 text-sm font-medium text-slate-900 shadow-sm backdrop-blur-md transition-all hover:bg-white",
+            }} 
           />
         </div>
       </header>

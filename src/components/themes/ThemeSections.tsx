@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { Marquee } from "@/components/ui/Marquee";
 import type { KontakItem, Profil } from "@/lib/site-data";
+import type { ThemeProject } from "./types";
 
 /**
  * Blok profil dan kontak yang dipakai bersama SEMBILAN tema.
@@ -101,16 +103,6 @@ export function ProfilBlok({
             Lihat Karya
             <span>↓</span>
           </motion.a>
-
-          <motion.a
-            href="#contact"
-            className={kelas.tombol ?? "inline-flex items-center gap-2 rounded-full border border-transparent bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:opacity-90"}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Hubungi Saya
-            <span>→</span>
-          </motion.a>
         </div>
       </div>
     </div>
@@ -129,7 +121,7 @@ export function KontakBlok({
   judul?: string;
 }) {
   return (
-    <section id="contact" className="scroll-mt-28 pt-20">
+    <section id="contact" className="scroll-mt-28 flex min-h-[80vh] flex-col justify-center py-20">
       <span className="eyebrow">{judul}</span>
       <div className={kelas.wadah ?? "mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"}>
         {kontak.map((k, i) => (
@@ -161,5 +153,58 @@ export function KontakBlok({
         ))}
       </div>
     </section>
+  );
+}
+
+
+export function HeroKananBlok({
+  projects,
+  kelas = {},
+}: {
+  projects: ThemeProject[];
+  kelas?: {
+    wadah?: string;
+    marqueeWadah?: string;
+    marqueeItem?: string;
+    ctaWadah?: string;
+    ctaJudul?: string;
+    ctaTombol?: string;
+    ctaIkon?: string;
+  };
+}) {
+  const dariProyek = [...new Set(projects.flatMap((p) => p.techStack))];
+  const stack = dariProyek.length > 0 ? dariProyek : ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Tailwind", "Docker"];
+
+  return (
+    <div className={kelas.wadah ?? "flex w-full shrink-0 flex-col justify-center gap-4 md:w-[22rem] lg:w-[26rem]"}>
+      {/* Tech Stack Marquee */}
+      <div className={kelas.marqueeWadah ?? "relative flex flex-col justify-center gap-4 overflow-hidden rounded-3xl bg-black/5 py-6"}>
+        <p className="px-6 text-[10px] font-bold uppercase tracking-[0.2em] opacity-50">Dibangun dengan</p>
+        <Marquee items={stack} durasi={24} itemClassName={kelas.marqueeItem} />
+        <Marquee items={[...stack].reverse()} durasi={30} itemClassName={kelas.marqueeItem} />
+      </div>
+
+      {/* Contact CTA */}
+      <motion.a
+        href="#contact"
+        whileHover="hover"
+        whileTap={{ scale: 0.98 }}
+        className={kelas.ctaWadah ?? "group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-neutral-900 p-8 text-white"}
+      >
+        <p className={kelas.ctaJudul ?? "text-2xl font-bold"}>
+          Punya ide?
+        </p>
+        <span className={kelas.ctaTombol ?? "mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition-colors group-hover:text-white"}>
+          Hubungi saya
+          <motion.span 
+            className={kelas.ctaIkon ?? ""}
+            variants={{ hover: { x: 8, rotate: -45 } }} 
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+          >
+            →
+          </motion.span>
+        </span>
+      </motion.a>
+    </div>
   );
 }

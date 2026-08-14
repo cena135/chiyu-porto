@@ -4,8 +4,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
-import type { ThemeProps } from "./types";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
+import type { ThemeProps, ThemeProject } from "./types";
 
 export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
   const wadah = useRef<HTMLDivElement>(null);
@@ -62,12 +62,12 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
     <div className="theme-vanta relative min-h-screen">
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r119/three.min.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => setTigaSelesai(true)}
       />
       <Script
         src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => setVantaSelesai(true)}
       />
 
@@ -83,26 +83,42 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-[86rem] px-6 pb-32 pt-24 sm:px-10">
-        <header className="vanta-card max-w-3xl rounded-[2rem] p-8 sm:p-12">
-          <span className="text-[11px] uppercase tracking-[0.22em] text-white/50">
-            {profil.status}
-          </span>
-          <h1 className="mt-5 text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.03] tracking-tight text-white">
-            {profil.judul[0]} {profil.judul[1]}
-            <br />
-            {profil.judul[2]}
-          </h1>
+        <header className="vanta-card rounded-[2rem] p-8 sm:p-12">
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+            <div className="flex-1">
+              <span className="text-[11px] uppercase tracking-[0.22em] text-white/50">
+                {profil.status}
+              </span>
+              <h1 className="mt-5 text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.03] tracking-tight text-white">
+                {profil.judul[0]} {profil.judul[1]}
+                <br />
+                {profil.judul[2]}
+              </h1>
 
-          <ProfilBlok
-            profil={profil}
-            kelas={{
-              foto: "rounded-full ring-2 ring-white/25",
-              bio: "text-sm leading-relaxed text-white/60",
-              garis: "border-white/20",
-              nilai: "text-white/85",
-            }}
-          />
+              <ProfilBlok
+                profil={profil}
+                kelas={{
+                  foto: "rounded-full ring-2 ring-white/25",
+                  bio: "text-sm leading-relaxed text-white/60",
+                  garis: "border-white/10",
+                  nilai: "text-white/80",
+                  tombol: "inline-flex items-center justify-center rounded-full bg-white/10 border border-white/25 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-white/20"
+                }}
+              />
+            </div>
 
+            <HeroKananBlok 
+              projects={projects} 
+              kelas={{
+                wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+                marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 py-6",
+                marqueeItem: "rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/60",
+                ctaWadah: "group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-8 text-white transition-colors hover:bg-white/10",
+                ctaJudul: "text-2xl font-semibold",
+                ctaTombol: "mt-6 inline-flex w-max items-center justify-center rounded-full bg-white text-[#05060f] px-6 py-3.5 text-sm font-semibold transition-transform hover:scale-105",
+              }} 
+            />
+          </div>
           {gagal && (
             <p className="mt-6 text-xs text-white/40">Latar 3D tidak aktif — {gagal}</p>
           )}

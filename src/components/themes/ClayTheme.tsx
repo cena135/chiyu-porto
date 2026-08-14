@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -95,21 +95,37 @@ export function ClayTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-clay mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="clay-card rounded-[2.5rem] p-8 sm:p-14">
-        <span className="eyebrow">{profil.status}</span>
-        <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">
-          {profil.judul[0]} {profil.judul[1]} {profil.judul[2]}
-        </h1>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            <span className="eyebrow">{profil.status}</span>
+            <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">
+              {profil.judul[0]} {profil.judul[1]} {profil.judul[2]}
+            </h1>
 
-        <ProfilBlok
-          profil={profil}
-          kelas={{
-            foto: "clay-blob rounded-[1.75rem]",
-            bio: "text-sm leading-relaxed text-[#6b6191]",
-            garis: "border-[#a99fd0]",
-            nilai: "text-[#3b2f63]",
-            tombol: "clay-blob inline-flex items-center justify-center rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
-          }}
-        />
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                foto: "clay-blob rounded-[1.75rem]",
+                bio: "text-sm leading-relaxed text-[#6b6191]",
+                garis: "border-[#a99fd0]",
+                nilai: "text-[#3b2f63]",
+                tombol: "clay-blob inline-flex items-center justify-center rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
+              }}
+            />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
+            kelas={{
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "clay-blob relative flex flex-col justify-center gap-4 overflow-hidden rounded-[2rem] bg-[#C4B5FD]/50 py-6",
+              marqueeItem: "clay-blob rounded-2xl bg-white/50 px-3 py-1.5 text-xs font-semibold text-[#3b2f63]",
+              ctaWadah: "clay-blob group relative flex flex-col justify-between overflow-hidden rounded-[2rem] bg-[#a99fd0] p-8 text-[#3b2f63]",
+              ctaJudul: "display text-2xl font-bold",
+              ctaTombol: "clay-blob mt-6 inline-flex w-max items-center justify-center rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-[#3b2f63] transition-transform active:scale-95",
+            }} 
+          />
+        </div>
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-14">

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -92,23 +92,39 @@ export function NeoTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-neo mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="border-4 border-black bg-white p-8 shadow-[8px_8px_0_0_#000] sm:p-12">
-        <span className="eyebrow">{profil.status}</span>
-        <h1 className="display mt-4 text-[clamp(2.5rem,8vw,6rem)]">
-          {profil.judul[0]}
-          <br />
-          {profil.judul[1]}
-        </h1>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            <span className="eyebrow">{profil.status}</span>
+            <h1 className="display mt-4 text-[clamp(2.5rem,8vw,6rem)]">
+              {profil.judul[0]}
+              <br />
+              {profil.judul[1]}
+            </h1>
 
-        <ProfilBlok
-          profil={profil}
-          kelas={{
-            foto: "border-4 border-black",
-            bio: "text-sm font-medium leading-relaxed text-neutral-800",
-            garis: "border-black/40",
-            nilai: "font-bold",
-            tombol: "neo-tag inline-flex items-center justify-center bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase text-black"
-          }}
-        />
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                foto: "border-4 border-black",
+                bio: "text-sm font-medium leading-relaxed text-neutral-800",
+                garis: "border-black/40",
+                nilai: "font-bold",
+                tombol: "neo-tag inline-flex items-center justify-center bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase text-black"
+              }}
+            />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
+            kelas={{
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden border-4 border-black bg-[#FF5A5F] py-6 shadow-[4px_4px_0_0_#000] text-black",
+              marqueeItem: "neo-tag bg-white px-2 py-1 text-[10px] font-black uppercase text-black",
+              ctaWadah: "group relative flex flex-col justify-between overflow-hidden border-4 border-black bg-black p-8 text-white shadow-[4px_4px_0_0_#000]",
+              ctaJudul: "display text-2xl font-bold",
+              ctaTombol: "neo-tag mt-6 inline-flex w-max items-center justify-center bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase text-black",
+            }} 
+          />
+        </div>
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-14">

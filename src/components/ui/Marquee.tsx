@@ -15,18 +15,20 @@ export function Marquee({
   items,
   durasi = 22,
   className = "",
+  itemClassName,
 }: {
   items: string[];
   /** Detik untuk satu putaran penuh. Makin banyak isi, makin panjang jalurnya. */
   durasi?: number;
   className?: string;
+  itemClassName?: string;
 }) {
   const jalur = (tersembunyi: boolean) => (
     <div className="flex shrink-0 items-center gap-3 pr-3" aria-hidden={tersembunyi}>
       {items.map((s, i) => (
         <span
           key={`${s}-${i}`}
-          className="whitespace-nowrap rounded-full border border-line bg-black/[0.03] px-3.5 py-1.5 text-xs font-semibold text-text-dim"
+          className={itemClassName ?? "whitespace-nowrap rounded-full border border-line bg-black/[0.03] px-3.5 py-1.5 text-xs font-semibold text-text-dim"}
         >
           {s}
         </span>

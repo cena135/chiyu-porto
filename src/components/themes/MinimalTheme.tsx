@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -92,24 +92,38 @@ function MinimalCard({ project, index }: { project: ThemeProject; index: number 
 export function MinimalTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-minimal mx-auto w-full max-w-[72rem] px-6 pb-48 pt-32 sm:px-10">
-      <header className="pb-32">
-        <span className="eyebrow">{profil.status}</span>
-        <h1 className="display mt-10 text-[clamp(3rem,9vw,7rem)]">
-          {profil.judul[0]}
-          <br />
-          {profil.judul[1]} {profil.judul[2]}
-        </h1>
+      <header className="py-12 sm:py-20">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            <span className="eyebrow">{profil.status}</span>
+            <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)] font-light tracking-tight text-neutral-900">
+              {profil.judul[0]} {profil.judul[1]} {profil.judul[2]}
+            </h1>
 
-        <ProfilBlok
-          profil={profil}
-          kelas={{
-            wadah: "mt-20 flex max-w-2xl flex-col gap-8 sm:flex-row sm:items-start sm:gap-12",
-            foto: "rounded-full",
-            bio: "text-lg font-light leading-relaxed text-[#86868b]",
-            garis: "border-black/15",
-            nilai: "font-light text-[#1d1d1f]",
-          }}
-        />
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                foto: "grayscale",
+                bio: "text-sm leading-relaxed text-neutral-500",
+                garis: "border-neutral-200",
+                nilai: "font-medium text-neutral-900",
+                tombol: "inline-flex items-center justify-center rounded-full border border-neutral-300 bg-transparent px-6 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-900 hover:text-white"
+              }}
+            />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
+            kelas={{
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden border border-neutral-200 py-6",
+              marqueeItem: "rounded-full border border-neutral-200 bg-transparent px-3 py-1.5 text-xs font-medium text-neutral-500",
+              ctaWadah: "group relative flex flex-col justify-between overflow-hidden border border-neutral-200 p-8 text-neutral-900 transition-colors hover:bg-neutral-50",
+              ctaJudul: "display text-2xl font-light tracking-tight",
+              ctaTombol: "mt-6 inline-flex w-max items-center justify-center rounded-full bg-neutral-900 px-6 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90",
+            }} 
+          />
+        </div>
       </header>
 
       <section id="karya" className="scroll-mt-28">

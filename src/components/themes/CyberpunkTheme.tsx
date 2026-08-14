@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrambleText } from "./ScrambleText";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -78,24 +78,41 @@ export function CyberpunkTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-cyber mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="cyber-card p-8 sm:p-12">
-        <p className="text-[11px] tracking-[0.2em] text-[#22c55e]/70">
-          alex@t480:~$ ./portofolio --mode=cyberpunk
-        </p>
-        <h1 className="mt-6 text-[clamp(2rem,6vw,4.5rem)] font-bold leading-none text-[#d7ffe9]">
-          <ScrambleText text={profil.judul.join(" ").toUpperCase()} speed={1} />
-        </h1>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            <p className="text-[11px] tracking-[0.2em] text-[#22c55e]/70">
+              alex@t480:~$ ./portofolio --mode=cyberpunk
+            </p>
+            <h1 className="mt-6 text-[clamp(2rem,6vw,4.5rem)] font-bold leading-none text-[#d7ffe9]">
+              <ScrambleText text={profil.judul.join(" ").toUpperCase()} speed={1} />
+            </h1>
 
-        <ProfilBlok
-          profil={profil}
-          kelas={{
-            foto: "border border-[#22d3ee]/40 saturate-[0.6]",
-            bio: "text-[13px] leading-relaxed text-[#4ade80]",
-            garis: "border-[#22c55e]/30",
-            nilai: "text-[#d7ffe9]",
-          }}
-        />
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                foto: "border border-[#22d3ee]/40 saturate-[0.6]",
+                bio: "text-[13px] leading-relaxed text-[#4ade80]",
+                garis: "border-[#22c55e]/30",
+                nilai: "text-[#d7ffe9]",
+                tombol: "inline-flex items-center justify-center border border-[#22c55e]/50 bg-transparent px-6 py-2.5 text-[13px] font-bold uppercase text-[#22c55e] transition-colors hover:bg-[#22c55e]/20"
+              }}
+            />
 
-        <span className="caret mt-6 inline-block text-sm text-[#22d3ee]" aria-hidden />
+            <span className="caret mt-6 inline-block text-sm text-[#22d3ee]" aria-hidden />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
+            kelas={{
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden border border-[#22c55e]/30 bg-[#0a192f]/50 py-6",
+              marqueeItem: "border border-[#22c55e]/30 bg-transparent px-3 py-1.5 text-[11px] font-bold text-[#4ade80]",
+              ctaWadah: "group relative flex flex-col justify-between overflow-hidden border border-[#22d3ee]/40 bg-[#050b14] p-8 text-[#d7ffe9] transition-colors hover:border-[#22d3ee]",
+              ctaJudul: "text-2xl font-bold uppercase",
+              ctaTombol: "mt-6 inline-flex w-max items-center justify-center border border-[#22d3ee]/50 bg-[#22d3ee]/10 px-6 py-3.5 text-[13px] font-bold uppercase text-[#22d3ee] transition-all hover:bg-[#22d3ee]/20",
+            }} 
+          />
+        </div>
       </header>
 
       <section className="pt-12">

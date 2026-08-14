@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { KontakBlok, ProfilBlok } from "./ThemeSections";
+import { HeroKananBlok, KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -88,26 +88,43 @@ export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
           <span>Edisi 01</span>
         </div>
 
-        {/* Judul sengaja melewati batas kolom teks di bawahnya — pelanggaran
-            grid yang justru menjadi ciri tata letak cetak. */}
-        <h1 className="mt-12 font-serif text-[clamp(3rem,9vw,7.5rem)] leading-[0.94] tracking-[-0.02em]">
-          {profil.judul[0]}
-          <br />
-          <span className="italic">{profil.judul[1]}</span>
-          <br />
-          {profil.judul[2]}
-        </h1>
+        <div className="mt-12 flex flex-col gap-10 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex-1">
+            {/* Judul sengaja melewati batas kolom teks di bawahnya — pelanggaran
+                grid yang justru menjadi ciri tata letak cetak. */}
+            <h1 className="font-serif text-[clamp(3rem,9vw,7.5rem)] leading-[0.94] tracking-[-0.02em]">
+              {profil.judul[0]}
+              <br />
+              <span className="italic">{profil.judul[1]}</span>
+              <br />
+              {profil.judul[2]}
+            </h1>
 
-        <ProfilBlok
-          profil={profil}
-          kelas={{
-            wadah: "mt-14 flex max-w-3xl flex-col gap-8 sm:flex-row sm:items-start sm:gap-10",
-            foto: "rounded-none grayscale",
-            bio: "font-serif text-xl italic leading-relaxed text-black/70",
-            garis: "border-black/25",
-            nilai: "text-black/70",
-          }}
-        />
+            <ProfilBlok
+              profil={profil}
+              kelas={{
+                wadah: "mt-14 flex max-w-3xl flex-col gap-8 sm:flex-row sm:items-start sm:gap-10",
+                foto: "rounded-none grayscale",
+                bio: "font-serif text-xl italic leading-relaxed text-black/70",
+                garis: "border-black/25",
+                nilai: "text-black/70",
+                tombol: "inline-flex items-center justify-center border border-black bg-transparent px-6 py-2.5 text-sm font-medium text-black transition-colors hover:bg-black hover:text-white"
+              }}
+            />
+          </div>
+
+          <HeroKananBlok 
+            projects={projects} 
+            kelas={{
+              wadah: "flex w-full shrink-0 flex-col justify-center gap-4 lg:w-[26rem]",
+              marqueeWadah: "relative flex flex-col justify-center gap-4 overflow-hidden border border-black/15 bg-[#F9F7F1] py-6",
+              marqueeItem: "border border-black/15 bg-transparent px-3 py-1.5 text-xs font-medium text-black/70",
+              ctaWadah: "group relative flex flex-col justify-between overflow-hidden border border-black/15 p-8 text-black transition-colors hover:bg-black/5",
+              ctaJudul: "font-serif text-2xl italic",
+              ctaTombol: "mt-6 inline-flex w-max items-center justify-center border border-black bg-black px-6 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90",
+            }} 
+          />
+        </div>
       </header>
 
       <section className="pt-6">
