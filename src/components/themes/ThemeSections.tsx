@@ -122,7 +122,17 @@ export function KontakBlok({
 }) {
   return (
     <section id="contact" className="mt-32 flex min-h-screen flex-col justify-center py-20 pb-32 md:mt-48">
-      <span className="eyebrow">{judul}</span>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        className="mb-16 text-center md:mb-24"
+      >
+        <h2 className="display text-[clamp(3.5rem,10vw,8rem)] leading-[0.9] tracking-tight">
+          {judul}
+        </h2>
+      </motion.div>
       <div className={kelas.wadah ?? "mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"}>
         {kontak.map((k, i) => (
           <motion.a
