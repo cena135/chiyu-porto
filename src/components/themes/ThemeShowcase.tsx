@@ -49,7 +49,7 @@ const MinimalTheme = dynamic(() => import("./MinimalTheme").then((m) => m.Minima
   ssr: false,
   loading: () => memuat,
 });
-const SpatialTheme = dynamic(() => import("./SpatialTheme").then((m) => m.SpatialTheme), {
+const LiquidLightTheme = dynamic(() => import("./LiquidLightTheme").then((m) => m.LiquidLightTheme), {
   ssr: false,
   loading: () => memuat,
 });
@@ -72,13 +72,13 @@ const PABRIK: Record<ThemeId, React.ComponentType<ThemeProps>> = {
   clay: ClayTheme,
   glass: GlassTheme,
   minimal: MinimalTheme,
-  spatial: SpatialTheme,
+  glasslight: LiquidLightTheme,
   editorial: EditorialTheme,
   cyber: CyberpunkTheme,
   vanta: VantaTheme,
 };
 
-export function ThemeShowcase({ projects }: ThemeProps) {
+export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
   const [tema, setTema] = useState<ThemeId>("bento");
   const Aktif = PABRIK[tema];
 
@@ -104,7 +104,7 @@ export function ThemeShowcase({ projects }: ThemeProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Aktif projects={projects} />
+            <Aktif projects={projects} profil={profil} kontak={kontak} />
           </motion.div>
         </AnimatePresence>
       </div>

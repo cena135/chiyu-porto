@@ -8,6 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -110,7 +111,7 @@ function GlassCard({ project, index }: { project: ThemeProject; index: number })
   );
 }
 
-export function GlassTheme({ projects }: ThemeProps) {
+export function GlassTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-glass relative mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       {/* Dua noda cahaya dengan ukuran dan posisi yang sengaja TIDAK simetris —
@@ -118,16 +119,24 @@ export function GlassTheme({ projects }: ThemeProps) {
       <div className="aurora-field" aria-hidden />
 
       <header className="glass-liquid rounded-[2rem] p-8 sm:p-14">
-        <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">Liquid Glass</span>
+        <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">
+          {profil.status}
+        </span>
         <h1 className="mt-5 text-[clamp(2.5rem,7vw,5rem)] font-semibold leading-[1.02] tracking-tight text-white">
-          Kaca di atas
+          {profil.judul[0]}
           <br />
-          cahaya.
+          {profil.judul[1]} {profil.judul[2]}
         </h1>
-        <p className="mt-7 max-w-lg text-[15px] leading-relaxed text-white/55">
-          Permukaan yang membiaskan aurora di belakangnya. Miringkan kartunya dengan kursor —
-          isinya terangkat, bukan ikut berputar rata bersama permukaannya.
-        </p>
+
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            foto: "rounded-[1.25rem] ring-1 ring-white/20",
+            bio: "text-sm leading-relaxed text-white/55",
+            garis: "border-white/20",
+            nilai: "text-white/85",
+          }}
+        />
       </header>
 
       <section className="pt-14">
@@ -137,6 +146,15 @@ export function GlassTheme({ projects }: ThemeProps) {
           ))}
         </div>
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        kelas={{
+          item: "glass-liquid group flex items-center gap-4 overflow-hidden rounded-[1.5rem] p-5 text-white",
+          ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10",
+          nilai: "text-white",
+        }}
+      />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import type { KontakItem, Profil } from "@/lib/site-data";
+
 /**
  * Bentuk data yang dipakai SEMUA tema.
  *
@@ -15,7 +17,14 @@ export type ThemeProject = {
   cover: string | null;
 };
 
-export type ThemeProps = { projects: ThemeProject[] };
+/** Semua tema menerima paket yang SAMA. Datanya diambil sekali di Server
+ *  Component induk lalu dioper turun — tidak ada tema yang mengambil datanya
+ *  sendiri, dan tidak ada satu pun yang menampilkan isian palsu. */
+export type ThemeProps = {
+  projects: ThemeProject[];
+  profil: Profil;
+  kontak: KontakItem[];
+};
 
 /** Id tema — dipakai sebagai kunci di switcher, state, dan nama kelas CSS. */
 export type ThemeId =
@@ -24,7 +33,7 @@ export type ThemeId =
   | "clay"
   | "glass"
   | "minimal"
-  | "spatial"
+  | "glasslight"
   | "editorial"
   | "cyber"
   | "vanta";
@@ -35,7 +44,7 @@ export const TEMA: { id: ThemeId; nama: string; catatan: string }[] = [
   { id: "clay", nama: "Clay 3D", catatan: "Pastel empuk" },
   { id: "glass", nama: "Liquid Glass", catatan: "Kaca di atas aurora" },
   { id: "minimal", nama: "Minimal", catatan: "Ruang kosong ekstrem" },
-  { id: "spatial", nama: "Spatial UI", catatan: "Kaca dalam, kilau kursor" },
+  { id: "glasslight", nama: "Liquid Light", catatan: "Kaca bening, latar terang" },
   { id: "editorial", nama: "Editorial", catatan: "Serif, majalah" },
   { id: "cyber", nama: "Cyberpunk", catatan: "Neon, monospace" },
   { id: "vanta", nama: "Vanta 3D", catatan: "Latar WebGL interaktif" },

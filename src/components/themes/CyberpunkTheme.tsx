@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ScrambleText } from "./ScrambleText";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -69,7 +70,7 @@ function CyberCard({ project, index }: { project: ThemeProject; index: number })
   );
 }
 
-export function CyberpunkTheme({ projects }: ThemeProps) {
+export function CyberpunkTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-cyber mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="cyber-card p-8 sm:p-12">
@@ -77,13 +78,19 @@ export function CyberpunkTheme({ projects }: ThemeProps) {
           alex@t480:~$ ./portofolio --mode=cyberpunk
         </p>
         <h1 className="mt-6 text-[clamp(2rem,6vw,4.5rem)] font-bold leading-none text-[#d7ffe9]">
-          <ScrambleText text="I BUILD AND HOST" speed={1} />
+          <ScrambleText text={profil.judul.join(" ").toUpperCase()} speed={1} />
         </h1>
-        <p className="mt-6 max-w-xl text-sm leading-relaxed text-[#4ade80]">
-          <span className="text-[#22c55e]/60">$ </span>
-          Seluruh sistem berjalan di atas satu ThinkPad T480. Tanpa penyedia awan, tanpa port
-          yang terbuka ke publik.
-        </p>
+
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            foto: "border border-[#22d3ee]/40 saturate-[0.6]",
+            bio: "text-[13px] leading-relaxed text-[#4ade80]",
+            garis: "border-[#22c55e]/30",
+            nilai: "text-[#d7ffe9]",
+          }}
+        />
+
         <span className="caret mt-6 inline-block text-sm text-[#22d3ee]" aria-hidden />
       </header>
 
@@ -97,6 +104,16 @@ export function CyberpunkTheme({ projects }: ThemeProps) {
           ))}
         </div>
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        judul="// kontak"
+        kelas={{
+          item: "cyber-card group flex items-center gap-4 p-5",
+          ikon: "flex h-11 w-11 shrink-0 items-center justify-center border border-[#22d3ee]/40 text-[#22d3ee]",
+          nilai: "text-[#d7ffe9]",
+        }}
+      />
     </div>
   );
 }

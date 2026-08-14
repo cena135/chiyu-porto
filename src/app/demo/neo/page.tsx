@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getDemoProjects } from "../_data";
+import { KONTAK, PROFIL } from "@/lib/site-data";
 import { NeoTheme } from "@/components/themes/NeoTheme";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export default async function Page() {
   const projects = await getDemoProjects();
   return (
     <main>
-      <NeoTheme projects={projects} />
+      <NeoTheme projects={projects} profil={PROFIL} kontak={KONTAK} />
     </main>
   );
 }

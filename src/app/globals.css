@@ -370,19 +370,16 @@ body:has(.theme-glass) {
      manual, Lightning CSS menganggap prefiksnya sudah diurus lalu MEMBUANG
      versi tanpa prefiks — dan efek kacanya mati di Firefox. */
   backdrop-filter: blur(64px) saturate(280%) brightness(1.12);
-  border: 1px solid transparent;
-  /* Border gradasi: meniru garis cahaya di bibir es basah yang menyala di satu
-     sisi lalu memudar. Warna rata terbaca sebagai kotak biasa. */
-  border-image: linear-gradient(
-      135deg,
-      rgb(255 255 255 / 0.5),
-      rgb(255 255 255 / 0.1) 40%,
-      rgb(255 255 255 / 0.03) 70%
-    )
-    1;
+  /* SENGAJA border biasa, BUKAN border-image. `border-image` membuat browser
+     mengabaikan `border-radius` sepenuhnya — sudut kartunya jadi kotak walau
+     kelas rounded-nya terpasang. Kesan "bibir es yang menyala di satu sisi"
+     dikembalikan lewat inset shadow, yang tetap mengikuti lengkungan. */
+  border: 1px solid rgb(255 255 255 / 0.16);
   box-shadow:
     0 40px 80px -26px rgb(0 0 0 / 0.9),
-    inset 0 1px 0 0 rgb(255 255 255 / 0.22);
+    inset 0 1px 0 0 rgb(255 255 255 / 0.45),
+    inset 1px 0 0 0 rgb(255 255 255 / 0.12),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.05);
 }
 /* Aurora hanya hidup di dalam tema ini — di luar sini kelasnya tidak
    didefinisikan sama sekali, jadi tidak ada yang bisa bocor. */
@@ -430,27 +427,39 @@ body:has(.theme-glass) {
   }
 }
 
-/* ---------- Spatial UI ----------
-   Kaca yang JAUH lebih buram daripada Liquid Glass dan tanpa aurora di
-   belakangnya. Kedalamannya datang dari blur dan bayangan, bukan dari warna. */
-body:has(.theme-spatial) {
+/* ---------- Liquid Glass · Light Mode ----------
+   Kaca di atas latar TERANG. Di latar gelap, kaca terlihat karena ia lebih
+   terang dari sekitarnya; di sini trik itu tidak ada. Yang menggantikannya:
+   saturasi tinggi yang menarik warna gradasi di belakang panel, border putih
+   pekat di sisi atas (meniru cahaya yang jatuh dari atas), dan bayangan yang
+   jatuh jauh ke bawah supaya panelnya MELAYANG, bukan menempel. */
+body:has(.theme-glasslight) {
   background:
-    radial-gradient(120% 90% at 15% 0%, #1a2246 0%, transparent 55%),
-    radial-gradient(90% 80% at 90% 20%, #2a1b4a 0%, transparent 60%), #070912;
+    radial-gradient(90% 70% at 12% 0%, #dbeafe 0%, transparent 55%),
+    radial-gradient(80% 70% at 88% 15%, #ede9fe 0%, transparent 58%),
+    radial-gradient(70% 60% at 60% 100%, #cffafe 0%, transparent 60%), #f4f6fb;
   background-attachment: fixed;
-  color: #ffffff;
-  --color-text-dim: rgb(255 255 255 / 0.5);
+  color: #0f172a;
+  --color-text-dim: #64748b;
 }
-.theme-spatial {
-  color: #ffffff;
+.theme-glasslight {
+  color: #0f172a;
 }
-.theme-spatial .spatial-card {
-  background: rgb(255 255 255 / 0.055);
-  backdrop-filter: blur(56px) saturate(180%);
-  border: 1px solid rgb(255 255 255 / 0.14);
+.theme-glasslight .liquid-card {
+  background: rgb(255 255 255 / 0.42);
+  /* JANGAN tambahkan -webkit-backdrop-filter manual di sini. Kalau ditulis
+     manual, Lightning CSS menganggap prefiksnya sudah diurus lalu MEMBUANG
+     versi tanpa prefiks — dan efek kacanya mati di Firefox. */
+  backdrop-filter: blur(28px) saturate(220%);
+  border: 1px solid rgb(255 255 255 / 0.85);
+  /* Border atas dibuat lebih pekat daripada sisanya lewat inset shadow:
+     border-image tidak bisa dipakai bersama border-radius, dan kartu ini
+     WAJIB melengkung supaya kilaunya terpotong rapi. */
   box-shadow:
-    0 32px 64px -28px rgb(0 0 0 / 0.85),
-    inset 0 1px 0 0 rgb(255 255 255 / 0.16);
+    0 24px 48px -20px rgb(15 23 42 / 0.28),
+    0 2px 6px -2px rgb(15 23 42 / 0.1),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.95),
+    inset 0 -12px 24px -18px rgb(15 23 42 / 0.25);
 }
 
 /* ---------- Editorial ----------

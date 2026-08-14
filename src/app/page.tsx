@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PROJECT_ORDER, PUBLIC_WHERE, WITH_IMAGES } from "@/lib/projects";
 import { ThemeShowcase } from "@/components/themes/ThemeShowcase";
+import { KONTAK, PROFIL } from "@/lib/site-data";
 import type { ThemeProject } from "@/components/themes/types";
 
 /**
@@ -59,7 +60,7 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      <ThemeShowcase projects={projects} />
+      <ThemeShowcase projects={projects} profil={PROFIL} kontak={KONTAK} />
 
       <footer className="mx-auto w-full max-w-[86rem] px-6 pb-10 sm:px-10">
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-current/10 pt-8">

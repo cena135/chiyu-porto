@@ -3,9 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import type { Profil } from "@/lib/site-data";
 import type { ThemeProject } from "@/components/themes/types";
 import { Marquee } from "@/components/ui/Marquee";
-import avatar from "../../public/avatar.jpg";
 
 /**
  * Vibrant Bento Grid — tata letak utama situs.
@@ -19,16 +19,6 @@ import avatar from "../../public/avatar.jpg";
 const BLUE = "#2563EB";
 const PURPLE = "#7C3AED";
 
-/* Ditulis sebagai string JS, bukan teks JSX langsung: apostrof pada "you're"
-   akan diprotes aturan lint react/no-unescaped-entities. */
-const BIO =
-  "Hai, aku Alexander Imanuel Joedo (22 tahun), Fullstack developer asal Petra angkatan 22, anak kedua dari dua bersaudara. Aku suka belajar, ngoprek, dan bermain dengan teknologi. If you're interested, feel free to contact me :)";
-
-const META: [string, string][] = [
-  ["Basis", "Indonesia"],
-  ["Fokus", "Web · Infrastruktur"],
-  ["Server", "ThinkPad T480, 24/7"],
-];
 
 /** Muncul beruntun; `custom` dipakai sebagai penunda per kotak. */
 const masuk = {
@@ -44,7 +34,13 @@ const masuk = {
 /** Satu sumber untuk transisi hover semua kotak, supaya iramanya seragam. */
 const pegas = { type: "spring" as const, stiffness: 320, damping: 22 };
 
-export function Bento({ projects }: { projects: ThemeProject[] }) {
+export function Bento({
+  projects,
+  profil,
+}: {
+  projects: ThemeProject[];
+  profil: Profil;
+}) {
   // Diambil dari proyek yang benar-benar ada, jadi daftarnya tidak pernah
   // berbohong. Kalau database masih kosong, barulah dipakai daftar dasar.
   const dariProyek = [...new Set(projects.flatMap((p) => p.techStack))];
@@ -99,7 +95,7 @@ export function Bento({ projects }: { projects: ThemeProject[] }) {
                 variants={{ hover: { color: "rgba(255,255,255,0.85)" } }}
                 transition={{ duration: 0.3 }}
               >
-                Lagi terima proyek baru
+                {profil.status}
               </motion.span>
             </div>
 
@@ -108,9 +104,9 @@ export function Bento({ projects }: { projects: ThemeProject[] }) {
               variants={{ hover: { color: "#ffffff" } }}
               transition={pegas}
             >
-              I Build
+              {profil.judul[0]}
               <br />
-              and Host
+              {profil.judul[1]}
               <br />
               <motion.span
                 className="inline-block"
@@ -118,7 +114,7 @@ export function Bento({ projects }: { projects: ThemeProject[] }) {
                 variants={{ hover: { color: "#ffffff", x: 8 } }}
                 transition={pegas}
               >
-                Websites.
+                {profil.judul[2]}
               </motion.span>
             </motion.h1>
 
@@ -133,8 +129,8 @@ export function Bento({ projects }: { projects: ThemeProject[] }) {
                 transition={pegas}
               >
                 <Image
-                  src={avatar}
-                  alt="Foto Alexander Imanuel Joedo"
+                  src={profil.avatar}
+                  alt={`Foto ${profil.nama}`}
                   priority
                   placeholder="blur"
                   // Berkasnya 65 KB dan tampil di bawah 112px. Mengoptimalkan
@@ -150,14 +146,14 @@ export function Bento({ projects }: { projects: ThemeProject[] }) {
                 variants={{ hover: { color: "rgba(255,255,255,0.9)" } }}
                 transition={{ duration: 0.3 }}
               >
-                {BIO}
+                {profil.bio}
               </motion.p>
             </div>
 
             {/* Meta bertitik-titik — jangkar visual yang menahan kotak besar
                 supaya tidak terasa kosong di bawah bio. */}
             <dl className="mt-7 max-w-md">
-              {META.map(([k, v]) => (
+              {profil.meta.map(([k, v]) => (
                 <div key={k} className="flex items-baseline gap-4 py-2">
                   <motion.dt
                     className="eyebrow shrink-0"

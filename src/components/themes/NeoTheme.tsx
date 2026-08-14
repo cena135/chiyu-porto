@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -78,20 +79,26 @@ function NeoCard({ project, index }: { project: ThemeProject; index: number }) {
   );
 }
 
-export function NeoTheme({ projects }: ThemeProps) {
+export function NeoTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-neo mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="border-4 border-black bg-white p-8 shadow-[8px_8px_0_0_#000] sm:p-12">
-        <span className="eyebrow">Neo Brutalism</span>
+        <span className="eyebrow">{profil.status}</span>
         <h1 className="display mt-4 text-[clamp(2.5rem,8vw,6rem)]">
-          I Build
+          {profil.judul[0]}
           <br />
-          and Host
+          {profil.judul[1]}
         </h1>
-        <p className="mt-6 max-w-xl text-sm font-medium leading-relaxed text-neutral-800">
-          Garis tebal, bayangan padat tanpa blur, dan warna primer yang tidak minta izin.
-          Arahkan kursor ke kartu — semuanya memantul kaku, bukan meluncur.
-        </p>
+
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            foto: "border-4 border-black",
+            bio: "text-sm font-medium leading-relaxed text-neutral-800",
+            garis: "border-black/40",
+            nilai: "font-bold",
+          }}
+        />
         <a
           href="#karya"
           className="neo-tag mt-8 inline-block bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase"
@@ -107,6 +114,15 @@ export function NeoTheme({ projects }: ThemeProps) {
           ))}
         </div>
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        kelas={{
+          item: "neo-card group flex items-center gap-4 p-5",
+          ikon: "flex h-11 w-11 shrink-0 items-center justify-center border-2 border-black bg-[#FFDD57]",
+          nilai: "font-bold",
+        }}
+      />
     </div>
   );
 }

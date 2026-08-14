@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -79,20 +80,27 @@ function MinimalCard({ project, index }: { project: ThemeProject; index: number 
   );
 }
 
-export function MinimalTheme({ projects }: ThemeProps) {
+export function MinimalTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-minimal mx-auto w-full max-w-[72rem] px-6 pb-48 pt-32 sm:px-10">
       <header className="pb-32">
-        <span className="eyebrow">Minimalism</span>
+        <span className="eyebrow">{profil.status}</span>
         <h1 className="display mt-10 text-[clamp(3rem,9vw,7rem)]">
-          Sesedikit
+          {profil.judul[0]}
           <br />
-          mungkin.
+          {profil.judul[1]} {profil.judul[2]}
         </h1>
-        <p className="mt-12 max-w-lg text-lg font-light leading-relaxed text-[#86868b]">
-          Tanpa garis, tanpa bayangan, tanpa warna. Yang memisahkan satu bagian dari yang
-          lain hanyalah jarak — itu sebabnya jaraknya sengaja terasa berlebihan.
-        </p>
+
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            wadah: "mt-20 flex max-w-2xl flex-col gap-8 sm:flex-row sm:items-start sm:gap-12",
+            foto: "rounded-full",
+            bio: "text-lg font-light leading-relaxed text-[#86868b]",
+            garis: "border-black/15",
+            nilai: "font-light text-[#1d1d1f]",
+          }}
+        />
       </header>
 
       <section id="karya" className="scroll-mt-28">
@@ -100,6 +108,16 @@ export function MinimalTheme({ projects }: ThemeProps) {
           <MinimalCard key={p.id} project={p} index={i} />
         ))}
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        kelas={{
+          wadah: "mt-8",
+          item: "group flex items-center gap-6 border-t border-black/[0.08] py-8",
+          ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 text-[#1d1d1f]",
+          nilai: "font-light text-[#1d1d1f]",
+        }}
+      />
     </div>
   );
 }

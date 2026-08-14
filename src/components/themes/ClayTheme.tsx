@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -81,16 +82,24 @@ function ClayCard({ project, index }: { project: ThemeProject; index: number }) 
   );
 }
 
-export function ClayTheme({ projects }: ThemeProps) {
+export function ClayTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-clay mx-auto w-full max-w-[86rem] px-6 pb-32 pt-20 sm:px-10">
       <header className="clay-card rounded-[2.5rem] p-8 sm:p-14">
-        <span className="eyebrow">Claymorphism</span>
-        <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">Empuk dan menggembung.</h1>
-        <p className="mt-6 max-w-xl text-sm leading-relaxed text-[#6b6191]">
-          Tekan kartunya — ia melesak ke dalam, karena bayangan luarnya ditukar dengan
-          bayangan dalam, bukan sekadar mengecil.
-        </p>
+        <span className="eyebrow">{profil.status}</span>
+        <h1 className="display mt-4 text-[clamp(2.5rem,7vw,5.5rem)]">
+          {profil.judul[0]} {profil.judul[1]} {profil.judul[2]}
+        </h1>
+
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            foto: "clay-blob rounded-[1.75rem]",
+            bio: "text-sm leading-relaxed text-[#6b6191]",
+            garis: "border-[#a99fd0]",
+            nilai: "text-[#3b2f63]",
+          }}
+        />
         <a
           href="#karya"
           className="clay-blob mt-8 inline-block rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
@@ -106,6 +115,15 @@ export function ClayTheme({ projects }: ThemeProps) {
           ))}
         </div>
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        kelas={{
+          item: "clay-card group flex items-center gap-4 rounded-[1.75rem] p-5",
+          ikon: "clay-blob flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#C4B5FD] text-[#3b2f63]",
+          nilai: "text-[#3b2f63]",
+        }}
+      />
     </div>
   );
 }

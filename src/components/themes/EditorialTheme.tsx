@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps, ThemeProject } from "./types";
 
 /**
@@ -69,7 +70,7 @@ function EditorialRow({ project, index }: { project: ThemeProject; index: number
   );
 }
 
-export function EditorialTheme({ projects }: ThemeProps) {
+export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
   return (
     <div className="theme-editorial mx-auto w-full max-w-[78rem] px-6 pb-40 pt-24 sm:px-12">
       <header className="border-b border-black/15 pb-16">
@@ -81,22 +82,23 @@ export function EditorialTheme({ projects }: ThemeProps) {
         {/* Judul sengaja melewati batas kolom teks di bawahnya — pelanggaran
             grid yang justru menjadi ciri tata letak cetak. */}
         <h1 className="mt-12 font-serif text-[clamp(3rem,9vw,7.5rem)] leading-[0.94] tracking-[-0.02em]">
-          Membangun
+          {profil.judul[0]}
           <br />
-          <span className="italic">&amp; menjalankan</span>
+          <span className="italic">{profil.judul[1]}</span>
           <br />
-          sendiri.
+          {profil.judul[2]}
         </h1>
 
-        <div className="mt-14 grid grid-cols-1 gap-10 md:grid-cols-12">
-          <p className="font-serif text-xl italic leading-relaxed text-black/70 md:col-span-5">
-            Sebagian dibangun untuk klien, sebagian untuk rasa penasaran sendiri.
-          </p>
-          <p className="text-[15px] leading-[1.8] text-black/60 md:col-span-5 md:col-start-8">
-            Setiap proyek di bawah ini berjalan di atas satu ThinkPad T480 yang menyala dua
-            puluh empat jam — dari kode, basis data, sampai jalur masuknya.
-          </p>
-        </div>
+        <ProfilBlok
+          profil={profil}
+          kelas={{
+            wadah: "mt-14 flex max-w-3xl flex-col gap-8 sm:flex-row sm:items-start sm:gap-10",
+            foto: "rounded-none grayscale",
+            bio: "font-serif text-xl italic leading-relaxed text-black/70",
+            garis: "border-black/25",
+            nilai: "text-black/70",
+          }}
+        />
       </header>
 
       <section className="pt-6">
@@ -104,6 +106,16 @@ export function EditorialTheme({ projects }: ThemeProps) {
           <EditorialRow key={p.id} project={p} index={i} />
         ))}
       </section>
+
+      <KontakBlok
+        kontak={kontak}
+        kelas={{
+          wadah: "mt-6",
+          item: "group flex items-center gap-6 border-t border-black/15 py-7",
+          ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/20",
+          nilai: "font-serif text-base",
+        }}
+      />
     </div>
   );
 }

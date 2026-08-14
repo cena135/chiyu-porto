@@ -3,33 +3,43 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps } from "./types";
 
 /**
- * Vanta 3D — latar WebGL yang bereaksi pada kursor.
+ * Vanta 3D — latar WebGL Birds yang bereaksi pada kursor.
  *
- * Tiga hal yang membuat versi ini tidak berbahaya dipasang di beranda:
+ * KENAPA VERSI SEBELUMNYA SELALU JATUH KE FALLBACK — dua sebab, keduanya ada
+ * di dalam bundel Vanta dan tidak terlihat dari luar:
  *
- * 1. three.js dan Vanta di-`import()` DI DALAM efek, bukan di atas berkas.
- *    Keduanya berukuran ratusan kilobyte; kalau diimpor statis, setiap
- *    pengunjung mengunduhnya walau tidak pernah membuka tema ini.
- * 2. Kalau WebGL tidak tersedia atau Vanta melempar galat, latar jatuh ke
- *    gradasi CSS biasa. Kanvas 3D yang gagal diam-diam meninggalkan halaman
- *    hitam kosong, dan tidak ada satu pun pesan yang menjelaskannya.
- * 3. Pengguna dengan "kurangi animasi" tidak pernah memuatnya sama sekali —
- *    hemat unduhan sekaligus menghormati setelan.
+ * 1. Di baris pertamanya, `vanta.birds.min.js` menjalankan
+ *    `let s = window.THREE || {}` — three.js diambil dari GLOBAL, sekali, PADA
+ *    SAAT MODULNYA DIEVALUASI. Opsi `THREE` yang kita oper ke pemanggilan efek
+ *    tidak pernah dipakai untuk ini. Kalau `window.THREE` belum ada saat
+ *    modulnya diimpor, Vanta mencetak "No THREE defined on window", melewati
+ *    pembuatan scene, lalu mengecat `el.style.background` dengan warna
+ *    `backgroundColor` — persis "lampu sticky di belakang" yang CEO lihat.
+ *    Karena itu `window.THREE` HARUS diisi SEBELUM baris impor Vanta.
+ *
+ * 2. Bundelnya UMD dan mendaftarkan efeknya ke `window.VANTA.BIRDS`. Nilai
+ *    yang dikembalikan modulnya bukan fungsi efek itu, jadi memanggil
+ *    `(await import(...)).default(...)` melempar TypeError.
  */
-export function VantaTheme({ projects }: ThemeProps) {
+
+type EfekVanta = { destroy: () => void };
+type PembuatEfek = (opsi: Record<string, unknown>) => EfekVanta;
+
+export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
   const wadah = useRef<HTMLDivElement>(null);
-  const [gagal, setGagal] = useState(false);
+  const [gagal, setGagal] = useState<string | null>(null);
 
   useEffect(() => {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setGagal(true);
+      setGagal("Dimatikan karena setelan “kurangi animasi” aktif.");
       return;
     }
 
-    let efek: { destroy: () => void } | null = null;
+    let efek: EfekVanta | null = null;
     // Dipasang sebelum await: komponen bisa saja sudah dilepas saat modulnya
     // selesai diunduh, dan tanpa penanda ini kita membuat kanvas WebGL yang
     // tidak akan pernah dihancurkan.
@@ -38,8 +48,22 @@ export function VantaTheme({ projects }: ThemeProps) {
     (async () => {
       try {
         const THREE = await import("three");
-        const BIRDS = (await import("vanta/dist/vanta.birds.min")).default;
+        (window as unknown as { THREE?: unknown }).THREE = THREE;
+
+        const modul = await import("vanta/dist/vanta.birds.min");
         if (!hidup || !wadah.current) return;
+
+        // Tiga jalan, berurutan dari yang paling bisa diandalkan. Registri
+        // global adalah cara resmi Vanta mengekspos efeknya.
+        const global = window as unknown as { VANTA?: Record<string, PembuatEfek> };
+        const bawaan = modul as unknown as { default?: unknown };
+        const BIRDS =
+          global.VANTA?.BIRDS ??
+          (typeof bawaan.default === "function" ? (bawaan.default as PembuatEfek) : undefined);
+
+        if (typeof BIRDS !== "function") {
+          throw new Error("VANTA.BIRDS tidak ditemukan setelah modul dimuat");
+        }
 
         efek = BIRDS({
           el: wadah.current,
@@ -54,14 +78,17 @@ export function VantaTheme({ projects }: ThemeProps) {
           backgroundColor: 0x05060f,
           color1: 0x2563eb,
           color2: 0x7c3aed,
-          birdSize: 1.1,
-          wingSpan: 24,
-          speedLimit: 4,
-          separation: 42,
+          birdSize: 1.2,
+          wingSpan: 26,
+          speedLimit: 4.5,
+          separation: 40,
           quantity: 3,
         });
-      } catch {
-        if (hidup) setGagal(true);
+      } catch (e) {
+        // Pesannya ditampilkan, bukan ditelan. Kanvas 3D yang gagal diam-diam
+        // meninggalkan halaman gelap kosong dan tidak ada satu pun petunjuk
+        // kenapa — persis yang terjadi pada versi sebelumnya.
+        if (hidup) setGagal(e instanceof Error ? e.message : "WebGL tidak tersedia");
       }
     })();
 
@@ -75,34 +102,42 @@ export function VantaTheme({ projects }: ThemeProps) {
     <div className="theme-vanta relative min-h-screen">
       {/* Kanvas WebGL ditanam di sini. `fixed` supaya tetap memenuhi layar saat
           halaman digulir — itu yang membuat kartunya terasa mengambang DI ATAS
-          ruang, bukan sekadar di atas gambar yang ikut bergulir. */}
+          ruang, bukan di atas gambar yang ikut bergulir. */}
       <div
         ref={wadah}
         aria-hidden
-        className="fixed inset-0 -z-10"
+        className="fixed inset-0 z-0"
         style={
           gagal
             ? { background: "radial-gradient(120% 100% at 20% 0%, #1b2570, #05060f 60%)" }
-            : { background: "#05060f" }
+            : undefined
         }
       />
 
-      <div className="mx-auto w-full max-w-[86rem] px-6 pb-32 pt-24 sm:px-10">
-        <header className="vanta-card max-w-2xl rounded-[2rem] p-8 sm:p-12">
-          <span className="text-[11px] uppercase tracking-[0.22em] text-white/50">Vanta 3D</span>
+      {/* z-10: seluruh isi halaman harus berada DI ATAS kanvas. */}
+      <div className="relative z-10 mx-auto w-full max-w-[86rem] px-6 pb-32 pt-24 sm:px-10">
+        <header className="vanta-card max-w-3xl rounded-[2rem] p-8 sm:p-12">
+          <span className="text-[11px] uppercase tracking-[0.22em] text-white/50">
+            {profil.status}
+          </span>
           <h1 className="mt-5 text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.03] tracking-tight text-white">
-            Ruang yang
+            {profil.judul[0]} {profil.judul[1]}
             <br />
-            bergerak sendiri.
+            {profil.judul[2]}
           </h1>
-          <p className="mt-6 text-[15px] leading-relaxed text-white/60">
-            Latar belakangnya WebGL sungguhan dan mengikuti kursormu. Semua kartu dibuat
-            nyaris tembus pandang supaya yang mendominasi adalah ruangnya, bukan kotaknya.
-          </p>
+
+          <ProfilBlok
+            profil={profil}
+            kelas={{
+              foto: "rounded-full ring-2 ring-white/25",
+              bio: "text-sm leading-relaxed text-white/60",
+              garis: "border-white/20",
+              nilai: "text-white/85",
+            }}
+          />
+
           {gagal && (
-            <p className="mt-5 text-xs text-white/40">
-              Kartu 3D tidak dimuat di perangkat ini — latar diganti gradasi statis.
-            </p>
+            <p className="mt-6 text-xs text-white/40">Latar 3D tidak aktif — {gagal}</p>
           )}
         </header>
 
@@ -116,7 +151,7 @@ export function VantaTheme({ projects }: ThemeProps) {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ type: "spring", stiffness: 110, damping: 18, delay: i * 0.04 }}
                 whileHover={{ y: -5 }}
-                className="vanta-card group relative flex min-h-[13rem] flex-col justify-between rounded-[1.5rem] p-6"
+                className="vanta-card group relative flex min-h-[13rem] flex-col justify-between overflow-hidden rounded-[1.5rem] p-6"
               >
                 <Link href={`/p/${p.slug}`} className="absolute inset-0 z-10" aria-label={p.title} />
                 <div className="relative">
@@ -138,6 +173,15 @@ export function VantaTheme({ projects }: ThemeProps) {
             ))}
           </div>
         </section>
+
+        <KontakBlok
+          kontak={kontak}
+          kelas={{
+            item: "vanta-card group flex items-center gap-4 overflow-hidden rounded-[1.5rem] p-5 text-white",
+            ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/80",
+            nilai: "text-white",
+          }}
+        />
       </div>
     </div>
   );
