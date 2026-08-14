@@ -468,7 +468,7 @@ body:has(.theme-editorial) {
 .theme-editorial .font-serif,
 .theme-editorial h1,
 .theme-editorial h3 {
-  font-family: var(--font-serif), Georgia, serif;
+  font-family: var(--font-editorial), Georgia, serif;
   font-weight: 400;
 }
 
@@ -482,7 +482,7 @@ body:has(.theme-cyber) {
 }
 .theme-cyber {
   color: #d7ffe9;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-cyber), ui-monospace, monospace;
 }
 .theme-cyber .cyber-card {
   background: rgb(0 18 12 / 0.62);

@@ -30,18 +30,21 @@ const chakra = Chakra_Petch({
   display: "swap",
 });
 
-// Dipakai HANYA oleh tema Editorial. Dimuat di layout, bukan di komponen tema,
+// Dipakai HANYA oleh tema Editorial. Namanya SENGAJA bukan --font-serif:
+// itu token bawaan Tailwind, dan menimpanya akan mengubah utilitas `font-serif`
+// di seluruh situs, bukan cuma di tema ini. Dimuat di layout, bukan di komponen tema,
 // supaya next/font tetap bisa self-hosting dan menyisipkan @font-face sekali.
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-serif",
+  variable: "--font-editorial",
   display: "swap",
 });
 
-// Dipakai HANYA oleh tema Cyberpunk.
+// Dipakai HANYA oleh tema Cyberpunk. Sama seperti di atas, namanya bukan
+// --font-mono karena itu pun token bawaan Tailwind.
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-cyber",
   display: "swap",
 });
 
