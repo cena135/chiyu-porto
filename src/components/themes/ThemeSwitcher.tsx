@@ -78,7 +78,7 @@ export function ThemeSwitcher({
             data-lenis-prevent
           >
             <p className={`px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] ${style.itemText}`}>
-              Sembilan Tema
+              Other themes
             </p>
             {TEMA.map((t) => {
               const dipilih = t.id === aktif;

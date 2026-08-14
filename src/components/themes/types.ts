@@ -38,12 +38,12 @@ export type ThemeId =
   | "vanta";
 
 export const TEMA: { id: ThemeId; nama: string; catatan: string }[] = [
-  { id: "bento", nama: "Bento", catatan: "Grid asimetris, terang" },
-  { id: "neo", nama: "Neo Brutal", catatan: "Garis tebal, bayangan padat" },
-  { id: "clay", nama: "Clay 3D", catatan: "Pastel empuk" },
-  { id: "minimal", nama: "Minimal", catatan: "Ruang kosong ekstrem" },
-  { id: "glasslight", nama: "Liquid Glass", catatan: "Kaca bening, latar terang" },
-  { id: "editorial", nama: "Editorial", catatan: "Serif, majalah" },
+  { id: "bento", nama: "Bento", catatan: "Asymmetric grid, bright" },
+  { id: "neo", nama: "Neo Brutal", catatan: "Thick lines, solid shadows" },
+  { id: "clay", nama: "Clay 3D", catatan: "Soft pastel, 3D effect" },
+  { id: "minimal", nama: "Minimal", catatan: "Extreme whitespace" },
+  { id: "glasslight", nama: "Liquid Glass", catatan: "Clear glass, bright background" },
+  { id: "editorial", nama: "Editorial", catatan: "Serif, magazine layout" },
   { id: "cyber", nama: "Cyberpunk", catatan: "Neon, monospace" },
-  { id: "vanta", nama: "Vanta 3D", catatan: "Latar WebGL interaktif" },
+  { id: "vanta", nama: "Vanta 3D", catatan: "Interactive WebGL background" },
 ];
