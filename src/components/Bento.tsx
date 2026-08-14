@@ -123,7 +123,7 @@ export function Bento({
                 sampai keluar dari lipatan layar. */}
             <div className="mt-8 flex max-w-xl flex-col gap-5 sm:flex-row sm:items-start">
               <motion.span
-                className="block shrink-0 overflow-hidden rounded-2xl"
+                className="block shrink-0 self-start overflow-hidden rounded-2xl"
                 variants={{ hover: { scale: 1.05, rotate: -2 } }}
                 whileHover={{ scale: 1.05 }}
                 transition={pegas}

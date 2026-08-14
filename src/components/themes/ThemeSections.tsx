@@ -63,7 +63,7 @@ export function ProfilBlok({
   return (
     <div className={kelas.wadah ?? "mt-8 flex max-w-xl flex-col gap-5 sm:flex-row sm:items-start"}>
       <motion.span
-        className={`block shrink-0 overflow-hidden ${kelas.foto ?? "rounded-2xl"}`}
+        className={`block shrink-0 self-start overflow-hidden ${kelas.foto ?? "rounded-2xl"}`}
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 320, damping: 22 }}
       >
