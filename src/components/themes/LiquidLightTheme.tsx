@@ -160,7 +160,7 @@ export function LiquidLightTheme({ projects, profil, kontak }: ThemeProps) {
         </div>
       </header>
 
-      <section className="pt-14">
+      <section id="karya" className="scroll-mt-28 pt-14">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p, i) => (
             <LiquidCard key={p.id} project={p} index={i} />

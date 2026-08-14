@@ -107,7 +107,7 @@ export function ThemeSwitcher({
         )}
       </AnimatePresence>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col items-end gap-3">
         {/* Hint text that disappears after opening the panel once */}
         {!buka && (
           <motion.div

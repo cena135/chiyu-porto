@@ -127,7 +127,7 @@ export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
         </div>
       </header>
 
-      <section className="pt-6">
+      <section id="karya" className="scroll-mt-28 pt-6">
         {projects.map((p, i) => (
           <EditorialRow key={p.id} project={p} index={i} />
         ))}

@@ -12,6 +12,14 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
   const [gagal, setGagal] = useState<string | null>(null);
   const [tigaSelesai, setTigaSelesai] = useState(false);
   const [vantaSelesai, setVantaSelesai] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const global = window as any;
+      if (global.THREE) setTigaSelesai(true);
+      if (global.VANTA && global.VANTA.BIRDS) setVantaSelesai(true);
+    }
+  }, []);
   const efek = useRef<{ destroy: () => void } | null>(null);
 
   useEffect(() => {
@@ -124,7 +132,7 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
           )}
         </header>
 
-        <section className="pt-14">
+        <section id="karya" className="scroll-mt-28 pt-14">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p, i) => (
               <motion.article

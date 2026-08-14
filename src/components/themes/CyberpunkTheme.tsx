@@ -115,7 +115,7 @@ export function CyberpunkTheme({ projects, profil, kontak }: ThemeProps) {
         </div>
       </header>
 
-      <section className="pt-12">
+      <section id="karya" className="scroll-mt-28 pt-12">
         <p className="mb-6 text-[11px] tracking-[0.2em] text-[#22c55e]/70">
           {"// daftar proyek"}
         </p>

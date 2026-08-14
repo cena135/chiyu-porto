@@ -47,7 +47,6 @@ export function SmoothScrolling({ children }: { children: React.ReactNode }) {
         // Lenis menangani sendiri klik <a href="#...">, jadi tombol "Lihat
         // Karya" ikut meluncur. Tanpa ini, anchor melompat instan karena
         // `scroll-behavior: smooth` milik CSS sudah kita matikan.
-        anchors: { offset: -80 },
         // Sentuhan di ponsel dibiarkan memakai gulir asli sistem: inersia
         // buatan di atas inersia bawaan layar sentuh terasa melayang.
         syncTouch: false,

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { VantaTheme } from "./VantaTheme";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -56,6 +56,11 @@ const PABRIK: Record<ThemeId, React.ComponentType<ThemeProps>> = {
 export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
   const [tema, setTema] = useState<ThemeId>("vanta");
   const Aktif = PABRIK[tema];
+
+  useEffect(() => {
+    document.body.setAttribute("data-theme", tema);
+    return () => document.body.removeAttribute("data-theme");
+  }, [tema]);
 
   return (
     <>
