@@ -128,9 +128,11 @@ export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-6">
-        {projects.map((p, i) => (
-          <EditorialRow key={p.id} project={p} index={i} />
-        ))}
+        <div className="flex flex-col gap-16 md:gap-24">
+          {projects.map((p, i) => (
+            <EditorialRow key={p.id} project={p} index={i} />
+          ))}
+        </div>
       </section>
 
       <KontakBlok

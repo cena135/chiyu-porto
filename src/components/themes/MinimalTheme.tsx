@@ -127,9 +127,11 @@ export function MinimalTheme({ projects, profil, kontak }: ThemeProps) {
       </header>
 
       <section id="karya" className="scroll-mt-28">
-        {projects.map((p, i) => (
-          <MinimalCard key={p.id} project={p} index={i} />
-        ))}
+        <div className="flex flex-col gap-16 md:gap-24">
+          {projects.map((p, i) => (
+            <MinimalCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
       </section>
 
       <KontakBlok

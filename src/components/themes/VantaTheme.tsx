@@ -133,7 +133,7 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
         </header>
 
         <section id="karya" className="scroll-mt-28 pt-14">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:gap-20">
             {projects.map((p, i) => (
               <motion.article
                 key={p.id}

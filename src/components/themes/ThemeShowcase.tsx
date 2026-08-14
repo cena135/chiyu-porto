@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { VantaTheme } from "./VantaTheme";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { CustomCursor } from "../CustomCursor";
 import type { ThemeId, ThemeProps } from "./types";
 
 const memuat = (
@@ -64,8 +65,6 @@ export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
   }, [tema]);
 
   const handleTemaChange = (id: ThemeId) => {
-    // Simpan posisi gulir sebelum ganti tema
-    scrollRef.current = window.scrollY;
     // Hapus hash dari URL supaya browser tidak otomatis loncat
     if (window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
@@ -75,15 +74,17 @@ export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
 
   return (
     <>
+      <CustomCursor aktif={tema} />
       {/* min-h-screen menahan tinggi halaman supaya scrollbar tidak hilang mendadak 
           saat transisi (DOM kosong sesaat), yang menyebabkan layar loncat ke atas. */}
       <div className="min-h-screen">
         <AnimatePresence 
           mode="wait"
           onExitComplete={() => {
-            // Kembalikan posisi gulir tepat setelah komponen lama hilang
-            // dan yang baru mulai render
-            window.scrollTo({ top: scrollRef.current, behavior: "instant" });
+            // Selalu kembalikan ke paling atas setiap ganti tema
+            window.scrollTo({ top: 0, behavior: "instant" });
+            // Coba panggil custom event kalau Lenis membutuhkannya, atau Lenis
+            // otomatis mendeteksi window.scrollTo.
           }}
         >
           <motion.div

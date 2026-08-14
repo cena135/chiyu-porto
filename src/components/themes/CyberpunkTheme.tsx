@@ -119,7 +119,7 @@ export function CyberpunkTheme({ projects, profil, kontak }: ThemeProps) {
         <p className="mb-6 text-[11px] tracking-[0.2em] text-[#22c55e]/70">
           {"// daftar proyek"}
         </p>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col gap-12 md:gap-16 lg:gap-20">
           {projects.map((p, i) => (
             <CyberCard key={p.id} project={p} index={i} />
           ))}

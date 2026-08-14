@@ -128,7 +128,7 @@ export function NeoTheme({ projects, profil, kontak }: ThemeProps) {
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-14">
-        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:gap-16 lg:grid-cols-3 lg:gap-24">
           {projects.map((p, i) => (
             <NeoCard key={p.id} project={p} index={i} />
           ))}
