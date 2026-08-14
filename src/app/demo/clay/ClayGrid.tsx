@@ -1,0 +1,92 @@
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import type { DemoProject } from "../_data";
+
+/**
+ * Kartu proyek versi Claymorphism.
+ *
+ * Gerakannya adalah kebalikan dari Neo: kartu MELESAK ke dalam saat ditekan.
+ * Caranya bukan sekadar mengecilkan skala, tapi menukar bayangan luar dengan
+ * bayangan dalam yang lebih dalam — tanah liat yang ditekan kehilangan
+ * ketebalannya, dan itu hanya terbaca lewat bayangan.
+ */
+
+const PASTEL = ["#C4B5FD", "#A5D8FF", "#FBCFE8", "#BBF7D0"];
+
+const empuk = { type: "spring" as const, stiffness: 260, damping: 20, mass: 0.8 };
+
+const NAIK =
+  "0 26px 40px -14px rgba(91,63,160,0.4), inset 0 5px 12px rgba(255,255,255,0.9), inset 0 -7px 14px rgba(91,63,160,0.18)";
+const MELESAK =
+  "0 6px 14px -8px rgba(91,63,160,0.35), inset 0 8px 18px rgba(91,63,160,0.28), inset 0 -3px 8px rgba(255,255,255,0.6)";
+
+function ClayCard({ project, index }: { project: DemoProject; index: number }) {
+  const warna = PASTEL[index % PASTEL.length];
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 26, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ ...empuk, delay: index * 0.06 }}
+      whileHover={{ y: -8, boxShadow: NAIK, transition: empuk }}
+      whileTap={{ scale: 0.975, boxShadow: MELESAK, transition: empuk }}
+      className="clay-card group relative flex min-h-[16rem] flex-col justify-between rounded-[2rem] p-7"
+    >
+      <Link href={`/p/${project.slug}`} className="absolute inset-0 z-10" aria-label={project.title} />
+
+      <div className="relative">
+        <div className="flex items-center gap-3">
+          <span
+            className="clay-blob flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold text-[#3b2f63]"
+            style={{ background: warna }}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          {project.isWip && (
+            <span className="clay-blob rounded-full bg-[#fde68a] px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-[#78350f]">
+              WIP
+            </span>
+          )}
+        </div>
+
+        <h3 className="display mt-5 text-2xl">{project.title}</h3>
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[#6b6191]">
+          {project.description}
+        </p>
+      </div>
+
+      <div className="relative mt-6 flex flex-wrap items-center gap-2">
+        {project.techStack.slice(0, 3).map((t) => (
+          <span
+            key={t}
+            className="clay-blob rounded-full bg-white/70 px-3 py-1 text-[10px] font-semibold text-[#6b6191]"
+          >
+            {t}
+          </span>
+        ))}
+        <motion.span
+          aria-hidden
+          className="clay-blob ml-auto flex h-10 w-10 items-center justify-center rounded-2xl text-[#3b2f63]"
+          style={{ background: warna }}
+          whileHover={{ rotate: -12 }}
+          transition={empuk}
+        >
+          →
+        </motion.span>
+      </div>
+    </motion.article>
+  );
+}
+
+export function ClayGrid({ projects }: { projects: DemoProject[] }) {
+  return (
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p, i) => (
+        <ClayCard key={p.id} project={p} index={i} />
+      ))}
+    </div>
+  );
+}

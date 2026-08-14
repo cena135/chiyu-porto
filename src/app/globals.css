@@ -241,6 +241,112 @@ html.lenis body {
   }
 }
 
+/* ============================================================
+   TEMA DEMO EKSPERIMENTAL (/demo/neo, /demo/clay, /demo/minimal)
+
+   SEMUA aturan di bawah ini WAJIB dikurung `.theme-*` atau
+   `body:has(.theme-*)`. Tidak satu pun boleh menyentuh `.bento`,
+   `.display`, atau token di `@theme` tanpa kurungan itu — beranda
+   utama memakai kelas yang sama, dan satu aturan telanjang di sini
+   akan mengubah wajah situs sungguhan.
+   ============================================================ */
+
+/* ---------- Neo Brutalism ----------
+   Latar kuning pekat, garis hitam tebal, dan bayangan PADAT tanpa blur.
+   Kuncinya di bayangan: begitu diberi blur sedikit saja, gayanya langsung
+   jatuh jadi "kartu biasa yang kegelapan". */
+body:has(.theme-neo) {
+  background: #ffdd57;
+}
+.theme-neo {
+  --color-text: #000000;
+  --color-text-dim: #2b2b2b;
+  color: #000000;
+}
+.theme-neo .eyebrow {
+  color: #000000;
+  font-weight: 700;
+}
+.theme-neo .display {
+  font-family: var(--font-chakra), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.theme-neo .neo-card {
+  background: #ffffff;
+  border: 4px solid #000000;
+  /* Offset ke kanan-bawah, tanpa blur, tanpa transparansi. */
+  box-shadow: 8px 8px 0 0 #000000;
+}
+.theme-neo .neo-tag {
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 0 #000000;
+}
+
+/* ---------- Claymorphism ----------
+   Empuk dan menggembung. Bayangan LUAR memberi ketebalan, dua bayangan DALAM
+   memberi lengkungnya: yang terang di atas meniru cahaya jatuh, yang gelap di
+   bawah meniru sisi yang membelok menjauh. Tanpa pasangan itu, hasilnya cuma
+   kotak pastel biasa. */
+body:has(.theme-clay) {
+  background: linear-gradient(160deg, #ede9fe, #e0f2fe 55%, #fce7f3);
+  background-attachment: fixed;
+}
+.theme-clay {
+  --color-text: #3b2f63;
+  --color-text-dim: #6b6191;
+  color: #3b2f63;
+}
+.theme-clay .eyebrow {
+  color: #6b6191;
+}
+.theme-clay .display {
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.theme-clay .clay-card {
+  background: #f5f3ff;
+  box-shadow:
+    0 18px 30px -12px rgb(91 63 160 / 0.35),
+    inset 0 4px 10px rgb(255 255 255 / 0.85),
+    inset 0 -6px 12px rgb(91 63 160 / 0.16);
+}
+.theme-clay .clay-blob {
+  box-shadow:
+    inset 0 3px 6px rgb(255 255 255 / 0.8),
+    inset 0 -4px 8px rgb(91 63 160 / 0.22),
+    0 6px 12px -4px rgb(91 63 160 / 0.4);
+}
+
+/* ---------- Apple Minimalism ----------
+   Tanpa garis, tanpa bayangan, tanpa warna. Yang memisahkan bagian di sini
+   HANYA jarak — itu sebabnya paddingnya sengaja terasa berlebihan. */
+body:has(.theme-minimal) {
+  background: #ffffff;
+}
+.theme-minimal {
+  --color-text: #1d1d1f;
+  --color-text-dim: #86868b;
+  color: #1d1d1f;
+}
+.theme-minimal .eyebrow {
+  color: #86868b;
+  letter-spacing: 0.18em;
+}
+.theme-minimal .display {
+  font-family: var(--font-inter), sans-serif;
+  /* Tipis dan besar. Berat 600 pada ukuran sebesar ini akan langsung
+     terbaca sebagai "situs biasa", bukan halaman produk Apple. */
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+.theme-minimal .hairline {
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.09), transparent 92%);
+}
+
 /* ---------- Fokus keyboard ---------- */
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--color-brand);
