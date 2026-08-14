@@ -91,15 +91,27 @@ export function ProfilBlok({
           ))}
         </dl>
 
-        <motion.a
-          href="#karya"
-          className={kelas.tombol ?? "mt-8 inline-flex items-center gap-2 rounded-full border border-current px-5 py-2.5 text-sm font-semibold transition-all hover:bg-foreground hover:text-background"}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Lihat Karya
-          <span>→</span>
-        </motion.a>
+        <div className="mt-8 flex flex-wrap gap-4">
+          <motion.a
+            href="#karya"
+            className={kelas.tombol ?? "inline-flex items-center gap-2 rounded-full border border-current px-5 py-2.5 text-sm font-semibold transition-all hover:bg-foreground hover:text-background"}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Lihat Karya
+            <span>↓</span>
+          </motion.a>
+
+          <motion.a
+            href="#contact"
+            className={kelas.tombol ?? "inline-flex items-center gap-2 rounded-full border border-transparent bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-all hover:opacity-90"}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Hubungi Saya
+            <span>→</span>
+          </motion.a>
+        </div>
       </div>
     </div>
   );

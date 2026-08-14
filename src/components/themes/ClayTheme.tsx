@@ -107,14 +107,9 @@ export function ClayTheme({ projects, profil, kontak }: ThemeProps) {
             bio: "text-sm leading-relaxed text-[#6b6191]",
             garis: "border-[#a99fd0]",
             nilai: "text-[#3b2f63]",
+            tombol: "clay-blob inline-flex items-center justify-center rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
           }}
         />
-        <a
-          href="#karya"
-          className="clay-blob mt-8 inline-block rounded-2xl bg-[#C4B5FD] px-7 py-3.5 text-sm font-semibold text-[#3b2f63]"
-        >
-          Lihat Karya
-        </a>
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-14">

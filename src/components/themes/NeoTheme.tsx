@@ -106,14 +106,9 @@ export function NeoTheme({ projects, profil, kontak }: ThemeProps) {
             bio: "text-sm font-medium leading-relaxed text-neutral-800",
             garis: "border-black/40",
             nilai: "font-bold",
+            tombol: "neo-tag inline-flex items-center justify-center bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase text-black"
           }}
         />
-        <a
-          href="#karya"
-          className="neo-tag mt-8 inline-block bg-[#FFDD57] px-6 py-3 text-sm font-black uppercase"
-        >
-          Lihat Karya
-        </a>
       </header>
 
       <section id="karya" className="scroll-mt-28 pt-14">
