@@ -31,7 +31,6 @@ export type ThemeId =
   | "bento"
   | "neo"
   | "clay"
-  | "glass"
   | "minimal"
   | "glasslight"
   | "editorial"
@@ -42,9 +41,8 @@ export const TEMA: { id: ThemeId; nama: string; catatan: string }[] = [
   { id: "bento", nama: "Bento", catatan: "Grid asimetris, terang" },
   { id: "neo", nama: "Neo Brutal", catatan: "Garis tebal, bayangan padat" },
   { id: "clay", nama: "Clay 3D", catatan: "Pastel empuk" },
-  { id: "glass", nama: "Liquid Glass", catatan: "Kaca di atas aurora" },
   { id: "minimal", nama: "Minimal", catatan: "Ruang kosong ekstrem" },
-  { id: "glasslight", nama: "Liquid Light", catatan: "Kaca bening, latar terang" },
+  { id: "glasslight", nama: "Liquid Glass", catatan: "Kaca bening, latar terang" },
   { id: "editorial", nama: "Editorial", catatan: "Serif, majalah" },
   { id: "cyber", nama: "Cyberpunk", catatan: "Neon, monospace" },
   { id: "vanta", nama: "Vanta 3D", catatan: "Latar WebGL interaktif" },

@@ -41,10 +41,6 @@ const ClayTheme = dynamic(() => import("./ClayTheme").then((m) => m.ClayTheme), 
   ssr: false,
   loading: () => memuat,
 });
-const GlassTheme = dynamic(() => import("./GlassTheme").then((m) => m.GlassTheme), {
-  ssr: false,
-  loading: () => memuat,
-});
 const MinimalTheme = dynamic(() => import("./MinimalTheme").then((m) => m.MinimalTheme), {
   ssr: false,
   loading: () => memuat,
@@ -70,7 +66,6 @@ const PABRIK: Record<ThemeId, React.ComponentType<ThemeProps>> = {
   bento: BentoTheme,
   neo: NeoTheme,
   clay: ClayTheme,
-  glass: GlassTheme,
   minimal: MinimalTheme,
   glasslight: LiquidLightTheme,
   editorial: EditorialTheme,

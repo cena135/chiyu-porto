@@ -1,37 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { KontakBlok, ProfilBlok } from "./ThemeSections";
 import type { ThemeProps } from "./types";
 
-/**
- * Vanta 3D — latar WebGL Birds yang bereaksi pada kursor.
- *
- * KENAPA VERSI SEBELUMNYA SELALU JATUH KE FALLBACK — dua sebab, keduanya ada
- * di dalam bundel Vanta dan tidak terlihat dari luar:
- *
- * 1. Di baris pertamanya, `vanta.birds.min.js` menjalankan
- *    `let s = window.THREE || {}` — three.js diambil dari GLOBAL, sekali, PADA
- *    SAAT MODULNYA DIEVALUASI. Opsi `THREE` yang kita oper ke pemanggilan efek
- *    tidak pernah dipakai untuk ini. Kalau `window.THREE` belum ada saat
- *    modulnya diimpor, Vanta mencetak "No THREE defined on window", melewati
- *    pembuatan scene, lalu mengecat `el.style.background` dengan warna
- *    `backgroundColor` — persis "lampu sticky di belakang" yang CEO lihat.
- *    Karena itu `window.THREE` HARUS diisi SEBELUM baris impor Vanta.
- *
- * 2. Bundelnya UMD dan mendaftarkan efeknya ke `window.VANTA.BIRDS`. Nilai
- *    yang dikembalikan modulnya bukan fungsi efek itu, jadi memanggil
- *    `(await import(...)).default(...)` melempar TypeError.
- */
-
-type EfekVanta = { destroy: () => void };
-type PembuatEfek = (opsi: Record<string, unknown>) => EfekVanta;
-
 export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
   const wadah = useRef<HTMLDivElement>(null);
   const [gagal, setGagal] = useState<string | null>(null);
+  const [tigaSelesai, setTigaSelesai] = useState(false);
+  const [vantaSelesai, setVantaSelesai] = useState(false);
+  const efek = useRef<{ destroy: () => void } | null>(null);
 
   useEffect(() => {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
@@ -39,70 +20,57 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
       return;
     }
 
-    let efek: EfekVanta | null = null;
-    // Dipasang sebelum await: komponen bisa saja sudah dilepas saat modulnya
-    // selesai diunduh, dan tanpa penanda ini kita membuat kanvas WebGL yang
-    // tidak akan pernah dihancurkan.
-    let hidup = true;
-
-    (async () => {
-      try {
-        const THREE = await import("three");
-        (window as unknown as { THREE?: unknown }).THREE = THREE;
-
-        const modul = await import("vanta/dist/vanta.birds.min");
-        if (!hidup || !wadah.current) return;
-
-        // Tiga jalan, berurutan dari yang paling bisa diandalkan. Registri
-        // global adalah cara resmi Vanta mengekspos efeknya.
-        const global = window as unknown as { VANTA?: Record<string, PembuatEfek> };
-        const bawaan = modul as unknown as { default?: unknown };
-        const BIRDS =
-          global.VANTA?.BIRDS ??
-          (typeof bawaan.default === "function" ? (bawaan.default as PembuatEfek) : undefined);
-
-        if (typeof BIRDS !== "function") {
-          throw new Error("VANTA.BIRDS tidak ditemukan setelah modul dimuat");
+    if (tigaSelesai && vantaSelesai && wadah.current) {
+      const global = window as any;
+      if (global.VANTA && global.VANTA.BIRDS) {
+        try {
+          efek.current = global.VANTA.BIRDS({
+            el: wadah.current,
+            mouseControls: true,
+            touchControls: false,
+            gyroControls: false,
+            minHeight: 200,
+            minWidth: 200,
+            scale: 1,
+            scaleMobile: 1,
+            backgroundColor: 0x05060f,
+            color1: 0x2563eb,
+            color2: 0x7c3aed,
+            birdSize: 1.2,
+            wingSpan: 26,
+            speedLimit: 4.5,
+            separation: 40,
+            quantity: 3,
+          });
+        } catch (e) {
+          setGagal(e instanceof Error ? e.message : "WebGL gagal diinisialisasi");
         }
-
-        efek = BIRDS({
-          el: wadah.current,
-          THREE,
-          mouseControls: true,
-          touchControls: false,
-          gyroControls: false,
-          minHeight: 200,
-          minWidth: 200,
-          scale: 1,
-          scaleMobile: 1,
-          backgroundColor: 0x05060f,
-          color1: 0x2563eb,
-          color2: 0x7c3aed,
-          birdSize: 1.2,
-          wingSpan: 26,
-          speedLimit: 4.5,
-          separation: 40,
-          quantity: 3,
-        });
-      } catch (e) {
-        // Pesannya ditampilkan, bukan ditelan. Kanvas 3D yang gagal diam-diam
-        // meninggalkan halaman gelap kosong dan tidak ada satu pun petunjuk
-        // kenapa — persis yang terjadi pada versi sebelumnya.
-        if (hidup) setGagal(e instanceof Error ? e.message : "WebGL tidak tersedia");
+      } else {
+        setGagal("Script Vanta/Three belum lengkap termuat");
       }
-    })();
+    }
 
     return () => {
-      hidup = false;
-      efek?.destroy();
+      if (efek.current) {
+        efek.current.destroy();
+        efek.current = null;
+      }
     };
-  }, []);
+  }, [tigaSelesai, vantaSelesai]);
 
   return (
     <div className="theme-vanta relative min-h-screen">
-      {/* Kanvas WebGL ditanam di sini. `fixed` supaya tetap memenuhi layar saat
-          halaman digulir — itu yang membuat kartunya terasa mengambang DI ATAS
-          ruang, bukan di atas gambar yang ikut bergulir. */}
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r119/three.min.js"
+        strategy="lazyOnload"
+        onLoad={() => setTigaSelesai(true)}
+      />
+      <Script
+        src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"
+        strategy="lazyOnload"
+        onLoad={() => setVantaSelesai(true)}
+      />
+
       <div
         ref={wadah}
         aria-hidden
@@ -114,7 +82,6 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
         }
       />
 
-      {/* z-10: seluruh isi halaman harus berada DI ATAS kanvas. */}
       <div className="relative z-10 mx-auto w-full max-w-[86rem] px-6 pb-32 pt-24 sm:px-10">
         <header className="vanta-card max-w-3xl rounded-[2rem] p-8 sm:p-12">
           <span className="text-[11px] uppercase tracking-[0.22em] text-white/50">
