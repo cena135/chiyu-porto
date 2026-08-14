@@ -54,9 +54,18 @@ function ClayCard({ project, index }: { project: ThemeProject; index: number }) 
         </div>
 
         <h3 className="display mt-5 text-2xl">{project.title}</h3>
-        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[#6b6191]">
+        <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-neutral-500">
           {project.description}
         </p>
+        {project.techStack.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.techStack.map((tech) => (
+              <span key={tech} className="clay-card rounded-full bg-white px-3 py-1 text-[10px] font-bold text-neutral-600">
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="relative mt-6 flex flex-wrap items-center gap-2">

@@ -54,6 +54,15 @@ function MinimalCard({ project, index }: { project: ThemeProject; index: number 
             transition={halus}
           >
             {project.description}
+            {project.techStack.length > 0 && (
+              <span className="mt-4 flex flex-wrap gap-1.5 pt-4">
+                {project.techStack.map((tech) => (
+                  <span key={tech} className="rounded-md bg-neutral-100 px-2 py-1 text-[10px] font-medium text-neutral-600">
+                    {tech}
+                  </span>
+                ))}
+              </span>
+            )}
           </motion.p>
         </div>
 

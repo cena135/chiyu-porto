@@ -45,9 +45,18 @@ function EditorialRow({ project, index }: { project: ThemeProject; index: number
           <h3 className="font-serif text-[clamp(1.75rem,3.6vw,2.75rem)] leading-[1.1] tracking-[-0.01em]">
             {project.title}
           </h3>
-          <p className="mt-4 max-w-xl text-[15px] leading-[1.75] text-black/65">
+          <p className="mt-3 line-clamp-3 text-[13px] leading-relaxed text-neutral-600">
             {project.description}
           </p>
+          {project.techStack.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {project.techStack.map((tech) => (
+                <span key={tech} className="border-b border-black/20 text-[10px] font-medium uppercase tracking-wider text-black/70">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
           <span className="mt-6 inline-flex items-center gap-2 border-b border-black pb-0.5 text-xs uppercase tracking-[0.16em] transition-all group-hover:gap-4">
             Baca selengkapnya <span aria-hidden>→</span>
           </span>

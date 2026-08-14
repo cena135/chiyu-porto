@@ -107,27 +107,46 @@ export function ThemeSwitcher({
         )}
       </AnimatePresence>
 
-      <motion.button
-        type="button"
-        onClick={() => setBuka((v) => !v)}
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
-        transition={{ type: "spring", stiffness: 400, damping: 22 }}
-        aria-expanded={buka}
-        title="Ganti tema tampilan"
-        className="flex items-center gap-2.5 rounded-full border border-black/10 bg-white py-2.5 pl-4 pr-3 text-sm font-semibold text-neutral-900 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.45)]"
-      >
-        <span className="h-2 w-2 rounded-full bg-neutral-900" aria-hidden />
-        {sekarang.nama}
-        <motion.span
-          aria-hidden
-          animate={{ rotate: buka ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 24 }}
-          className="text-xs text-neutral-400"
+      <div className="flex items-center gap-4">
+        {/* Hint text that disappears after opening the panel once */}
+        {!buka && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 rounded-full bg-black/80 px-4 py-2 text-xs font-semibold text-white shadow-lg backdrop-blur-md"
+          >
+            <span>✨ Coba ganti tema di sini!</span>
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+          </motion.div>
+        )}
+
+        <motion.button
+          type="button"
+          onClick={() => setBuka((v) => !v)}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 400, damping: 22 }}
+          aria-expanded={buka}
+          title="Ganti tema tampilan"
+          className="flex items-center gap-2.5 rounded-full border border-black/10 bg-white py-2.5 pl-4 pr-3 text-sm font-semibold text-neutral-900 shadow-[0_16px_40px_-12px_rgb(0_0_0/0.45)]"
         >
-          ▲
-        </motion.span>
-      </motion.button>
+          <span className="h-2 w-2 rounded-full bg-neutral-900" aria-hidden />
+          {sekarang.nama}
+          <motion.span
+            aria-hidden
+            animate={{ rotate: buka ? 180 : 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 24 }}
+            className="text-xs text-neutral-400"
+          >
+            ▲
+          </motion.span>
+        </motion.button>
+      </div>
     </div>
   );
 }

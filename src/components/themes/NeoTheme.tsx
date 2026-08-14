@@ -59,6 +59,15 @@ function NeoCard({ project, index }: { project: ThemeProject; index: number }) {
         <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-neutral-800">
           {project.description}
         </p>
+        {project.techStack.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.techStack.map((tech) => (
+              <span key={tech} className="neo-tag bg-white px-2 py-1 text-[10px] font-black uppercase text-black">
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="relative mt-6 flex flex-wrap items-center gap-2">

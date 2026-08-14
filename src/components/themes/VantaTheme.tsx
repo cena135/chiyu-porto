@@ -129,6 +129,15 @@ export function VantaTheme({ projects, profil, kontak }: ThemeProps) {
                   <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">
                     {p.description}
                   </p>
+                  {p.techStack.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.techStack.map((tech) => (
+                        <span key={tech} className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/70">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <span
                   aria-hidden

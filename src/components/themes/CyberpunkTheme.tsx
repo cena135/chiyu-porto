@@ -51,14 +51,18 @@ function CyberCard({ project, index }: { project: ThemeProject; index: number })
           <span className="text-[#22c55e]/60">$ </span>
           {project.description}
         </p>
+        {project.techStack.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.techStack.map((tech) => (
+              <span key={tech} className="border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-cyan-400">
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="relative mt-6 flex items-center gap-2">
-        {project.techStack.slice(0, 3).map((t) => (
-          <span key={t} className="border border-[#22c55e]/25 px-2 py-0.5 text-[10px] text-[#22c55e]/80">
-            {t}
-          </span>
-        ))}
         <span
           aria-hidden
           className="ml-auto text-[#22d3ee] transition-transform duration-300 group-hover:translate-x-1"

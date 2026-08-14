@@ -77,9 +77,18 @@ function LiquidCard({ project, index }: { project: ThemeProject; index: number }
         <h3 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900">
           {project.title}
         </h3>
-        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-600">
           {project.description}
         </p>
+        {project.techStack.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.techStack.map((tech) => (
+              <span key={tech} className="rounded-full border border-white/40 bg-white/30 px-2.5 py-1 text-[10px] font-medium text-neutral-700 shadow-sm backdrop-blur-md">
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="relative mt-6 flex items-center gap-2">

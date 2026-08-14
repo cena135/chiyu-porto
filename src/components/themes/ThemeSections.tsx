@@ -56,7 +56,7 @@ export function ProfilBlok({
   kelas = {},
 }: {
   profil: Profil;
-  kelas?: { wadah?: string; foto?: string; bio?: string; garis?: string; nilai?: string };
+  kelas?: { wadah?: string; foto?: string; bio?: string; garis?: string; nilai?: string; tombol?: string };
 }) {
   return (
     <div className={kelas.wadah ?? "mt-8 flex max-w-xl flex-col gap-5 sm:flex-row sm:items-start"}>
@@ -90,6 +90,16 @@ export function ProfilBlok({
             </div>
           ))}
         </dl>
+
+        <motion.a
+          href="#karya"
+          className={kelas.tombol ?? "mt-8 inline-flex items-center gap-2 rounded-full border border-current px-5 py-2.5 text-sm font-semibold transition-all hover:bg-foreground hover:text-background"}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Lihat Karya
+          <span>→</span>
+        </motion.a>
       </div>
     </div>
   );
