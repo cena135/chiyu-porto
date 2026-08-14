@@ -136,8 +136,8 @@ export function EditorialTheme({ projects, profil, kontak }: ThemeProps) {
       <KontakBlok
         kontak={kontak}
         kelas={{
-          wadah: "mt-6",
-          item: "group flex items-center gap-6 border-t border-black/15 py-7",
+          wadah: "mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4",
+          item: "group flex items-center gap-4 border-t border-black/15 py-7",
           ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/20",
           nilai: "font-serif text-base",
         }}

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { VantaTheme } from "./VantaTheme";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -55,6 +55,7 @@ const PABRIK: Record<ThemeId, React.ComponentType<ThemeProps>> = {
 
 export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
   const [tema, setTema] = useState<ThemeId>("vanta");
+  const scrollRef = useRef<number>(0);
   const Aktif = PABRIK[tema];
 
   useEffect(() => {
@@ -62,10 +63,29 @@ export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
     return () => document.body.removeAttribute("data-theme");
   }, [tema]);
 
+  const handleTemaChange = (id: ThemeId) => {
+    // Simpan posisi gulir sebelum ganti tema
+    scrollRef.current = window.scrollY;
+    // Hapus hash dari URL supaya browser tidak otomatis loncat
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+    setTema(id);
+  };
+
   return (
     <>
-      <div>
-        <AnimatePresence mode="wait">
+      {/* min-h-screen menahan tinggi halaman supaya scrollbar tidak hilang mendadak 
+          saat transisi (DOM kosong sesaat), yang menyebabkan layar loncat ke atas. */}
+      <div className="min-h-screen">
+        <AnimatePresence 
+          mode="wait"
+          onExitComplete={() => {
+            // Kembalikan posisi gulir tepat setelah komponen lama hilang
+            // dan yang baru mulai render
+            window.scrollTo({ top: scrollRef.current, behavior: "instant" });
+          }}
+        >
           <motion.div
             key={tema}
             initial={{ opacity: 0 }}
@@ -78,7 +98,7 @@ export function ThemeShowcase({ projects, profil, kontak }: ThemeProps) {
         </AnimatePresence>
       </div>
 
-      <ThemeSwitcher aktif={tema} onPilih={setTema} />
+      <ThemeSwitcher aktif={tema} onPilih={handleTemaChange} />
     </>
   );
 }

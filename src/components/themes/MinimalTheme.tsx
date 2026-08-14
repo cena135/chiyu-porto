@@ -135,7 +135,7 @@ export function MinimalTheme({ projects, profil, kontak }: ThemeProps) {
       <KontakBlok
         kontak={kontak}
         kelas={{
-          wadah: "mt-8",
+          wadah: "mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4",
           item: "group flex items-center gap-6 border-t border-black/[0.08] py-8",
           ikon: "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 text-[#1d1d1f]",
           nilai: "font-light text-[#1d1d1f]",
