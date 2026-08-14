@@ -53,8 +53,8 @@ function ClayCard({ project, index }: { project: ThemeProject; index: number }) 
           )}
         </div>
 
-        <h3 className="display mt-5 text-2xl">{project.title}</h3>
-        <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-neutral-500">
+        <h3 className="display mt-5 text-2xl text-[#3b2f63]">{project.title}</h3>
+        <p className="mt-3 line-clamp-3 text-sm font-medium leading-relaxed text-[#6b6191]">
           {project.description}
         </p>
         {project.techStack.length > 0 && (
